@@ -47,7 +47,7 @@
   <header class="w-full px-5 py-3 border-b border-slate-900 bg-slate-950/80 backdrop-blur z-10 safe-pt flex items-center justify-between">
     <div class="flex flex-col">
       <h1 class="text-base font-extrabold tracking-wider bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent uppercase">Evo-Neon Cars</h1>
-      <span class="text-[9px] text-emerald-400 font-mono-tech tracking-widest uppercase">GENETIC ALGORITHM LAB // M3 PRO FAST EDITION</span>
+      <span class="text-[9px] text-emerald-400 font-mono-tech tracking-widest uppercase">GENETIC ALGORITHM LAB // M3 PRO PARALLEL CONTINUITY FIX</span>
     </div>
     <div class="flex items-center space-x-2 text-xs font-mono-tech bg-slate-900/90 border border-slate-800 px-3 py-1 rounded-full text-slate-300">
       <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -91,12 +91,12 @@
         </div>
 
         <!-- スキップモード中のオンスクリーン表示 -->
-        <div id="skipOverlay" class="absolute inset-0 bg-slate-950/90 z-20 flex flex-col items-center justify-center p-6 text-center transition-all duration-200 hidden">
-          <svg class="w-12 h-12 text-rose-500 animate-pulse mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <div id="skipOverlay" class="absolute top-3 right-3 bg-slate-950/90 z-20 flex flex-col items-start justify-start p-3 text-left transition-all duration-200 hidden rounded-xl border border-rose-900/50 shadow-xl pointer-events-none max-w-[320px]">
+          <svg class="w-5 h-5 text-rose-500 animate-pulse mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.333-4zM19.933 12.8a1 1 0 000-1.6l-5.333-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.333-4z" />
           </svg>
-          <h3 class="text-rose-400 font-bold tracking-widest text-sm mb-1">HYPER DRIVE COMPUTING</h3>
-          <p class="text-slate-400 text-xs font-mono-tech">描画を止め、複数CPUコアで世代を回しています...</p>
+          <h3 class="text-rose-400 font-bold tracking-widest text-xs mb-1">HYPER DRIVE COMPUTING</h3>
+          <p class="text-slate-400 text-[10px] font-mono-tech leading-relaxed">並列評価中。金色の車は現在の最良遺伝子のプレビューです。</p>
         </div>
 
         <!-- ゲーム終了 / 開始オーバーレイ -->
@@ -228,7 +228,7 @@
   </main>
 
   <footer class="w-full px-5 py-3 border-t border-slate-900 bg-slate-950/90 text-center text-xs text-slate-500 z-10 safe-pb flex flex-col sm:flex-row items-center justify-between gap-2">
-    <p>© 2026 AI Laboratory. M3 Pro Fast Edition: Parallel Evaluation GA & Continuity Preserved.</p>
+    <p>© 2026 AI Laboratory. M3 Pro Parallel Continuity Fix: Elite Inheritance, Correct Sensors & Champion Preview.</p>
     <div class="flex items-center space-x-3 text-slate-400">
       <span>突然変異: <strong id="uiMutationLabel" class="text-slate-300">10%</strong></span>
       <span>|</span>
@@ -992,7 +992,7 @@ function raySegmentDistance(px, py, dx, dy, ax, ay, bx, by) {
   const bottom = sy * rx - sx * ry;
   if (bottom > -1e-9 && bottom < 1e-9) return SENSOR_RANGE;
   const tTop = sx * (py - ay) - sy * (px - ax);
-  const uTop = (ay - py) * rx - (ax - px) * ry;
+  const uTop = (py - ay) * rx + (ax - px) * ry;
   const t = tTop / bottom;
   const u = uTop / bottom;
   return (t >= 0 && t <= 1 && u >= 0 && u <= 1) ? t * SENSOR_RANGE : SENSOR_RANGE;
@@ -1135,6 +1135,8 @@ self.onmessage = function(e) {
         this.lastGenTime = 0;
         this.avgGenMs = 0;
         this.configDirty = false;
+        this.previewCar = null;
+        this.previewGenomeSignature = '';
       }
       desiredWorkerCount() {
         const hc = navigator.hardwareConcurrency || 8;
@@ -1203,6 +1205,8 @@ self.onmessage = function(e) {
         if (msg.bestFitness > this.bestFitnessSeen && msg.bestGenome) {
           this.bestFitnessSeen = msg.bestFitness;
           this.bestGenome = msg.bestGenome;
+          this.previewCar = null;
+          this.previewGenomeSignature = '';
         }
         this.pending--;
         if (this.pending > 0) return;
@@ -1219,19 +1223,36 @@ self.onmessage = function(e) {
         uiAlive.innerText = `評価完了/${populationSize}`;
         if (skipStatusText) {
           const gps = this.avgGenMs > 0 ? (1000 / this.avgGenMs).toFixed(1) : '-';
-          skipStatusText.textContent = `${this.workerCount} workersで評価分散中。${gps}世代/秒、同一集団で進化継続。`;
+          skipStatusText.textContent = `${this.workerCount} workersで評価分散中。${gps}世代/秒、GEN ${ga.generation}、BEST ${(Math.max(ga.bestFitnessSeen, this.bestFitnessSeen) / 100).toFixed(1)}。金色の車で最良遺伝子を再生中。`;
         }
         if (this.active) this.dispatchGeneration();
+      }
+      getPreviewCar() {
+        if (!this.bestGenome) return null;
+        const signature = String(this.bestFitnessSeen) + ':' + this.bestGenome.slice(0, 4).join(',');
+        if (!this.previewCar || this.previewGenomeSignature !== signature || !this.previewCar.alive) {
+          const car = new Car();
+          car.brain.loadGenome(new Float32Array(this.bestGenome));
+          car.color = '#fbbf24';
+          car.isElite = true;
+          this.previewCar = car;
+          this.previewGenomeSignature = signature;
+        }
+        return this.previewCar;
       }
       pushConfig() {
         // 評価中のジョブはそのまま終わらせ、次世代から新設定を使う。
         this.configDirty = true;
+        this.previewCar = null;
+        this.previewGenomeSignature = '';
       }
       reset() {
         this.bestFitnessSeen = 0;
         this.bestGenome = null;
         this.generationsCompleted = 0;
         this.avgGenMs = 0;
+        this.previewCar = null;
+        this.previewGenomeSignature = '';
         this.jobId++;
         if (this.active) this.dispatchGeneration();
       }
@@ -1258,6 +1279,51 @@ self.onmessage = function(e) {
     let uiAccum = 0;
     let brainFrameSkip = 0;
 
+
+
+    function drawMaxPreview() {
+      ctx.clearRect(0, 0, BASE_WIDTH, BASE_HEIGHT);
+      drawCircuit(ctx);
+
+      if (customObstacles.length) {
+        ctx.save();
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = '#ef4444';
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 4;
+        for (let i = 0; i < customObstacles.length; i++) {
+          const o = customObstacles[i];
+          ctx.beginPath();
+          ctx.moveTo(o.x1, o.y1);
+          ctx.lineTo(o.x2, o.y2);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      const preview = turbo.getPreviewCar();
+      if (preview) {
+        // 並列評価はWorkerで継続し、メインスレッドでは最良遺伝子を軽く再生するだけ。
+        for (let i = 0; i < 2; i++) {
+          if (!preview.alive) break;
+          preview.update(wallData);
+        }
+        preview.draw(ctx);
+        ctx.save();
+        ctx.font = 'bold 12px Share Tech Mono, monospace';
+        ctx.fillStyle = 'rgba(251, 191, 36, 0.95)';
+        ctx.fillText('CHAMPION PREVIEW', 58, 84);
+        ctx.fillText('BEST ' + (turbo.bestFitnessSeen / 100).toFixed(1), 58, 100);
+        ctx.restore();
+      } else {
+        ctx.save();
+        ctx.font = 'bold 12px Share Tech Mono, monospace';
+        ctx.fillStyle = 'rgba(148, 163, 184, 0.9)';
+        ctx.fillText('WAITING FOR FIRST PARALLEL EVALUATION...', 58, 84);
+        ctx.restore();
+      }
+    }
+
     function loop(timestamp) {
       const dt = timestamp - lastTime;
       lastTime = timestamp;
@@ -1272,6 +1338,7 @@ self.onmessage = function(e) {
 
       if (isRunning && simulationSpeed === 'MAX') {
         turbo.start();
+        drawMaxPreview();
         requestAnimationFrame(loop);
         return;
       }
@@ -1475,7 +1542,7 @@ self.onmessage = function(e) {
       const bottom = sy * rx - sx * ry;
       if (bottom > -1e-9 && bottom < 1e-9) return SENSOR_RANGE;
       const tTop = sx * (py - ay) - sy * (px - ax);
-      const uTop = (ay - py) * rx - (ax - px) * ry;
+      const uTop = (py - ay) * rx + (ax - px) * ry;
       const t = tTop / bottom;
       const u = uTop / bottom;
       return (t >= 0 && t <= 1 && u >= 0 && u <= 1) ? t * SENSOR_RANGE : SENSOR_RANGE;
