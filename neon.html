@@ -1,0 +1,1363 @@
+```html
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Neon Physics Odyssey</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      touch-action: none; /* スマホのスクロールやダブルタップズームを防止 */
+      -webkit-user-select: none; /* テキスト選択防止 */
+      user-select: none;
+    }
+    /* iOSセーフエリア対応 */
+    .safe-pt { padding-top: env(safe-area-inset-top); }
+    .safe-pb { padding-bottom: env(safe-area-inset-bottom); }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between overflow-hidden relative">
+
+  <!-- 背景のネオングリッド雰囲気 -->
+  <div class="absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.8)_2px,transparent_2px),linear-gradient(90deg,rgba(15,23,42,0.8)_2px,transparent_2px)] bg-[size:30px_30px] [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] pointer-events-none z-0"></div>
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(99,102,241,0.15),transparent_60%)] pointer-events-none z-0"></div>
+
+  <!-- UIヘッダー -->
+  <header class="w-full px-6 py-4 flex items-center justify-between z-10 safe-pt">
+    <div class="flex flex-col">
+      <h1 class="text-lg font-extrabold tracking-wider bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent uppercase">Neon Odyssey</h1>
+      <span class="text-[10px] text-indigo-400 font-bold tracking-widest uppercase">STAGE <span id="stageNum">1</span> / 10</span>
+    </div>
+    
+    <div class="flex items-center space-x-4">
+      <div class="bg-slate-900/80 border border-slate-800/80 rounded-xl px-3 py-1.5 text-center shadow-lg">
+        <span class="text-[9px] text-slate-500 font-bold uppercase block leading-none">SHOTS</span>
+        <span id="shotCount" class="text-sm font-extrabold text-cyan-400">0</span>
+      </div>
+      
+      <!-- 音声ミュートボタン -->
+      <button id="btnMute" class="bg-slate-900/80 border border-slate-800 hover:border-slate-700 p-2.5 rounded-xl text-slate-400 hover:text-white transition-colors cursor-pointer shadow-lg active:scale-95">
+        <svg id="svgSoundOn" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+        </svg>
+        <svg id="svgSoundOff" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ゲームキャンバスコンテナ -->
+  <div class="flex-1 flex items-center justify-center p-3 z-10 relative">
+    <!-- FPSカウンター -->
+    <div class="absolute top-4 left-6 bg-slate-950/80 border border-indigo-950/40 text-[9px] font-mono font-bold text-emerald-400 px-2 py-0.5 rounded-md z-30 pointer-events-none">
+      FPS: <span id="fpsText">120</span>
+    </div>
+
+    <!-- ゲーム終了 / 開始オーバーレイ -->
+    <div id="overlay" class="absolute inset-4 bg-slate-950/90 border border-slate-800/80 rounded-2xl z-20 flex flex-col items-center justify-center p-6 text-center shadow-2xl transition-all duration-300">
+      <div id="overlayIcon" class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-cyan-500/10 mb-4 animate-bounce">
+        <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h2 id="overlayTitle" class="text-2xl font-extrabold text-white tracking-wide">NEON ODYSSEY</h2>
+      <p id="overlayDesc" class="text-xs text-slate-400 mt-2 max-w-xs leading-relaxed">
+        ボールを引っ張って、障害物を避けながら光るゴール(ポータル)に届けよう。ブラックホールの引力に注意！
+      </p>
+      <button id="btnStart" class="mt-6 bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-extrabold text-xs tracking-wider py-3.5 px-8 rounded-xl transition-all shadow-lg shadow-cyan-500/20 active:scale-95 cursor-pointer">
+        ゲームスタート
+      </button>
+    </div>
+
+    <!-- メインCanvas -->
+    <canvas id="gameCanvas" class="max-w-full max-h-full aspect-[9/16] rounded-2xl border border-slate-800 bg-slate-950 shadow-2xl shadow-indigo-500/5"></canvas>
+  </div>
+
+  <!-- 下部操作パネル -->
+  <footer class="w-full px-6 py-4 flex items-center justify-between z-10 safe-pb">
+    <button id="btnRestart" class="bg-slate-900/60 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white font-semibold text-xs py-3 px-5 rounded-xl flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer">
+      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 15.89M9.612 11h-.612m0 0h-.612M9.612 11l-3 3m3-3l-3-3" />
+      </svg>
+      やり直す
+    </button>
+
+    <div class="flex items-center space-x-2">
+      <button id="btnPrevStage" class="bg-slate-900/60 border border-slate-800 hover:border-slate-700 text-slate-400 p-3 rounded-xl transition-all active:scale-95 cursor-pointer" title="前のステージ">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <button id="btnNextStage" class="bg-slate-900/60 border border-slate-800 hover:border-slate-700 text-slate-400 p-3 rounded-xl transition-all active:scale-95 cursor-pointer" title="次のステージ">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </div>
+  </footer>
+
+  <!-- カスタムダイアログ（クリア・ゲームオーバー時） -->
+  <div id="modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-indigo-900/30 rounded-2xl w-full max-w-sm p-6 text-center shadow-2xl relative overflow-hidden">
+      <!-- 装飾用ネオンライト -->
+      <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-cyan-500 to-indigo-500"></div>
+
+      <span id="modalEmoji" class="text-5xl block mb-3 animate-bounce">🎉</span>
+      <h3 id="modalTitle" class="text-xl font-extrabold text-white tracking-wide">STAGE CLEAR</h3>
+      <p id="modalDesc" class="text-xs text-slate-400 mt-2 leading-relaxed">素晴らしいコントロール！次のステージに挑戦しましょう。</p>
+
+      <div class="mt-6 flex flex-col gap-2">
+        <button id="modalAction" class="w-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-extrabold text-xs tracking-wider py-3.5 rounded-xl transition-all shadow-lg active:scale-95 cursor-pointer">
+          次へ進む
+        </button>
+        <button id="modalClose" class="w-full bg-slate-950 hover:bg-slate-850 text-slate-400 text-xs font-semibold py-3 rounded-xl transition-all">
+          もう一度遊ぶ
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- 音響システム (Web Audio API) ---
+    class AudioSynth {
+      constructor() {
+        this.ctx = null;
+        this.muted = false;
+      }
+
+      init() {
+        if (!this.ctx) {
+          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+      }
+
+      playHit() {
+        if (this.muted || !this.ctx) return;
+        this.init();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(300, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.15);
+
+        gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.15);
+      }
+
+      playBouncer() {
+        if (this.muted || !this.ctx) return;
+        this.init();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(523.25, this.ctx.currentTime); // C5
+        osc.frequency.exponentialRampToValueAtTime(1046.50, this.ctx.currentTime + 0.1); // C6
+
+        gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.2);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.2);
+      }
+
+      playShot() {
+        if (this.muted || !this.ctx) return;
+        this.init();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(600, this.ctx.currentTime + 0.25);
+
+        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
+
+        // ローパスフィルターで音を滑らかに
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(800, this.ctx.currentTime);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.ctx.destination);
+        
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.25);
+      }
+
+      playPortal() {
+        if (this.muted || !this.ctx) return;
+        this.init();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(220, this.ctx.currentTime + 0.3);
+
+        gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.3);
+      }
+
+      playClear() {
+        if (this.muted || !this.ctx) return;
+        this.init();
+        const now = this.ctx.currentTime;
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // Cメジャーアルペジオ
+        notes.forEach((freq, index) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + index * 0.08);
+          
+          gain.gain.setValueAtTime(0.15, now + index * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + index * 0.08 + 0.3);
+          
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          
+          osc.start(now + index * 0.08);
+          osc.stop(now + index * 0.08 + 0.3);
+        });
+      }
+
+      playGameOver() {
+        if (this.muted || !this.ctx) return;
+        this.init();
+        const now = this.ctx.currentTime;
+        const notes = [293.66, 277.18, 261.63, 196.00]; // 下降悲しいコード
+        notes.forEach((freq, index) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + index * 0.12);
+          
+          gain.gain.setValueAtTime(0.2, now + index * 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + index * 0.12 + 0.4);
+          
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          
+          osc.start(now + index * 0.12);
+          osc.stop(now + index * 0.12 + 0.4);
+        });
+      }
+    }
+
+    const sfx = new AudioSynth();
+
+    // --- DOM要素 ---
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const stageNumText = document.getElementById('stageNum');
+    const shotCountText = document.getElementById('shotCount');
+    const fpsText = document.getElementById('fpsText');
+    const overlay = document.getElementById('overlay');
+    const btnStart = document.getElementById('btnStart');
+    const overlayTitle = document.getElementById('overlayTitle');
+    const overlayDesc = document.getElementById('overlayDesc');
+    const btnMute = document.getElementById('btnMute');
+    const btnRestart = document.getElementById('btnRestart');
+    const btnPrevStage = document.getElementById('btnPrevStage');
+    const btnNextStage = document.getElementById('btnNextStage');
+
+    const modal = document.getElementById('modal');
+    const modalEmoji = document.getElementById('modalEmoji');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDesc = document.getElementById('modalDesc');
+    const modalAction = document.getElementById('modalAction');
+    const modalClose = document.getElementById('modalClose');
+
+    // --- ゲーム設定 & 定数 ---
+    const BASE_WIDTH = 540;
+    const BASE_HEIGHT = 960;
+    let scale = 1; // 画面サイズに合わせる倍率
+
+    // 物理エンジンパラメータ
+    const GRAVITY = 0.25;
+    const FRICTION = 0.992;
+    const RESTITUTION = 0.78; // ボールの弾性（跳ね返り具合）
+
+    // ゲーム状態
+    let currentStageIndex = 0;
+    let shotsUsed = 0;
+    let isGameOver = false;
+    let isStageCleared = false;
+    let gameLoopId = null;
+    let isDrawingTrajectory = false;
+
+    // --- 各種エンティティクラス ---
+
+    // 1. プレイヤーパーティクル (自慢のA17 Pro対応の火花演出)
+    class Particle {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 8;
+        this.vy = (Math.random() - 0.5) * 8 - 2;
+        this.color = color;
+        this.alpha = 1;
+        this.decay = 0.02 + Math.random() * 0.02;
+        this.radius = 2 + Math.random() * 3;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy += 0.05; // わずかな重力
+        this.alpha -= this.decay;
+      }
+
+      draw(ctx) {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = this.color;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // 2. プレイヤーボール
+    class Ball {
+      constructor(x, y) {
+        this.startX = x;
+        this.startY = y;
+        this.x = x;
+        this.y = y;
+        this.vx = 0;
+        this.vy = 0;
+        this.radius = 16;
+        this.color = '#00f0ff'; // ネオンシアン
+        this.isLaunched = false;
+        this.trail = [];
+      }
+
+      reset() {
+        this.x = this.startX;
+        this.y = this.startY;
+        this.vx = 0;
+        this.vy = 0;
+        this.isLaunched = false;
+        this.trail = [];
+      }
+
+      update() {
+        if (!this.isLaunched) return;
+
+        // 軌跡トレイルの保存
+        this.trail.push({ x: this.x, y: this.y });
+        if (this.trail.length > 20) this.trail.shift();
+
+        // 物理運動の更新
+        this.vy += GRAVITY;
+        this.vx *= FRICTION;
+        this.vy *= FRICTION;
+
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // 壁との衝突
+        if (this.x - this.radius < 0) {
+          this.x = this.radius;
+          this.vx = -this.vx * RESTITUTION;
+          sfx.playHit();
+          spawnSparks(this.x, this.y, this.color);
+        } else if (this.x + this.radius > BASE_WIDTH) {
+          this.x = BASE_WIDTH - this.radius;
+          this.vx = -this.vx * RESTITUTION;
+          sfx.playHit();
+          spawnSparks(this.x, this.y, this.color);
+        }
+
+        if (this.y - this.radius < 0) {
+          this.y = this.radius;
+          this.vy = -this.vy * RESTITUTION;
+          sfx.playHit();
+          spawnSparks(this.x, this.y, this.color);
+        } else if (this.y + this.radius > BASE_HEIGHT) {
+          // 下に落ちたら失敗扱い
+          triggerGameOver();
+        }
+      }
+
+      draw(ctx) {
+        // トレイルの描画
+        if (this.trail.length > 1) {
+          ctx.save();
+          ctx.lineWidth = 4;
+          ctx.lineCap = 'round';
+          for (let i = 0; i < this.trail.length - 1; i++) {
+            const ratio = i / this.trail.length;
+            ctx.strokeStyle = `rgba(0, 240, 255, ${ratio * 0.4})`;
+            ctx.shadowBlur = 10 * ratio;
+            ctx.shadowColor = this.color;
+            ctx.beginPath();
+            ctx.moveTo(this.trail[i].x, this.trail[i].y);
+            ctx.lineTo(this.trail[i + 1].x, this.trail[i + 1].y);
+            ctx.stroke();
+          }
+          ctx.restore();
+        }
+
+        // メインボールの描画
+        ctx.save();
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = this.color;
+        ctx.fillStyle = '#ffffff';
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    // 3. ゴール（空間ポータル）
+    class Goal {
+      constructor(x, y, radius = 32) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.angle = 0;
+      }
+
+      update() {
+        this.angle += 0.04;
+      }
+
+      draw(ctx) {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+
+        // 外側の怪しい渦
+        ctx.shadowBlur = 25;
+        ctx.shadowColor = '#d946ef'; // マゼンタネオン
+        ctx.strokeStyle = '#d946ef';
+        ctx.lineWidth = 4;
+        ctx.setLineDash([10, 15]);
+        ctx.beginPath();
+        ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // 内側のコア
+        ctx.fillStyle = 'rgba(217, 70, 239, 0.2)';
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.arc(0, 0, this.radius - 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.restore();
+      }
+    }
+
+    // 4. 固定ネオン障害物
+    class Obstacle {
+      constructor(x, y, w, h, rotation = 0) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+        this.rotation = rotation; // 傾き（ラジアン）
+        this.color = '#ef4444'; // 赤ネオン
+      }
+
+      draw(ctx) {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation);
+        
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = this.color;
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 3;
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.1)';
+        
+        ctx.beginPath();
+        ctx.rect(-this.w/2, -this.h/2, this.w, this.h);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // ボールとの衝突解決
+      resolveCollision(ball) {
+        // 回転された座標空間にボールの位置を変換
+        const cos = Math.cos(-this.rotation);
+        const sin = Math.sin(-this.rotation);
+        
+        // 障害物の中心を原点とした相対的な位置
+        const rx = ball.x - this.x;
+        const ry = ball.y - this.y;
+        
+        // 回転適用後
+        const bx = rx * cos - ry * sin;
+        const by = rx * sin + ry * cos;
+        
+        // 矩形上の最も近い点を見つける
+        const halfW = this.w / 2;
+        const halfH = this.h / 2;
+        const closestX = Math.max(-halfW, Math.min(halfW, bx));
+        const closestY = Math.max(-halfH, Math.min(halfH, by));
+        
+        // 最も近い点とボールの中心との距離
+        const dx = bx - closestX;
+        const dy = by - closestY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < ball.radius) {
+          // 衝突発生
+          // 衝突法線方向を計算（回転後空間）
+          let nx = dx;
+          let ny = dy;
+          if (distance === 0) {
+            // ボールが完全に内部に入っているときの安全弁
+            nx = 1; ny = 0;
+          } else {
+            nx /= distance;
+            ny /= distance;
+          }
+          
+          // ボールの位置を重なりから押し戻す
+          const overlap = ball.radius - distance;
+          const pushX = nx * overlap;
+          const pushY = ny * overlap;
+          
+          // 位置を元（ワールド空間）に逆回転して戻す
+          const cosR = Math.cos(this.rotation);
+          const sinR = Math.sin(this.rotation);
+          
+          const worldPushX = pushX * cosR - pushY * sinR;
+          const worldPushY = pushX * sinR + pushY * cosR;
+          
+          ball.x += worldPushX;
+          ball.y += worldPushY;
+          
+          // 速度を回転後空間に変換
+          const bvx = ball.vx * cos - ball.vy * sin;
+          const bvy = ball.vx * sin + ball.vy * cos;
+          
+          // 反射計算 (法線ベクトルに対して反射)
+          const dot = bvx * nx + bvy * ny;
+          let newBvx = bvx - 2 * dot * nx * RESTITUTION;
+          let newBvy = bvy - 2 * dot * ny * RESTITUTION;
+          
+          // 速度をワールド空間に戻す
+          ball.vx = newBvx * cosR - newBvy * sinR;
+          ball.vy = newBvx * sinR + newBvy * cosR;
+          
+          sfx.playHit();
+          spawnSparks(ball.x, ball.y, this.color);
+        }
+      }
+    }
+
+    // 5. 動く弾むバンパー (黄色ネオン)
+    class Bumper {
+      constructor(x, y, radius = 24) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = '#eab308'; // 黄色ネオン
+        this.pulse = 0;
+      }
+
+      update() {
+        if (this.pulse > 0) this.pulse -= 0.1;
+      }
+
+      draw(ctx) {
+        ctx.save();
+        const drawRadius = this.radius + (this.pulse * 8);
+        ctx.shadowBlur = 15 + (this.pulse * 15);
+        ctx.shadowColor = this.color;
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 4;
+        ctx.fillStyle = 'rgba(234, 179, 8, 0.15)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, drawRadius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // 中央マーク
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      resolveCollision(ball) {
+        const dx = ball.x - this.x;
+        const dy = ball.y - this.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const minDist = this.radius + ball.radius;
+
+        if (dist < minDist) {
+          // 衝突解決
+          const nx = dx / dist;
+          const ny = dy / dist;
+
+          // 押し戻し
+          const overlap = minDist - dist;
+          ball.x += nx * overlap;
+          ball.y += ny * overlap;
+
+          // バンパーは超弾性(1.4倍)で弾き飛ばす
+          const dot = ball.vx * nx + ball.vy * ny;
+          ball.vx = (ball.vx - 2 * dot * nx) * 1.35;
+          ball.vy = (ball.vy - 2 * dot * ny) * 1.35;
+
+          this.pulse = 1.0;
+          sfx.playBouncer();
+          spawnSparks(ball.x, ball.y, this.color);
+        }
+      }
+    }
+
+    // 6. 重力ブラックホール (超巨大引力)
+    class BlackHole {
+      constructor(x, y, strength = 4.5) {
+        this.x = x;
+        this.y = y;
+        this.radius = 28;
+        this.pullRadius = 180; // 引き寄せ影響半径
+        this.strength = strength;
+        this.angle = 0;
+      }
+
+      update(ball) {
+        this.angle -= 0.08;
+
+        // ボールへの吸引力を計算
+        const dx = this.x - ball.x;
+        const dy = this.y - ball.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < this.pullRadius && ball.isLaunched) {
+          // 距離の2乗に反比例する強力な引力
+          const force = (this.strength * 12) / (dist + 10);
+          ball.vx += (dx / dist) * force;
+          ball.vy += (dy / dist) * force;
+        }
+
+        // ブラックホールそのものに吸い込まれたら失敗
+        if (dist < this.radius - 8) {
+          triggerGameOver();
+        }
+      }
+
+      draw(ctx) {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+
+        // 吸引範囲のプレビューガイドライン
+        ctx.strokeStyle = 'rgba(99, 102, 241, 0.06)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.arc(0, 0, this.pullRadius, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // 渦巻ライン
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = '#6366f1'; // インディゴネオン
+        ctx.strokeStyle = '#6366f1';
+        ctx.setLineDash([5, 8]);
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // コア（暗黒空間）
+        ctx.fillStyle = '#020617';
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.arc(0, 0, this.radius - 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // 7. ワープポータル (ペアで配置される空間歪曲)
+    class PortalPair {
+      constructor(x1, y1, x2, y2) {
+        this.p1 = { x: x1, y: y1, radius: 22, angle: 0 };
+        this.p2 = { x: x2, y: y2, radius: 22, angle: 0 };
+        this.color = '#10b981'; // エメラルドネオン
+        this.cooldown = 0; // ループワープ防止用のディレイ
+      }
+
+      update(ball) {
+        this.p1.angle += 0.05;
+        this.p2.angle -= 0.05;
+
+        if (this.cooldown > 0) {
+          this.cooldown--;
+          return;
+        }
+
+        // ポータル1に入った
+        const d1 = Math.sqrt((ball.x - this.p1.x)**2 + (ball.y - this.p1.y)**2);
+        if (d1 < this.p1.radius) {
+          ball.x = this.p2.x;
+          ball.y = this.p2.y;
+          this.cooldown = 40; // しばらくワープ不活性化
+          sfx.playPortal();
+          spawnSparks(this.p1.x, this.p1.y, this.color);
+          spawnSparks(this.p2.x, this.p2.y, this.color);
+        }
+
+        // ポータル2に入った
+        const d2 = Math.sqrt((ball.x - this.p2.x)**2 + (ball.y - this.p2.y)**2);
+        if (d2 < this.p2.radius) {
+          ball.x = this.p1.x;
+          ball.y = this.p1.y;
+          this.cooldown = 40;
+          sfx.playPortal();
+          spawnSparks(this.p1.x, this.p1.y, this.color);
+          spawnSparks(this.p2.x, this.p2.y, this.color);
+        }
+      }
+
+      draw(ctx) {
+        ctx.save();
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = this.color;
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 3;
+
+        // ポータル 1
+        ctx.save();
+        ctx.translate(this.p1.x, this.p1.y);
+        ctx.rotate(this.p1.angle);
+        ctx.setLineDash([6, 6]);
+        ctx.beginPath();
+        ctx.arc(0, 0, this.p1.radius, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+
+        // ポータル 2
+        ctx.save();
+        ctx.translate(this.p2.x, this.p2.y);
+        ctx.rotate(this.p2.angle);
+        ctx.setLineDash([6, 6]);
+        ctx.beginPath();
+        ctx.arc(0, 0, this.p2.radius, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.restore();
+      }
+    }
+
+
+    // --- ステージデザイン (全10ステージ) ---
+    const STAGES = [
+      {
+        // 1. 基本トレーニング
+        ballPos: { x: 270, y: 800 },
+        goalPos: { x: 270, y: 200 },
+        obstacles: [
+          new Obstacle(270, 500, 250, 20)
+        ],
+        bumpers: [],
+        blackHoles: [],
+        portals: []
+      },
+      {
+        // 2. ダブルバウンサー
+        ballPos: { x: 100, y: 850 },
+        goalPos: { x: 440, y: 150 },
+        obstacles: [
+          new Obstacle(270, 400, 20, 300),
+          new Obstacle(270, 700, 350, 20)
+        ],
+        bumpers: [
+          new Bumper(100, 450, 25),
+          new Bumper(440, 550, 25)
+        ],
+        blackHoles: [],
+        portals: []
+      },
+      {
+        // 3. 重力の歪み
+        ballPos: { x: 270, y: 850 },
+        goalPos: { x: 270, y: 150 },
+        obstacles: [
+          new Obstacle(120, 500, 180, 25),
+          new Obstacle(420, 500, 180, 25)
+        ],
+        bumpers: [],
+        blackHoles: [
+          new BlackHole(270, 480, 5)
+        ],
+        portals: []
+      },
+      {
+        // 4. ワープスペース
+        ballPos: { x: 80, y: 850 },
+        goalPos: { x: 460, y: 850 },
+        obstacles: [
+          new Obstacle(270, 600, 540, 20), // 完全に分断
+          new Obstacle(270, 300, 250, 20)
+        ],
+        bumpers: [],
+        blackHoles: [],
+        portals: [
+          new PortalPair(80, 500, 460, 200) // ワープで超える
+        ]
+      },
+      {
+        // 5. 迷路ピンボール
+        ballPos: { x: 270, y: 880 },
+        goalPos: { x: 270, y: 100 },
+        obstacles: [
+          new Obstacle(150, 650, 200, 20, 0.2),
+          new Obstacle(390, 450, 200, 20, -0.2),
+          new Obstacle(150, 250, 200, 20, 0.2)
+        ],
+        bumpers: [
+          new Bumper(380, 650, 20),
+          new Bumper(160, 450, 20),
+          new Bumper(380, 250, 20)
+        ],
+        blackHoles: [],
+        portals: []
+      },
+      {
+        // 6. ダブルブラックホール
+        ballPos: { x: 270, y: 850 },
+        goalPos: { x: 270, y: 150 },
+        obstacles: [
+          new Obstacle(270, 500, 300, 20)
+        ],
+        bumpers: [],
+        blackHoles: [
+          new BlackHole(100, 500, 4),
+          new BlackHole(440, 500, 4)
+        ],
+        portals: []
+      },
+      {
+        // 7. トリックショット
+        ballPos: { x: 270, y: 850 },
+        goalPos: { x: 440, y: 450 },
+        obstacles: [
+          new Obstacle(270, 250, 20, 400),
+          new Obstacle(270, 650, 20, 400),
+          new Obstacle(100, 450, 120, 20)
+        ],
+        bumpers: [
+          new Bumper(100, 250, 25),
+          new Bumper(440, 800, 25)
+        ],
+        blackHoles: [],
+        portals: [
+          new PortalPair(100, 800, 100, 150)
+        ]
+      },
+      {
+        // 8. 引力と反発
+        ballPos: { x: 80, y: 850 },
+        goalPos: { x: 460, y: 150 },
+        obstacles: [
+          new Obstacle(270, 450, 400, 20, 0.5)
+        ],
+        bumpers: [
+          new Bumper(200, 250, 30),
+          new Bumper(340, 650, 30)
+        ],
+        blackHoles: [
+          new BlackHole(270, 450, 6)
+        ],
+        portals: []
+      },
+      {
+        // 9. カオス空間
+        ballPos: { x: 270, y: 850 },
+        goalPos: { x: 270, y: 500 },
+        obstacles: [
+          new Obstacle(270, 300, 220, 20),
+          new Obstacle(270, 700, 220, 20)
+        ],
+        bumpers: [
+          new Bumper(120, 500, 24),
+          new Bumper(420, 500, 24)
+        ],
+        blackHoles: [
+          new BlackHole(270, 200, 5),
+          new BlackHole(270, 800, 5)
+        ],
+        portals: [
+          new PortalPair(120, 200, 420, 800)
+        ]
+      },
+      {
+        // 10. ラストパズル
+        ballPos: { x: 270, y: 850 },
+        goalPos: { x: 270, y: 120 },
+        obstacles: [
+          new Obstacle(270, 350, 540, 20),
+          new Obstacle(270, 650, 540, 20)
+        ],
+        bumpers: [
+          new Bumper(270, 500, 35)
+        ],
+        blackHoles: [
+          new BlackHole(80, 500, 4.5),
+          new BlackHole(460, 500, 4.5)
+        ],
+        portals: [
+          new PortalPair(270, 780, 270, 220)
+        ]
+      }
+    ];
+
+    // --- ゲーム実体ストレージ ---
+    let playerBall = null;
+    let stageGoal = null;
+    let obstacles = [];
+    let bumpers = [];
+    let blackHoles = [];
+    let portals = [];
+    let particles = [];
+
+    // スリングショット操作データ
+    let dragStart = { x: 0, y: 0 };
+    let dragCurrent = { x: 0, y: 0 };
+    let isDragging = false;
+
+    // --- 各種関数 ---
+
+    // 1. デバイスに合わせてCanvas解像度を調整 (超ぬるぬる・Retina 120Hz対応)
+    function resizeCanvas() {
+      const container = canvas.parentElement;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+
+      // 比率を9:16に保ちながら最大化
+      let destWidth = w;
+      let destHeight = (w * 16) / 9;
+
+      if (destHeight > h) {
+        destHeight = h;
+        destWidth = (h * 9) / 16;
+      }
+
+      // 内部サイズと物理ピクセルサイズを設定
+      canvas.style.width = `${destWidth}px`;
+      canvas.style.height = `${destHeight}px`;
+
+      // Retinaディスプレイ（かつiPhone 15 Pro Maxなどの高性能機）のために倍精度化
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = BASE_WIDTH * dpr;
+      canvas.height = BASE_HEIGHT * dpr;
+      ctx.scale(dpr, dpr);
+
+      // 操作比率スケールの計算
+      scale = destWidth / BASE_WIDTH;
+    }
+
+    // 2. ステージの読み込み
+    function loadStage(index) {
+      currentStageIndex = index;
+      const config = STAGES[index];
+
+      // ステージ情報のUI反映
+      stageNumText.innerText = index + 1;
+      shotsUsed = 0;
+      shotCountText.innerText = shotsUsed;
+
+      // 各種オブジェクトの初期化
+      playerBall = new Ball(config.ballPos.x, config.ballPos.y);
+      stageGoal = new Goal(config.goalPos.x, config.goalPos.y);
+      obstacles = config.obstacles;
+      bumpers = config.bumpers;
+      blackHoles = config.blackHoles;
+      portals = config.portals;
+      particles = [];
+
+      isGameOver = false;
+      isStageCleared = false;
+    }
+
+    // 3. 火花ネオンエフェクトの発生
+    function spawnSparks(x, y, color) {
+      const count = 12 + Math.floor(Math.random() * 8);
+      for (let i = 0; i < count; i++) {
+        particles.push(new Particle(x, y, color));
+      }
+    }
+
+    // 4. ゲームオーバー処理
+    function triggerGameOver() {
+      if (isGameOver || isStageCleared) return;
+      isGameOver = true;
+      sfx.playGameOver();
+      
+      setTimeout(() => {
+        showModal("💀", "MISSION FAILED", "コースから外れてしまったか、ブラックホールに吸い込まれてしまいました。リトライしましょう！", "やり直す");
+      }, 600);
+    }
+
+    // 5. ステージクリア処理
+    function triggerStageClear() {
+      if (isStageCleared || isGameOver) return;
+      isStageCleared = true;
+      sfx.playClear();
+      spawnSparks(stageGoal.x, stageGoal.y, '#d946ef');
+
+      setTimeout(() => {
+        if (currentStageIndex === STAGES.length - 1) {
+          showModal("🏆", "ALL STAGES CLEARED!!", `おめでとうございます！全10ステージを攻略しました！あなたの最終スコア(総発射回数)は「${shotsUsed}回」です。`, "最初から遊ぶ");
+        } else {
+          showModal("🎉", "STAGE CLEAR!", `素晴らしいショットです！${shotsUsed}回の手数でクリアしました！`, "次のステージへ");
+        }
+      }, 600);
+    }
+
+    // 6. モーダルの表示
+    function showModal(emoji, title, desc, actionText) {
+      modalEmoji.innerText = emoji;
+      modalTitle.innerText = title;
+      modalDesc.innerText = desc;
+      modalAction.innerText = actionText;
+      modal.classList.remove('hidden');
+    }
+
+    // 7. モーダルの非表示＆アクション処理
+    modalAction.addEventListener('click', () => {
+      modal.classList.add('hidden');
+      if (modalAction.innerText === "次のステージへ") {
+        currentStageIndex++;
+        loadStage(currentStageIndex);
+      } else if (modalAction.innerText === "最初から遊ぶ") {
+        loadStage(0);
+      } else {
+        // やり直す
+        loadStage(currentStageIndex);
+      }
+    });
+
+    modalClose.addEventListener('click', () => {
+      modal.classList.add('hidden');
+      loadStage(currentStageIndex);
+    });
+
+    // --- 操作ロジック（スリングショット） ---
+    function getCanvasCoordinates(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+      // 画面上の位置をCanvas内部(540x960)の座標系に逆算マッピング
+      return {
+        x: (clientX - rect.left) / scale,
+        y: (clientY - rect.top) / scale
+      };
+    }
+
+    function handleStart(e) {
+      if (isGameOver || isStageCleared || playerBall.isLaunched) return;
+
+      const pos = getCanvasCoordinates(e);
+      // ボールのタップ判定
+      const dist = Math.sqrt((pos.x - playerBall.x)**2 + (pos.y - playerBall.y)**2);
+
+      // タップがボールに近い場合、ドラッグ開始
+      if (dist < playerBall.radius * 2.5) {
+        isDragging = true;
+        dragStart = { x: playerBall.x, y: playerBall.y };
+        dragCurrent = pos;
+        isDrawingTrajectory = true;
+      }
+    }
+
+    function handleMove(e) {
+      if (!isDragging) return;
+      e.preventDefault(); // スワイプスクロールを防止
+      dragCurrent = getCanvasCoordinates(e);
+    }
+
+    function handleEnd() {
+      if (!isDragging) return;
+      isDragging = false;
+      isDrawingTrajectory = false;
+
+      // 発射ベクトルの計算
+      const dx = dragStart.x - dragCurrent.x;
+      const dy = dragStart.y - dragCurrent.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist > 15) {
+        // 発射処理 (パワー係数をかけて速度に変換)
+        const power = Math.min(dist * 0.14, 25); // 上限を設けてバグを防ぐ
+        const angle = Math.atan2(dy, dx);
+
+        playerBall.vx = Math.cos(angle) * power;
+        playerBall.vy = Math.sin(angle) * power;
+        playerBall.isLaunched = true;
+
+        shotsUsed++;
+        shotCountText.innerText = shotsUsed;
+        sfx.playShot();
+        spawnSparks(playerBall.x, playerBall.y, playerBall.color);
+      } else {
+        // キャンセル
+        playerBall.reset();
+      }
+    }
+
+    // イベント登録
+    canvas.addEventListener('mousedown', handleStart);
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mouseup', handleEnd);
+
+    canvas.addEventListener('touchstart', handleStart, { passive: false });
+    window.addEventListener('touchmove', handleMove, { passive: false });
+    window.addEventListener('touchend', handleEnd);
+
+
+    // --- メイン描画＆シミュレーションループ ---
+    let lastTime = performance.now();
+    let frameCount = 0;
+    let fpsTimer = 0;
+
+    function gameLoop(timestamp) {
+      const dt = timestamp - lastTime;
+      lastTime = timestamp;
+
+      // FPS計測 (120Hz確認用)
+      frameCount++;
+      fpsTimer += dt;
+      if (fpsTimer >= 1000) {
+        fpsText.innerText = Math.round((frameCount * 1000) / fpsTimer);
+        frameCount = 0;
+        fpsTimer = 0;
+      }
+
+      // 1. 物理状態の更新
+      if (!isGameOver && !isStageCleared) {
+        playerBall.update();
+
+        // ポータルチェック
+        stageGoal.update();
+        const distToGoal = Math.sqrt((playerBall.x - stageGoal.x)**2 + (playerBall.y - stageGoal.y)**2);
+        if (distToGoal < playerBall.radius + stageGoal.radius - 4) {
+          triggerStageClear();
+        }
+
+        // ポータル
+        portals.forEach(p => p.update(playerBall));
+
+        // ブラックホール
+        blackHoles.forEach(b => b.update(playerBall));
+
+        // 障害物の衝突判定
+        obstacles.forEach(o => o.resolveCollision(playerBall));
+
+        // バンパーの衝突判定
+        bumpers.forEach(b => {
+          b.update();
+          b.resolveCollision(playerBall);
+        });
+      }
+
+      // パーティクルの更新
+      particles.forEach(p => p.update());
+      particles = particles.filter(p => p.alpha > 0);
+
+      // 2. 描画処理
+      ctx.clearRect(0, 0, BASE_WIDTH, BASE_HEIGHT);
+
+      // ワープポータルの描画
+      portals.forEach(p => p.draw(ctx));
+
+      // ブラックホールの描画
+      blackHoles.forEach(b => b.draw(ctx));
+
+      // 障害物
+      obstacles.forEach(o => o.draw(ctx));
+
+      // バンパー
+      bumpers.forEach(b => b.draw(ctx));
+
+      // ゴール
+      stageGoal.draw(ctx);
+
+      // 弾道ガイドライン（ひっぱっている間だけ予測表示）
+      if (isDrawingTrajectory) {
+        drawPredictiveLine();
+      }
+
+      // プレイヤーボール
+      playerBall.draw(ctx);
+
+      // パーティクルエフェクト
+      particles.forEach(p => p.draw(ctx));
+
+      gameLoopId = requestAnimationFrame(gameLoop);
+    }
+
+    // 予測軌道の高速描画シミュレーション
+    function drawPredictiveLine() {
+      const dx = dragStart.x - dragCurrent.x;
+      const dy = dragStart.y - dragCurrent.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist < 15) return;
+
+      const power = Math.min(dist * 0.14, 25);
+      const angle = Math.atan2(dy, dx);
+
+      // 仮想シミュレーション
+      let simX = playerBall.x;
+      let simY = playerBall.y;
+      let simVx = Math.cos(angle) * power;
+      let simVy = Math.sin(angle) * power;
+
+      ctx.save();
+      ctx.strokeStyle = 'rgba(0, 240, 255, 0.45)';
+      ctx.setLineDash([6, 8]);
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(simX, simY);
+
+      // 予測点を40ステップ分計算
+      for (let i = 0; i < 40; i++) {
+        simVy += GRAVITY;
+        simVx *= FRICTION;
+        simVy *= FRICTION;
+        simX += simVx;
+        simY += simVy;
+
+        // 壁反射のシミュレート
+        if (simX - playerBall.radius < 0) {
+          simX = playerBall.radius;
+          simVx = -simVx * RESTITUTION;
+        } else if (simX + playerBall.radius > BASE_WIDTH) {
+          simX = BASE_WIDTH - playerBall.radius;
+          simVx = -simVx * RESTITUTION;
+        }
+
+        // ブラックホールの引力をシミュレート
+        blackHoles.forEach(bh => {
+          const bdx = bh.x - simX;
+          const bdy = bh.y - simY;
+          const bdist = Math.sqrt(bdx * bdx + bdy * bdy);
+          if (bdist < bh.pullRadius) {
+            const force = (bh.strength * 12) / (bdist + 10);
+            simVx += (bdx / bdist) * force;
+            simVy += (bdy / bdist) * force;
+          }
+        });
+
+        ctx.lineTo(simX, simY);
+
+        // 画面外に落ちたらシミュレーション終了
+        if (simY > BASE_HEIGHT) break;
+      }
+      ctx.stroke();
+
+      // 引っ張りライン（ネオンゴムの伸縮ビジュアル）
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(239, 68, 68, 0.7)';
+      ctx.lineWidth = 4;
+      ctx.setLineDash([]);
+      ctx.moveTo(playerBall.x, playerBall.y);
+      ctx.lineTo(dragCurrent.x, dragCurrent.y);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+
+    // --- UIイベント設定 ---
+
+    // 音声ミュート切り替え
+    btnMute.addEventListener('click', () => {
+      sfx.muted = !sfx.muted;
+      if (sfx.muted) {
+        document.getElementById('svgSoundOn').classList.add('hidden');
+        document.getElementById('svgSoundOff').classList.remove('hidden');
+      } else {
+        document.getElementById('svgSoundOn').classList.remove('hidden');
+        document.getElementById('svgSoundOff').classList.add('hidden');
+        sfx.init();
+      }
+    });
+
+    // やり直しボタン
+    btnRestart.addEventListener('click', () => {
+      loadStage(currentStageIndex);
+    });
+
+    // ステージ進退ボタン
+    btnPrevStage.addEventListener('click', () => {
+      if (currentStageIndex > 0) {
+        loadStage(currentStageIndex - 1);
+      }
+    });
+    btnNextStage.addEventListener('click', () => {
+      if (currentStageIndex < STAGES.length - 1) {
+        loadStage(currentStageIndex + 1);
+      }
+    });
+
+    // 起動時のオーバーレイ
+    btnStart.addEventListener('click', () => {
+      sfx.init();
+      overlay.classList.add('opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+      }, 300);
+      loadStage(0);
+      lastTime = performance.now();
+      gameLoopId = requestAnimationFrame(gameLoop);
+    });
+
+    // リサイズ監視（スマホの回転等に対応）
+    window.addEventListener('resize', resizeCanvas);
+    
+    // 初回リサイズ実行
+    resizeCanvas();
+  </script>
+</body>
+</html>
+
+```
