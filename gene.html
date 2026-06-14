@@ -1,1091 +1,1075 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="ja">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.4">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Evolutionary Neon Cars (AI Evolution Simulator)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .font-mono-tech {
+      font-family: 'Share Tech Mono', monospace;
+    }
+    /* iOS安全領域 */
+    .safe-pt { padding-top: env(safe-area-inset-top); }
+    .safe-pb { padding-bottom: env(safe-area-inset-bottom); }
   </style>
 </head>
-<body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="ja"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;Evolutionary Neon Cars (AI Evolution Simulator)&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- Tailwind CSS --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- Google Fonts --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;link rel="preconnect" href="https://fonts.gstatic.com" crossorigin&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&amp;family=Share+Tech+Mono&amp;display=swap" rel="stylesheet"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-family: 'Plus Jakarta Sans', sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>touch-action: none;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>-webkit-user-select: none;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>user-select: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.font-mono-tech {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-family: 'Share Tech Mono', monospace;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* iOS安全領域 */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.safe-pt { padding-top: env(safe-area-inset-top); }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.safe-pb { padding-bottom: env(safe-area-inset-bottom); }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between overflow-hidden relative"&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- 背景演出 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.9)_2px,transparent_2px),linear-gradient(90deg,rgba(15,23,42,0.9)_2px,transparent_2px)] bg-[size:25px_25px] [mask-image:radial-gradient(ellipse_at_center,transparent_40%,black)] pointer-events-none z-0"&gt;&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- ヘッダー --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;header class="w-full px-5 py-3 border-b border-slate-900 bg-slate-950/80 backdrop-blur z-10 safe-pt flex items-center justify-between"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="flex flex-col"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;h1 class="text-base font-extrabold tracking-wider bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent uppercase"&gt;Evo-Neon Cars&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;span class="text-[9px] text-emerald-400 font-mono-tech tracking-widest uppercase"&gt;GENETIC ALGORITHM LAB // IPAD PRO OPTIMIZED&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="flex items-center space-x-2 text-xs font-mono-tech bg-slate-900/90 border border-slate-800 px-3 py-1 rounded-full text-slate-300"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"&gt;&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;span&gt;GEN: &lt;span id="uiGeneration" class="text-emerald-400 font-bold"&gt;1&lt;/span&gt;&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/header&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- メインシミュレーションコンテナ (グリッド配置) --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;main class="flex-1 max-w-7xl w-full mx-auto p-3 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden z-10"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- 左：シミュレータ本体 (7カラム) --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="lg:col-span-7 flex flex-col space-y-3 relative h-full min-h-[350px]"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- コントロール簡易HUD --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="flex items-center justify-between bg-slate-900/60 border border-slate-800/80 rounded-xl p-2.5 text-xs"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="flex items-center space-x-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="text-slate-400"&gt;生存: &lt;strong id="uiAlive" class="text-emerald-400 font-bold"&gt;0/0&lt;/strong&gt;&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="text-slate-400"&gt;最高適応度: &lt;strong id="uiBestFitness" class="text-cyan-400 font-bold"&gt;0.0&lt;/strong&gt;&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- 倍速コントローラー --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="flex bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-[10px]"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button id="speed1x" class="px-2.5 py-1 rounded-md bg-emerald-600 text-white font-bold transition-all"&gt;1x&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button id="speed2x" class="px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition-all"&gt;2x&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button id="speed5x" class="px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition-all"&gt;5x&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button id="speed10x" class="px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition-all"&gt;10x&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- キャンバスエリア --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="flex-1 flex items-center justify-center relative bg-slate-950/90 rounded-2xl border border-slate-800/80 overflow-hidden shadow-2xl"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;canvas id="simCanvas" class="max-w-full max-h-full aspect-[4/3] rounded-xl cursor-crosshair"&gt;&lt;/canvas&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- キャンバスオーバーレイメッセージ --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="absolute bottom-3 left-4 right-4 flex items-center justify-between pointer-events-none text-[10px] text-slate-500 bg-slate-950/80 px-3 py-1.5 rounded-lg border border-slate-900"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;span&gt;💡 ドラッグしてコース上に新しい壁を自由に配置できます&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button id="btnClearCustomObstacles" class="pointer-events-auto text-slate-400 hover:text-rose-400 active:scale-95 font-semibold transition-all"&gt;自作壁を消去&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- 右：AIステータス ＆ パラメータ (5カラム) --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="lg:col-span-5 flex flex-col space-y-4 h-full overflow-y-auto"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">      </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- パラメータコントロール --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 shadow-xl space-y-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest flex items-center gap-1.5"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="w-1.5 h-3 bg-emerald-500 rounded-full inline-block"&gt;&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>進化パラメータ</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/h2&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="space-y-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;!-- 突然変異率 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="flex items-center justify-between mb-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;label for="slideMutation" class="text-xs text-slate-300"&gt;突然変異率 (遺伝の多様性)&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;span id="valMutation" class="text-xs font-mono-tech font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded"&gt;10%&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;input type="range" id="slideMutation" min="1" max="50" value="10" class="w-full h-1 bg-slate-950 rounded-lg appearance-none cursor-pointer"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p class="text-[9px] text-slate-500 mt-1"&gt;高くすると変則的な天才が生まれやすく、低くすると安定した引き継ぎになります。&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;!-- 個体数 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="flex items-center justify-between mb-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;label for="slidePopulation" class="text-xs text-slate-300"&gt;個体数 (1世代あたりの車)&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;span id="valPopulation" class="text-xs font-mono-tech font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded"&gt;40&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;input type="range" id="slidePopulation" min="10" max="100" value="40" class="w-full h-1 bg-slate-950 rounded-lg appearance-none cursor-pointer"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p class="text-[9px] text-slate-500 mt-1"&gt;※変更は次世代から反映されます。個体数が多いほど最適解を早く見つけられます。&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="flex gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button id="btnNextGenForce" class="flex-1 bg-emerald-600/20 hover:bg-emerald-600 border border-emerald-500/40 hover:border-emerald-500 text-emerald-300 hover:text-white text-xs font-bold py-2.5 rounded-xl transition-all active:scale-95 cursor-pointer"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>強制世代交代 (評価へ)</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button id="btnResetEvolution" class="bg-slate-950 hover:bg-rose-950/20 border border-slate-800 hover:border-rose-900 text-slate-400 hover:text-rose-400 text-xs font-bold py-2.5 px-4 rounded-xl transition-all active:scale-95 cursor-pointer"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>リセット</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- 🧠 脳内可視化 (ニューラルネットワーク構造) --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 shadow-xl flex-1 flex flex-col justify-between"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;h2 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest flex items-center gap-1.5 mb-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="w-1.5 h-3 bg-cyan-500 rounded-full inline-block"&gt;&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>エリート脳のリアルタイム思考</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;p class="text-[10px] text-slate-400 leading-relaxed"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>現在最も好成績を収めている「エリート車」のニューラルネットワークです。5つの距離センサーの反応が、操舵角と加速にどう伝達されているか（太さ＝結合強度）を可視化しています。</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- ネットワーク描画キャンバス --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="flex-1 flex items-center justify-center my-3 bg-slate-950 rounded-xl border border-slate-900 relative min-h-[160px]"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;canvas id="brainCanvas" class="w-full h-full max-h-[220px]"&gt;&lt;/canvas&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="absolute left-2 top-2 text-[9px] text-slate-500 flex flex-col"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span&gt;LEFT&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span&gt;FRONT-LEFT&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span&gt;FRONT&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span&gt;FRONT-RIGHT&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span&gt;RIGHT&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="absolute right-2 top-2 text-[9px] text-slate-500 text-right flex flex-col justify-between h-[80%]"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span&gt;前進パワー&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="mt-auto"&gt;ステアリング&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/main&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;footer class="w-full px-5 py-3 border-t border-slate-900 bg-slate-950/90 text-center text-xs text-slate-500 z-10 safe-pb flex flex-col sm:flex-row items-center justify-between gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;p&gt;© 2026 AI Biology Laboratory. 120Hz Realtime Local Physics &amp; GA.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="flex items-center space-x-3 text-slate-400"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;span&gt;突然変異: &lt;strong id="uiMutationLabel" class="text-slate-300"&gt;10%&lt;/strong&gt;&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;span&gt;|&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;span&gt;選択アルゴリズム: &lt;strong class="text-slate-300"&gt;エリート＋ルーレット&lt;/strong&gt;&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/footer&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// --- 音響システム (Web Audio API) iOS/iPadOSガード付き ---</p>
-<p class="p1"><span class="Apple-converted-space">    </span>class Synth {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>constructor() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.ctx = null;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>init() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>try {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>if (!this.ctx) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>this.ctx = new (window.AudioContext || window.webkitAudioContext)();</p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">          </span>if (this.ctx &amp;&amp; this.ctx.state === 'suspended') {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>this.ctx.resume();</p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>} catch (e) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>console.warn("Audio initialization blocked or not supported on this browser.");</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>playGen() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.init();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (!this.ctx) return;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>try {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const now = this.ctx.currentTime;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const notes = [523.25, 659.25, 783.99];<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>notes.forEach((freq, idx) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const osc = this.ctx.createOscillator();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const gain = this.ctx.createGain();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>osc.type = 'sine';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>osc.frequency.setValueAtTime(freq, now + idx * 0.08);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>gain.gain.setValueAtTime(0.08, now + idx * 0.08);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>osc.connect(gain);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>gain.connect(this.ctx.destination);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>osc.start(now + idx * 0.08);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>osc.stop(now + idx * 0.08 + 0.3);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>});</p>
-<p class="p1"><span class="Apple-converted-space">        </span>} catch (err) {}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>playCrash() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.init();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (!this.ctx) return;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>try {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const bufferSize = this.ctx.sampleRate * 0.06;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const data = buffer.getChannelData(0);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>for (let i = 0; i &lt; bufferSize; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>data[i] = Math.random() * 2 - 1;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const noise = this.ctx.createBufferSource();</p>
-<p class="p1"><span class="Apple-converted-space">          </span>noise.buffer = buffer;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const gain = this.ctx.createGain();</p>
-<p class="p1"><span class="Apple-converted-space">          </span>gain.gain.setValueAtTime(0.04, this.ctx.currentTime);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.06);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>noise.connect(gain);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>gain.connect(this.ctx.destination);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>noise.start();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>} catch (err) {}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const sound = new Synth();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// --- HTML / Canvas 設定 ---</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const canvas = document.getElementById('simCanvas');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const ctx = canvas.getContext('2d');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const brainCanvas = document.getElementById('brainCanvas');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const bCtx = brainCanvas.getContext('2d');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// UIテキスト</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const uiGeneration = document.getElementById('uiGeneration');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const uiAlive = document.getElementById('uiAlive');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const uiBestFitness = document.getElementById('uiBestFitness');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const fpsText = document.getElementById('fpsText');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const valMutation = document.getElementById('valMutation');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const valPopulation = document.getElementById('valPopulation');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const uiMutationLabel = document.getElementById('uiMutationLabel');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// スライダー</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const slideMutation = document.getElementById('slideMutation');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const slidePopulation = document.getElementById('slidePopulation');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// ボタン</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const speed1x = document.getElementById('speed1x');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const speed2x = document.getElementById('speed2x');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const speed5x = document.getElementById('speed5x');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const speed10x = document.getElementById('speed10x');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const btnNextGenForce = document.getElementById('btnNextGenForce');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const btnResetEvolution = document.getElementById('btnResetEvolution');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const btnClearCustomObstacles = document.getElementById('btnClearCustomObstacles');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 定数</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const BASE_WIDTH = 800;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const BASE_HEIGHT = 600;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let populationSize = 40;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let mutationRate = 0.10;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let simulationSpeed = 1;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// --- コース壁（静的データ） ---</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const outerWalls = [</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 50, y1: 50, x2: 750, y2: 50 },</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 750, y1: 50, x2: 750, y2: 550 },</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 750, y1: 550, x2: 50, y2: 550 },</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 50, y1: 550, x2: 50, y2: 550 }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>const innerWalls = [</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 170, y1: 170, x2: 630, y2: 170 },</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 630, y1: 170, x2: 630, y2: 430 },</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 630, y1: 430, x2: 170, y2: 430 },</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 170, y1: 430, x2: 170, y2: 170 }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>const trackObstacles = [</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 300, y1: 50, x2: 300, y2: 170 },<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 500, y1: 430, x2: 500, y2: 550 } <span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>let customObstacles = [];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// チェックポイント</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const checkLines = [</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 170, y1: 430, x2: 50, y2: 430 }, <span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 170, y1: 300, x2: 50, y2: 300 },</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 170, y1: 170, x2: 50, y2: 170 }, <span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 300, y1: 170, x2: 300, y2: 50 },</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 450, y1: 170, x2: 450, y2: 50 },</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 630, y1: 170, x2: 750, y2: 170 },<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 630, y1: 300, x2: 750, y2: 300 },</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 630, y1: 430, x2: 750, y2: 430 },<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 450, y1: 430, x2: 450, y2: 550 },</p>
-<p class="p1"><span class="Apple-converted-space">      </span>{ x1: 300, y1: 430, x2: 300, y2: 550 }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>const START_POS = { x: 110, y: 500 };</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const START_ANGLE = -Math.PI / 2;<span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 安全な角丸長方形の描画ヘルパー (ブラウザ依存性を排除)</p>
-<p class="p1"><span class="Apple-converted-space">    </span>function drawRoundRect(c, x, y, width, height, radius) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>c.beginPath();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>c.moveTo(x + radius, y);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>c.lineTo(x + width - radius, y);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>c.quadraticCurveTo(x + width, y, x + width, y + radius);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>c.lineTo(x + width, y + height - radius);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>c.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>c.lineTo(x + radius, y + height);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>c.quadraticCurveTo(x, y + height, x, y + height - radius);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>c.lineTo(x, y + radius);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>c.quadraticCurveTo(x, y, x + radius, y);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>c.closePath();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// --- ニューラルネットワーククラス ---</p>
-<p class="p1"><span class="Apple-converted-space">    </span>class NeuralNetwork {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>constructor(inputSize, hiddenSize, outputSize) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.inputSize = inputSize;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.hiddenSize = hiddenSize;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.outputSize = outputSize;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.weightsIH = [];<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.weightsHO = [];<span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.biasesH = [];<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.biasesO = [];<span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.initRandom();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>initRandom() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let i = 0; i &lt; this.inputSize; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>this.weightsIH[i] = [];</p>
-<p class="p1"><span class="Apple-converted-space">          </span>for (let j = 0; j &lt; this.hiddenSize; j++) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>this.weightsIH[i][j] = Math.random() * 2 - 1;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let i = 0; i &lt; this.hiddenSize; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>this.weightsHO[i] = [];</p>
-<p class="p1"><span class="Apple-converted-space">          </span>for (let j = 0; j &lt; this.outputSize; j++) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>this.weightsHO[i][j] = Math.random() * 2 - 1;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let j = 0; j &lt; this.hiddenSize; j++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>this.biasesH[j] = Math.random() * 2 - 1;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let j = 0; j &lt; this.outputSize; j++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>this.biasesO[j] = Math.random() * 2 - 1;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>activate(x) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return 1 / (1 + Math.exp(-x));</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>feedForward(inputs) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const hiddenOutputs = [];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let j = 0; j &lt; this.hiddenSize; j++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>let sum = 0;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>for (let i = 0; i &lt; this.inputSize; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>sum += inputs[i] * this.weightsIH[i][j];</p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">          </span>sum += this.biasesH[j];</p>
-<p class="p1"><span class="Apple-converted-space">          </span>hiddenOutputs[j] = this.activate(sum);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const outputs = [];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let j = 0; j &lt; this.outputSize; j++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>let sum = 0;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>for (let i = 0; i &lt; this.hiddenSize; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>sum += hiddenOutputs[i] * this.weightsHO[i][j];</p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">          </span>sum += this.biasesO[j];</p>
-<p class="p1"><span class="Apple-converted-space">          </span>outputs[j] = this.activate(sum);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>return { outputs, hiddenOutputs };</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>getGenome() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const genes = [];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let i = 0; i &lt; this.inputSize; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>genes.push(...this.weightsIH[i]);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let i = 0; i &lt; this.hiddenSize; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>genes.push(...this.weightsHO[i]);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>genes.push(...this.biasesH);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>genes.push(...this.biasesO);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return genes;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>loadGenome(genes) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let idx = 0;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let i = 0; i &lt; this.inputSize; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>for (let j = 0; j &lt; this.hiddenSize; j++) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>this.weightsIH[i][j] = genes[idx++];</p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let i = 0; i &lt; this.hiddenSize; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>for (let j = 0; j &lt; this.outputSize; j++) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>this.weightsHO[i][j] = genes[idx++];</p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let j = 0; j &lt; this.hiddenSize; j++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>this.biasesH[j] = genes[idx++];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let j = 0; j &lt; this.outputSize; j++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>this.biasesO[j] = genes[idx++];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// --- AIカー個体クラス ---</p>
-<p class="p1"><span class="Apple-converted-space">    </span>class Car {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>constructor() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.reset();</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.sensorAngles = [</p>
-<p class="p1"><span class="Apple-converted-space">          </span>-Math.PI / 2,<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>-Math.PI / 4,<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>0, <span class="Apple-converted-space">           </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>Math.PI / 4, <span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>Math.PI / 2<span class="Apple-converted-space">   </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.sensorRange = 150;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.sensors = [0, 0, 0, 0, 0];<span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.brain = new NeuralNetwork(5, 4, 2);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.lastHiddenState = [0, 0, 0, 0];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.lastOutputs = [0, 0];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.color = `hsla(${Math.random() * 360}, 100%, 60%, 0.8)`;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.isElite = false;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>reset() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.x = START_POS.x;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.y = START_POS.y;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.angle = START_ANGLE;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.speed = 0;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.alive = true;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.fitness = 0;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.lastCheckpointIndex = -1;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.timeSinceLastCheckpoint = 0;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.checkpointsCleared = 0;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.totalFramesAlive = 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>scan(walls) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let i = 0; i &lt; this.sensorAngles.length; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const sAngle = this.angle + this.sensorAngles[i];</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const xEnd = this.x + Math.cos(sAngle) * this.sensorRange;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const yEnd = this.y + Math.sin(sAngle) * this.sensorRange;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">          </span>let closestDistance = this.sensorRange;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">          </span>walls.forEach(w =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const hit = getIntersection(</p>
-<p class="p1"><span class="Apple-converted-space">              </span>{ x: this.x, y: this.y },</p>
-<p class="p1"><span class="Apple-converted-space">              </span>{ x: xEnd, y: yEnd },</p>
-<p class="p1"><span class="Apple-converted-space">              </span>{ x: w.x1, y: w.y1 },</p>
-<p class="p1"><span class="Apple-converted-space">              </span>{ x: w.x2, y: w.y2 }</p>
-<p class="p1"><span class="Apple-converted-space">            </span>);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (hit) {</p>
-<p class="p1"><span class="Apple-converted-space">              </span>const d = Math.sqrt((hit.x - this.x)**2 + (hit.y - this.y)**2);</p>
-<p class="p1"><span class="Apple-converted-space">              </span>if (d &lt; closestDistance) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>closestDistance = d;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">          </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">          </span>this.sensors[i] = 1 - (closestDistance / this.sensorRange);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>update(walls) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (!this.alive) return;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.totalFramesAlive++;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.timeSinceLastCheckpoint++;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// 3秒チェック</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (this.timeSinceLastCheckpoint &gt; 180) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>this.alive = false;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>sound.playCrash();</p>
-<p class="p1"><span class="Apple-converted-space">          </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.scan(walls);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const { outputs, hiddenOutputs } = this.brain.feedForward(this.sensors);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.lastHiddenState = hiddenOutputs;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.lastOutputs = outputs;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const thrust = (outputs[0] - 0.2) * 5;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const steering = (outputs[1] - 0.5) * 0.12;<span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.angle += steering;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.speed = Math.max(0.5, Math.min(thrust, 4.5));<span class="Apple-converted-space"> </span></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.x += Math.cos(this.angle) * this.speed;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.y += Math.sin(this.angle) * this.speed;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (this.checkCollision(walls)) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>this.alive = false;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>sound.playCrash();</p>
-<p class="p1"><span class="Apple-converted-space">          </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.evalFitness();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>checkCollision(walls) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const radius = 9;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let i = 0; i &lt; walls.length; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const w = walls[i];</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const dist = distToSegment({ x: this.x, y: this.y }, { x: w.x1, y: w.y1 }, { x: w.x2, y: w.y2 });</p>
-<p class="p1"><span class="Apple-converted-space">          </span>if (dist &lt; radius) return true;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return false;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>evalFitness() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let i = 0; i &lt; checkLines.length; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const targetIdx = (this.lastCheckpointIndex + 1) % checkLines.length;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const line = checkLines[targetIdx];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">          </span>const dist = distToSegment({ x: this.x, y: this.y }, { x: line.x1, y: line.y1 }, { x: line.x2, y: line.y2 });</p>
-<p class="p1"><span class="Apple-converted-space">          </span>if (dist &lt; 18) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>this.lastCheckpointIndex = targetIdx;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>this.checkpointsCleared++;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>this.timeSinceLastCheckpoint = 0;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.fitness = (this.checkpointsCleared * 500) + this.totalFramesAlive;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>draw(ctx) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.save();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.translate(this.x, this.y);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.rotate(this.angle);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (this.isElite) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>ctx.shadowBlur = 15;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>ctx.shadowColor = '#fbbf24';<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>ctx.fillStyle = '#fbbf24';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>ctx.shadowBlur = 8;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>ctx.shadowColor = this.color;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>ctx.fillStyle = this.color;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.beginPath();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.moveTo(12, 0);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.lineTo(-8, -7);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.lineTo(-5, 0);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.lineTo(-8, 7);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.closePath();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.fill();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.restore();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (this.isElite &amp;&amp; this.alive) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>ctx.save();</p>
-<p class="p1"><span class="Apple-converted-space">          </span>ctx.lineWidth = 1;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>for (let i = 0; i &lt; this.sensorAngles.length; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const sAngle = this.angle + this.sensorAngles[i];</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const sensorVal = this.sensors[i];<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const actLen = this.sensorRange * (1 - sensorVal);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>ctx.strokeStyle = sensorVal &gt; 0.8 ? 'rgba(239, 68, 68, 0.4)' : 'rgba(16, 185, 129, 0.2)';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>ctx.beginPath();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>ctx.moveTo(this.x, this.y);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>ctx.lineTo(this.x + Math.cos(sAngle) * actLen, this.y + Math.sin(sAngle) * actLen);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>ctx.stroke();</p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">          </span>ctx.restore();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// --- 遺伝的アルゴリズム・マネージャークラス ---</p>
-<p class="p1"><span class="Apple-converted-space">    </span>class GeneticAlgorithm {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>constructor() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.generation = 1;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.population = [];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.initPopulation();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>initPopulation() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.population = [];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let i = 0; i &lt; populationSize; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>this.population.push(new Car());</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.generation = 1;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>uiGeneration.innerText = this.generation;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>evolve() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let maxFitness = -1;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let bestCar = null;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.population.forEach(car =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>if (car.fitness &gt; maxFitness) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>maxFitness = car.fitness;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>bestCar = car;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>uiBestFitness.innerText = (maxFitness / 100).toFixed(1);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const nextGeneration = [];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (bestCar) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const elite = new Car();</p>
-<p class="p1"><span class="Apple-converted-space">          </span>elite.brain.loadGenome(bestCar.brain.getGenome());</p>
-<p class="p1"><span class="Apple-converted-space">          </span>elite.color = '#fbbf24';<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>elite.isElite = true;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>nextGeneration.push(elite);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>while (nextGeneration.length &lt; populationSize) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const parentA = this.rouletteSelect();</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const parentB = this.rouletteSelect();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">          </span>const child = new Car();</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const childGenome = this.crossover(parentA.brain.getGenome(), parentB.brain.getGenome());</p>
-<p class="p1"><span class="Apple-converted-space">          </span>this.mutate(childGenome);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">          </span>child.brain.loadGenome(childGenome);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>nextGeneration.push(child);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.population = nextGeneration;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.generation++;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>uiGeneration.innerText = this.generation;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>sound.playGen();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>rouletteSelect() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let totalFitness = 0;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>this.population.forEach(car =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>totalFitness += Math.max(1, car.fitness);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>let r = Math.random() * totalFitness;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let sum = 0;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let i = 0; i &lt; this.population.length; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>sum += Math.max(1, this.population[i].fitness);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>if (sum &gt;= r) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>return this.population[i];</p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return this.population[0];</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>crossover(parentAGenome, parentBGenome) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const childGenome = [];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let i = 0; i &lt; parentAGenome.length; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>childGenome[i] = Math.random() &lt; 0.5 ? parentAGenome[i] : parentBGenome[i];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return childGenome;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>mutate(genome) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let i = 0; i &lt; genome.length; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>if (Math.random() &lt; mutationRate) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>genome[i] += (Math.random() * 0.4 - 0.2);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (genome[i] &lt; -1) genome[i] = -1;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (genome[i] &gt; 1) genome[i] = 1;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// --- シミュレーション管理システム ---</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const ga = new GeneticAlgorithm();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function getAllWalls() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>return [...outerWalls, ...innerWalls, ...trackObstacles, ...customObstacles];</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function setupCanvas() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>canvas.width = BASE_WIDTH;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>canvas.height = BASE_HEIGHT;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>resizeBrainCanvas();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function resizeBrainCanvas() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const dpr = window.devicePixelRatio || 1;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const rect = brainCanvas.parentElement.getBoundingClientRect();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>brainCanvas.width = rect.width * dpr;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>brainCanvas.height = rect.height * dpr;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>bCtx.scale(dpr, dpr);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function drawBrainStructure(eliteCar) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (!eliteCar) return;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const bw = brainCanvas.width / (window.devicePixelRatio || 1);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const bh = brainCanvas.height / (window.devicePixelRatio || 1);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>bCtx.clearRect(0, 0, bw, bh);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const net = eliteCar.brain;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const neurons = [net.inputSize, net.hiddenSize, net.outputSize];</p>
-<p class="p2"><span class="Apple-converted-space">      </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const layerX = [40, bw / 2, bw - 40];</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const nodeY = [];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>for (let layerIdx = 0; layerIdx &lt; neurons.length; layerIdx++) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>nodeY[layerIdx] = [];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const count = neurons[layerIdx];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const step = bh / (count + 1);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let nodeIdx = 0; nodeIdx &lt; count; nodeIdx++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>nodeY[layerIdx][nodeIdx] = step * (nodeIdx + 1);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>for (let i = 0; i &lt; net.inputSize; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let h = 0; h &lt; net.hiddenSize; h++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const weight = net.weightsIH[i][h];</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const activeVal = eliteCar.sensors[i];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.strokeStyle = weight &gt; 0 ? `rgba(16, 185, 129, ${0.1 + activeVal * 0.5})` : `rgba(239, 68, 68, ${0.1 + activeVal * 0.5})`;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.lineWidth = Math.abs(weight) * 3 * activeVal;</p>
-<p class="p2"><span class="Apple-converted-space">          </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.beginPath();</p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.moveTo(layerX[0], nodeY[0][i]);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.lineTo(layerX[1], nodeY[1][h]);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.stroke();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>for (let h = 0; h &lt; net.hiddenSize; h++) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let o = 0; o &lt; net.outputSize; o++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const weight = net.weightsHO[h][o];</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const activeVal = eliteCar.lastHiddenState[h] || 0;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.strokeStyle = weight &gt; 0 ? `rgba(16, 185, 129, ${0.1 + activeVal * 0.5})` : `rgba(239, 68, 68, ${0.1 + activeVal * 0.5})`;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.lineWidth = Math.abs(weight) * 3 * activeVal;</p>
-<p class="p2"><span class="Apple-converted-space">          </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.beginPath();</p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.moveTo(layerX[1], nodeY[1][h]);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.lineTo(layerX[2], nodeY[2][o]);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.stroke();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>for (let l = 0; l &lt; neurons.length; l++) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const count = neurons[l];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let n = 0; n &lt; count; n++) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const x = layerX[l];</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const y = nodeY[l][n];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">          </span>let nodeVal = 0;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>if (l === 0) nodeVal = eliteCar.sensors[n];</p>
-<p class="p1"><span class="Apple-converted-space">          </span>else if (l === 1) nodeVal = eliteCar.lastHiddenState[n] || 0;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>else nodeVal = eliteCar.lastOutputs[n] || 0;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.save();</p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.shadowBlur = 10;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.shadowColor = '#00f0ff';</p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.fillStyle = `rgba(0, 240, 255, ${0.3 + nodeVal * 0.7})`;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.strokeStyle = '#ffffff';</p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.lineWidth = 1.5;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.beginPath();</p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.arc(x, y, 7, 0, Math.PI * 2);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.fill();</p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.stroke();</p>
-<p class="p1"><span class="Apple-converted-space">          </span>bCtx.restore();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// --- メイン描画＆シミュレーションループ ---</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let frameCount = 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let fpsTimer = 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let lastTime = performance.now();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function loop(timestamp) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const dt = timestamp - lastTime;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>lastTime = timestamp;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>frameCount++;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>fpsTimer += dt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (fpsTimer &gt;= 1000) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>fpsText.innerText = Math.round((frameCount * 1000) / fpsTimer);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>frameCount = 0;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>fpsTimer = 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const currentWalls = getAllWalls();</p>
-<p class="p2"><span class="Apple-converted-space">      </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>for (let s = 0; s &lt; simulationSpeed; s++) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let aliveCount = 0;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>ga.population.forEach(car =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>if (car.alive) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>car.update(currentWalls);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>aliveCount++;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (aliveCount === 0) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>ga.evolve();</p>
-<p class="p1"><span class="Apple-converted-space">          </span>break;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.clearRect(0, 0, BASE_WIDTH, BASE_HEIGHT);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>drawCircuit(ctx);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.save();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.shadowBlur = 12;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.shadowColor = '#ef4444';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.strokeStyle = '#ef4444';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.lineWidth = 4;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>customObstacles.forEach(o =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.beginPath();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.moveTo(o.x1, o.y1);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.lineTo(o.x2, o.y2);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.stroke();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.restore();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>let aliveCount = 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>let eliteCar = null;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>ga.population.forEach(car =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>car.draw(ctx);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (car.alive) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>aliveCount++;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>if (!eliteCar || car.fitness &gt; eliteCar.fitness) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>eliteCar = car;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (!eliteCar) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>eliteCar = ga.population[0];</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>drawBrainStructure(eliteCar);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>uiAlive.innerText = `${aliveCount}/${populationSize}`;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>requestAnimationFrame(loop);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function drawCircuit(ctx) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.save();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.fillStyle = '#090d16';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.beginPath();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.moveTo(outerWalls[0].x1, outerWalls[0].y1);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>for(let i=1; i&lt;outerWalls.length; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.lineTo(outerWalls[i].x1, outerWalls[i].y1);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.closePath();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.fill();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.fillStyle = '#020617';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.beginPath();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.moveTo(innerWalls[0].x1, innerWalls[0].y1);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>for(let i=1; i&lt;innerWalls.length; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.lineTo(innerWalls[i].x1, innerWalls[i].y1);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.closePath();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.fill();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.shadowBlur = 10;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.shadowColor = '#10b981';<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.strokeStyle = '#10b981';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.lineWidth = 3;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.beginPath();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>outerWalls.forEach(w =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.moveTo(w.x1, w.y1);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.lineTo(w.x2, w.y2);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.stroke();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.shadowBlur = 10;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.shadowColor = '#06b6d4';<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.strokeStyle = '#06b6d4';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.lineWidth = 3;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.beginPath();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>innerWalls.forEach(w =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.moveTo(w.x1, w.y1);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.lineTo(w.x2, w.y2);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.stroke();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.shadowBlur = 12;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.shadowColor = '#f43f5e';<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.strokeStyle = '#f43f5e';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.lineWidth = 5;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.beginPath();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>trackObstacles.forEach(o =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.moveTo(o.x1, o.y1);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.lineTo(o.x2, o.y2);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.stroke();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.shadowBlur = 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.strokeStyle = 'rgba(251, 191, 36, 0.08)';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.lineWidth = 1;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.beginPath();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>checkLines.forEach(l =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.moveTo(l.x1, l.y1);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.lineTo(l.x2, l.y2);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.stroke();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.save();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.strokeStyle = '#ffffff';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.lineWidth = 4;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.setLineDash([4, 4]);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.beginPath();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.moveTo(170, 500);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.lineTo(50, 500);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.stroke();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.restore();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.restore();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// --- 🛠️ ユーザーによるドラッグ障害物の設置 (iPad / タッチ完全対応版) ---</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let dragStartPos = null;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function getMousePos(e) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const rect = canvas.getBoundingClientRect();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>let clientX, clientY;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>// iOS/iPadOS Safariの `touchend` 時でも絶対に落ちない頑丈な座標判定</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (e.touches &amp;&amp; e.touches.length &gt; 0) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>clientX = e.touches[0].clientX;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>clientY = e.touches[0].clientY;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>} else if (e.changedTouches &amp;&amp; e.changedTouches.length &gt; 0) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>clientX = e.changedTouches[0].clientX;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>clientY = e.changedTouches[0].clientY;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>clientX = e.clientX;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>clientY = e.clientY;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><span class="Apple-converted-space">      </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>return {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>x: ((clientX - rect.left) / rect.width) * BASE_WIDTH,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>y: ((clientY - rect.top) / rect.height) * BASE_HEIGHT</p>
-<p class="p1"><span class="Apple-converted-space">      </span>};</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function onDragStart(e) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>sound.init(); // 最初のインタラクションでオーディオのロックを解除</p>
-<p class="p1"><span class="Apple-converted-space">      </span>dragStartPos = getMousePos(e);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function onDragEnd(e) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (!dragStartPos) return;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const endPos = getMousePos(e);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const dist = Math.sqrt((endPos.x - dragStartPos.x)**2 + (endPos.y - dragStartPos.y)**2);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (dist &gt; 15) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>customObstacles.push({</p>
-<p class="p1"><span class="Apple-converted-space">          </span>x1: dragStartPos.x,</p>
-<p class="p1"><span class="Apple-converted-space">          </span>y1: dragStartPos.y,</p>
-<p class="p1"><span class="Apple-converted-space">          </span>x2: endPos.x,</p>
-<p class="p1"><span class="Apple-converted-space">          </span>y2: endPos.y</p>
-<p class="p1"><span class="Apple-converted-space">        </span>});</p>
-<p class="p1"><span class="Apple-converted-space">        </span>sound.playHit();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>dragStartPos = null;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// イベント登録</p>
-<p class="p1"><span class="Apple-converted-space">    </span>canvas.addEventListener('mousedown', onDragStart);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>canvas.addEventListener('mouseup', onDragEnd);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>canvas.addEventListener('touchstart', onDragStart, { passive: true });</p>
-<p class="p1"><span class="Apple-converted-space">    </span>canvas.addEventListener('touchend', onDragEnd, { passive: true });</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// --- ⚙️ コントロールパネルのイベント群 ---</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>slideMutation.addEventListener('input', (e) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>mutationRate = e.target.value / 100;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>valMutation.innerText = `${e.target.value}%`;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>uiMutationLabel.innerText = `${e.target.value}%`;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>slidePopulation.addEventListener('input', (e) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>populationSize = parseInt(e.target.value);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>valPopulation.innerText = populationSize;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>const speedButtons = [speed1x, speed2x, speed5x, speed10x];</p>
-<p class="p1"><span class="Apple-converted-space">    </span>function setSpeed(speed, activeBtn) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>simulationSpeed = speed;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>speedButtons.forEach(btn =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>btn.className = "px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition-all";</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p1"><span class="Apple-converted-space">      </span>activeBtn.className = "px-2.5 py-1 rounded-md bg-emerald-600 text-white font-bold transition-all";</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>speed1x.addEventListener('click', () =&gt; setSpeed(1, speed1x));</p>
-<p class="p1"><span class="Apple-converted-space">    </span>speed2x.addEventListener('click', () =&gt; setSpeed(2, speed2x));</p>
-<p class="p1"><span class="Apple-converted-space">    </span>speed5x.addEventListener('click', () =&gt; setSpeed(5, speed5x));</p>
-<p class="p1"><span class="Apple-converted-space">    </span>speed10x.addEventListener('click', () =&gt; setSpeed(10, speed10x));</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>btnClearCustomObstacles.addEventListener('click', () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>customObstacles = [];</p>
-<p class="p1"><span class="Apple-converted-space">    </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>btnNextGenForce.addEventListener('click', () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ga.evolve();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>btnResetEvolution = document.getElementById('btnResetEvolution').addEventListener('click', () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>customObstacles = [];</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ga.initPopulation();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>});</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// --- 📐 幾何計算ヘルパー ---</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function getIntersection(A, B, C, D) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const tTop = (D.x - C.x) * (A.y - C.y) - (D.y - C.y) * (A.x - C.x);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const uTop = (C.y - A.y) * (A.x - B.x) - (C.x - A.x) * (A.y - B.y);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const bottom = (D.y - C.y) * (B.x - A.x) - (D.x - C.x) * (B.y - A.y);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (bottom !== 0) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const t = tTop / bottom;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const u = uTop / bottom;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (t &gt;= 0 &amp;&amp; t &lt;= 1 &amp;&amp; u &gt;= 0 &amp;&amp; u &lt;= 1) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>return {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>x: lerp(A.x, B.x, t),</p>
-<p class="p1"><span class="Apple-converted-space">            </span>y: lerp(A.y, B.y, t),</p>
-<p class="p1"><span class="Apple-converted-space">            </span>offset: t</p>
-<p class="p1"><span class="Apple-converted-space">          </span>};</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>return null;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function lerp(A, B, t) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>return A + (B - A) * t;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function distToSegment(p, a, b) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const l2 = (a.x - b.x)**2 + (a.y - b.y)**2;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (l2 === 0) return Math.sqrt((p.x - a.x)**2 + (p.y - a.y)**2);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>let t = ((p.x - a.x) * (b.x - a.x) + (p.y - a.y) * (b.y - a.y)) / l2;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>t = Math.max(0, Math.min(1, t));</p>
-<p class="p1"><span class="Apple-converted-space">      </span>return Math.sqrt((p.x - (a.x + t * (b.x - a.x)))**2 + (p.y - (a.y + t * (b.y - a.y)))**2);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// --- 起動 ---</p>
-<p class="p1"><span class="Apple-converted-space">    </span>window.onload = function() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>setupCanvas();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>window.addEventListener('resize', resizeBrainCanvas);</p>
-<p class="p2"><span class="Apple-converted-space">      </span></p>
-<p class="p1"><span class="Apple-converted-space">      </span>ga.initPopulation();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>lastTime = performance.now();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>requestAnimationFrame(loop);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>};</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between overflow-hidden relative">
+
+  <!-- 背景演出 -->
+  <div class="absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.9)_2px,transparent_2px),linear-gradient(90deg,rgba(15,23,42,0.9)_2px,transparent_2px)] bg-[size:25px_25px] [mask-image:radial-gradient(ellipse_at_center,transparent_40%,black)] pointer-events-none z-0"></div>
+
+  <!-- ヘッダー -->
+  <header class="w-full px-5 py-3 border-b border-slate-900 bg-slate-950/80 backdrop-blur z-10 safe-pt flex items-center justify-between">
+    <div class="flex flex-col">
+      <h1 class="text-base font-extrabold tracking-wider bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent uppercase">Evo-Neon Cars</h1>
+      <span class="text-[9px] text-emerald-400 font-mono-tech tracking-widest uppercase">GENETIC ALGORITHM LAB // IPAD PRO OPTIMIZED</span>
+    </div>
+    <div class="flex items-center space-x-2 text-xs font-mono-tech bg-slate-900/90 border border-slate-800 px-3 py-1 rounded-full text-slate-300">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+      <span>GEN: <span id="uiGeneration" class="text-emerald-400 font-bold">1</span></span>
+    </div>
+  </header>
+
+  <!-- メインシミュレーションコンテナ (グリッド配置) -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-3 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden z-10">
+    
+    <!-- 左：シミュレータ本体 (7カラム) -->
+    <div class="lg:col-span-7 flex flex-col space-y-3 relative h-full min-h-[350px]">
+      
+      <!-- コントロール簡易HUD -->
+      <div class="flex items-center justify-between bg-slate-900/60 border border-slate-800/80 rounded-xl p-2.5 text-xs">
+        <div class="flex items-center space-x-3">
+          <span class="text-slate-400">生存: <strong id="uiAlive" class="text-emerald-400 font-bold">0/0</strong></span>
+          <span class="text-slate-400">最高適応度: <strong id="uiBestFitness" class="text-cyan-400 font-bold">0.0</strong></span>
+        </div>
+        
+        <!-- 倍速コントローラー -->
+        <div class="flex bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-[10px]">
+          <button id="speed1x" class="px-2.5 py-1 rounded-md bg-emerald-600 text-white font-bold transition-all">1x</button>
+          <button id="speed2x" class="px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition-all">2x</button>
+          <button id="speed5x" class="px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition-all">5x</button>
+          <button id="speed10x" class="px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition-all">10x</button>
+        </div>
+      </div>
+
+      <!-- キャンバスエリア -->
+      <div class="flex-1 flex items-center justify-center relative bg-slate-950/90 rounded-2xl border border-slate-800/80 overflow-hidden shadow-2xl">
+        <canvas id="simCanvas" class="max-w-full max-h-full aspect-[4/3] rounded-xl cursor-crosshair"></canvas>
+        
+        <!-- キャンバスオーバーレイメッセージ -->
+        <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between pointer-events-none text-[10px] text-slate-500 bg-slate-950/80 px-3 py-1.5 rounded-lg border border-slate-900">
+          <span>💡 ドラッグしてコース上に新しい壁を自由に配置できます</span>
+          <button id="btnClearCustomObstacles" class="pointer-events-auto text-slate-400 hover:text-rose-400 active:scale-95 font-semibold transition-all">自作壁を消去</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右：AIステータス ＆ パラメータ (5カラム) -->
+    <div class="lg:col-span-5 flex flex-col space-y-4 h-full overflow-y-auto">
+      
+      <!-- パラメータコントロール -->
+      <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 shadow-xl space-y-4">
+        <h2 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+          <span class="w-1.5 h-3 bg-emerald-500 rounded-full inline-block"></span>
+          進化パラメータ
+        </h2>
+
+        <div class="space-y-3">
+          <!-- 突然変異率 -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label for="slideMutation" class="text-xs text-slate-300">突然変異率 (遺伝の多様性)</label>
+              <span id="valMutation" class="text-xs font-mono-tech font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">10%</span>
+            </div>
+            <input type="range" id="slideMutation" min="1" max="50" value="10" class="w-full h-1 bg-slate-950 rounded-lg appearance-none cursor-pointer">
+            <p class="text-[9px] text-slate-500 mt-1">高くすると変則的な天才が生まれやすく、低くすると安定した引き継ぎになります。</p>
+          </div>
+
+          <!-- 個体数 -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label for="slidePopulation" class="text-xs text-slate-300">個体数 (1世代あたりの車)</label>
+              <span id="valPopulation" class="text-xs font-mono-tech font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">40</span>
+            </div>
+            <input type="range" id="slidePopulation" min="10" max="100" value="40" class="w-full h-1 bg-slate-950 rounded-lg appearance-none cursor-pointer">
+            <p class="text-[9px] text-slate-500 mt-1">※変更は次世代から反映されます。個体数が多いほど最適解を早く見つけられます。</p>
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <button id="btnNextGenForce" class="flex-1 bg-emerald-600/20 hover:bg-emerald-600 border border-emerald-500/40 hover:border-emerald-500 text-emerald-300 hover:text-white text-xs font-bold py-2.5 rounded-xl transition-all active:scale-95 cursor-pointer">
+            強制世代交代 (評価へ)
+          </button>
+          <button id="btnResetEvolution" class="bg-slate-950 hover:bg-rose-950/20 border border-slate-800 hover:border-rose-900 text-slate-400 hover:text-rose-400 text-xs font-bold py-2.5 px-4 rounded-xl transition-all active:scale-95 cursor-pointer">
+            リセット
+          </button>
+        </div>
+      </div>
+
+      <!-- 🧠 脳内可視化 (ニューラルネットワーク構造) -->
+      <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 shadow-xl flex-1 flex flex-col justify-between">
+        <div>
+          <h2 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest flex items-center gap-1.5 mb-2">
+            <span class="w-1.5 h-3 bg-cyan-500 rounded-full inline-block"></span>
+            エリート脳のリアルタイム思考
+          </h2>
+          <p class="text-[10px] text-slate-400 leading-relaxed">
+            現在最も好成績を収めている「エリート車」のニューラルネットワークです。5つの距離センサーの反応が、操舵角と加速にどう伝達されているか（太さ＝結合強度）を可視化しています。
+          </p>
+        </div>
+
+        <!-- ネットワーク描画キャンバス -->
+        <div class="flex-1 flex items-center justify-center my-3 bg-slate-950 rounded-xl border border-slate-900 relative min-h-[160px]">
+          <canvas id="brainCanvas" class="w-full h-full max-h-[220px]"></canvas>
+          <div class="absolute left-2 top-2 text-[9px] text-slate-500 flex flex-col">
+            <span>LEFT</span>
+            <span>FRONT-LEFT</span>
+            <span>FRONT</span>
+            <span>FRONT-RIGHT</span>
+            <span>RIGHT</span>
+          </div>
+          <div class="absolute right-2 top-2 text-[9px] text-slate-500 text-right flex flex-col justify-between h-[80%]">
+            <span>前進パワー</span>
+            <span class="mt-auto">ステアリング</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="w-full px-5 py-3 border-t border-slate-900 bg-slate-950/90 text-center text-xs text-slate-500 z-10 safe-pb flex flex-col sm:flex-row items-center justify-between gap-2">
+    <p>© 2026 AI Biology Laboratory. 120Hz Realtime Local Physics & GA.</p>
+    <div class="flex items-center space-x-3 text-slate-400">
+      <span>突然変異: <strong id="uiMutationLabel" class="text-slate-300">10%</strong></span>
+      <span>|</span>
+      <span>選択アルゴリズム: <strong class="text-slate-300">エリート＋ルーレット</strong></span>
+    </div>
+  </footer>
+
+  <script>
+    // --- 音響システム (Web Audio API) iOS/iPadOSガード付き ---
+    class Synth {
+      constructor() {
+        this.ctx = null;
+      }
+      init() {
+        try {
+          if (!this.ctx) {
+            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+          }
+          if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume();
+          }
+        } catch (e) {
+          console.warn("Audio initialization blocked or not supported on this browser.");
+        }
+      }
+      playGen() {
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+          const notes = [523.25, 659.25, 783.99]; 
+          notes.forEach((freq, idx) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+            gain.gain.setValueAtTime(0.08, now + idx * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now + idx * 0.08);
+            osc.stop(now + idx * 0.08 + 0.3);
+          });
+        } catch (err) {}
+      }
+      playCrash() {
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const bufferSize = this.ctx.sampleRate * 0.06;
+          const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+          }
+          const noise = this.ctx.createBufferSource();
+          noise.buffer = buffer;
+          const gain = this.ctx.createGain();
+          gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.06);
+          noise.connect(gain);
+          gain.connect(this.ctx.destination);
+          noise.start();
+        } catch (err) {}
+      }
+    }
+    const sound = new Synth();
+
+    // --- HTML / Canvas 設定 ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    const brainCanvas = document.getElementById('brainCanvas');
+    const bCtx = brainCanvas.getContext('2d');
+
+    // UIテキスト
+    const uiGeneration = document.getElementById('uiGeneration');
+    const uiAlive = document.getElementById('uiAlive');
+    const uiBestFitness = document.getElementById('uiBestFitness');
+    const fpsText = document.getElementById('fpsText');
+    const valMutation = document.getElementById('valMutation');
+    const valPopulation = document.getElementById('valPopulation');
+    const uiMutationLabel = document.getElementById('uiMutationLabel');
+
+    // スライダー
+    const slideMutation = document.getElementById('slideMutation');
+    const slidePopulation = document.getElementById('slidePopulation');
+
+    // ボタン
+    const speed1x = document.getElementById('speed1x');
+    const speed2x = document.getElementById('speed2x');
+    const speed5x = document.getElementById('speed5x');
+    const speed10x = document.getElementById('speed10x');
+    const btnNextGenForce = document.getElementById('btnNextGenForce');
+    const btnResetEvolution = document.getElementById('btnResetEvolution');
+    const btnClearCustomObstacles = document.getElementById('btnClearCustomObstacles');
+
+    // 定数
+    const BASE_WIDTH = 800;
+    const BASE_HEIGHT = 600;
+    let populationSize = 40;
+    let mutationRate = 0.10;
+    let simulationSpeed = 1;
+
+    // --- コース壁（静的データ） ---
+    const outerWalls = [
+      { x1: 50, y1: 50, x2: 750, y2: 50 },
+      { x1: 750, y1: 50, x2: 750, y2: 550 },
+      { x1: 750, y1: 550, x2: 50, y2: 550 },
+      { x1: 50, y1: 550, x2: 50, y2: 550 }
+    ];
+
+    const innerWalls = [
+      { x1: 170, y1: 170, x2: 630, y2: 170 },
+      { x1: 630, y1: 170, x2: 630, y2: 430 },
+      { x1: 630, y1: 430, x2: 170, y2: 430 },
+      { x1: 170, y1: 430, x2: 170, y2: 170 }
+    ];
+
+    const trackObstacles = [
+      { x1: 300, y1: 50, x2: 300, y2: 170 }, 
+      { x1: 500, y1: 430, x2: 500, y2: 550 }  
+    ];
+
+    let customObstacles = [];
+
+    // チェックポイント
+    const checkLines = [
+      { x1: 170, y1: 430, x2: 50, y2: 430 },  
+      { x1: 170, y1: 300, x2: 50, y2: 300 },
+      { x1: 170, y1: 170, x2: 50, y2: 170 },  
+      { x1: 300, y1: 170, x2: 300, y2: 50 },
+      { x1: 450, y1: 170, x2: 450, y2: 50 },
+      { x1: 630, y1: 170, x2: 750, y2: 170 }, 
+      { x1: 630, y1: 300, x2: 750, y2: 300 },
+      { x1: 630, y1: 430, x2: 750, y2: 430 }, 
+      { x1: 450, y1: 430, x2: 450, y2: 550 },
+      { x1: 300, y1: 430, x2: 300, y2: 550 }
+    ];
+
+    const START_POS = { x: 110, y: 500 };
+    const START_ANGLE = -Math.PI / 2; 
+
+    // 安全な角丸長方形の描画ヘルパー (ブラウザ依存性を排除)
+    function drawRoundRect(c, x, y, width, height, radius) {
+      c.beginPath();
+      c.moveTo(x + radius, y);
+      c.lineTo(x + width - radius, y);
+      c.quadraticCurveTo(x + width, y, x + width, y + radius);
+      c.lineTo(x + width, y + height - radius);
+      c.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      c.lineTo(x + radius, y + height);
+      c.quadraticCurveTo(x, y + height, x, y + height - radius);
+      c.lineTo(x, y + radius);
+      c.quadraticCurveTo(x, y, x + radius, y);
+      c.closePath();
+    }
+
+    // --- ニューラルネットワーククラス ---
+    class NeuralNetwork {
+      constructor(inputSize, hiddenSize, outputSize) {
+        this.inputSize = inputSize;
+        this.hiddenSize = hiddenSize;
+        this.outputSize = outputSize;
+
+        this.weightsIH = []; 
+        this.weightsHO = []; 
+
+        this.biasesH = []; 
+        this.biasesO = []; 
+
+        this.initRandom();
+      }
+
+      initRandom() {
+        for (let i = 0; i < this.inputSize; i++) {
+          this.weightsIH[i] = [];
+          for (let j = 0; j < this.hiddenSize; j++) {
+            this.weightsIH[i][j] = Math.random() * 2 - 1;
+          }
+        }
+        for (let i = 0; i < this.hiddenSize; i++) {
+          this.weightsHO[i] = [];
+          for (let j = 0; j < this.outputSize; j++) {
+            this.weightsHO[i][j] = Math.random() * 2 - 1;
+          }
+        }
+        for (let j = 0; j < this.hiddenSize; j++) {
+          this.biasesH[j] = Math.random() * 2 - 1;
+        }
+        for (let j = 0; j < this.outputSize; j++) {
+          this.biasesO[j] = Math.random() * 2 - 1;
+        }
+      }
+
+      activate(x) {
+        return 1 / (1 + Math.exp(-x));
+      }
+
+      feedForward(inputs) {
+        const hiddenOutputs = [];
+        for (let j = 0; j < this.hiddenSize; j++) {
+          let sum = 0;
+          for (let i = 0; i < this.inputSize; i++) {
+            sum += inputs[i] * this.weightsIH[i][j];
+          }
+          sum += this.biasesH[j];
+          hiddenOutputs[j] = this.activate(sum);
+        }
+
+        const outputs = [];
+        for (let j = 0; j < this.outputSize; j++) {
+          let sum = 0;
+          for (let i = 0; i < this.hiddenSize; i++) {
+            sum += hiddenOutputs[i] * this.weightsHO[i][j];
+          }
+          sum += this.biasesO[j];
+          outputs[j] = this.activate(sum);
+        }
+
+        return { outputs, hiddenOutputs };
+      }
+
+      getGenome() {
+        const genes = [];
+        for (let i = 0; i < this.inputSize; i++) {
+          genes.push(...this.weightsIH[i]);
+        }
+        for (let i = 0; i < this.hiddenSize; i++) {
+          genes.push(...this.weightsHO[i]);
+        }
+        genes.push(...this.biasesH);
+        genes.push(...this.biasesO);
+        return genes;
+      }
+
+      loadGenome(genes) {
+        let idx = 0;
+        for (let i = 0; i < this.inputSize; i++) {
+          for (let j = 0; j < this.hiddenSize; j++) {
+            this.weightsIH[i][j] = genes[idx++];
+          }
+        }
+        for (let i = 0; i < this.hiddenSize; i++) {
+          for (let j = 0; j < this.outputSize; j++) {
+            this.weightsHO[i][j] = genes[idx++];
+          }
+        }
+        for (let j = 0; j < this.hiddenSize; j++) {
+          this.biasesH[j] = genes[idx++];
+        }
+        for (let j = 0; j < this.outputSize; j++) {
+          this.biasesO[j] = genes[idx++];
+        }
+      }
+    }
+
+
+    // --- AIカー個体クラス ---
+    class Car {
+      constructor() {
+        this.reset();
+        
+        this.sensorAngles = [
+          -Math.PI / 2, 
+          -Math.PI / 4, 
+          0,            
+          Math.PI / 4,  
+          Math.PI / 2   
+        ];
+        this.sensorRange = 150; 
+        this.sensors = [0, 0, 0, 0, 0]; 
+
+        this.brain = new NeuralNetwork(5, 4, 2);
+        this.lastHiddenState = [0, 0, 0, 0];
+        this.lastOutputs = [0, 0];
+
+        this.color = `hsla(${Math.random() * 360}, 100%, 60%, 0.8)`;
+        this.isElite = false;
+      }
+
+      reset() {
+        this.x = START_POS.x;
+        this.y = START_POS.y;
+        this.angle = START_ANGLE;
+        this.speed = 0;
+        this.alive = true;
+        
+        this.fitness = 0;
+        this.lastCheckpointIndex = -1;
+        this.timeSinceLastCheckpoint = 0;
+        this.checkpointsCleared = 0;
+        this.totalFramesAlive = 0;
+      }
+
+      scan(walls) {
+        for (let i = 0; i < this.sensorAngles.length; i++) {
+          const sAngle = this.angle + this.sensorAngles[i];
+          const xEnd = this.x + Math.cos(sAngle) * this.sensorRange;
+          const yEnd = this.y + Math.sin(sAngle) * this.sensorRange;
+
+          let closestDistance = this.sensorRange;
+
+          walls.forEach(w => {
+            const hit = getIntersection(
+              { x: this.x, y: this.y },
+              { x: xEnd, y: yEnd },
+              { x: w.x1, y: w.y1 },
+              { x: w.x2, y: w.y2 }
+            );
+
+            if (hit) {
+              const d = Math.sqrt((hit.x - this.x)**2 + (hit.y - this.y)**2);
+              if (d < closestDistance) {
+                closestDistance = d;
+              }
+            }
+          });
+
+          this.sensors[i] = 1 - (closestDistance / this.sensorRange);
+        }
+      }
+
+      update(walls) {
+        if (!this.alive) return;
+
+        this.totalFramesAlive++;
+        this.timeSinceLastCheckpoint++;
+
+        // 3秒チェック
+        if (this.timeSinceLastCheckpoint > 180) {
+          this.alive = false;
+          sound.playCrash();
+          return;
+        }
+
+        this.scan(walls);
+
+        const { outputs, hiddenOutputs } = this.brain.feedForward(this.sensors);
+        this.lastHiddenState = hiddenOutputs;
+        this.lastOutputs = outputs;
+
+        const thrust = (outputs[0] - 0.2) * 5; 
+        const steering = (outputs[1] - 0.5) * 0.12; 
+
+        this.angle += steering;
+        this.speed = Math.max(0.5, Math.min(thrust, 4.5)); 
+
+        this.x += Math.cos(this.angle) * this.speed;
+        this.y += Math.sin(this.angle) * this.speed;
+
+        if (this.checkCollision(walls)) {
+          this.alive = false;
+          sound.playCrash();
+          return;
+        }
+
+        this.evalFitness();
+      }
+
+      checkCollision(walls) {
+        const radius = 9;
+        for (let i = 0; i < walls.length; i++) {
+          const w = walls[i];
+          const dist = distToSegment({ x: this.x, y: this.y }, { x: w.x1, y: w.y1 }, { x: w.x2, y: w.y2 });
+          if (dist < radius) return true;
+        }
+        return false;
+      }
+
+      evalFitness() {
+        for (let i = 0; i < checkLines.length; i++) {
+          const targetIdx = (this.lastCheckpointIndex + 1) % checkLines.length;
+          const line = checkLines[targetIdx];
+
+          const dist = distToSegment({ x: this.x, y: this.y }, { x: line.x1, y: line.y1 }, { x: line.x2, y: line.y2 });
+          if (dist < 18) {
+            this.lastCheckpointIndex = targetIdx;
+            this.checkpointsCleared++;
+            this.timeSinceLastCheckpoint = 0; 
+          }
+        }
+
+        this.fitness = (this.checkpointsCleared * 500) + this.totalFramesAlive;
+      }
+
+      draw(ctx) {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+
+        if (this.isElite) {
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = '#fbbf24'; 
+          ctx.fillStyle = '#fbbf24';
+        } else {
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = this.color;
+          ctx.fillStyle = this.color;
+        }
+
+        ctx.beginPath();
+        ctx.moveTo(12, 0);
+        ctx.lineTo(-8, -7);
+        ctx.lineTo(-5, 0);
+        ctx.lineTo(-8, 7);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.restore();
+
+        if (this.isElite && this.alive) {
+          ctx.save();
+          ctx.lineWidth = 1;
+          for (let i = 0; i < this.sensorAngles.length; i++) {
+            const sAngle = this.angle + this.sensorAngles[i];
+            const sensorVal = this.sensors[i]; 
+            const actLen = this.sensorRange * (1 - sensorVal);
+
+            ctx.strokeStyle = sensorVal > 0.8 ? 'rgba(239, 68, 68, 0.4)' : 'rgba(16, 185, 129, 0.2)';
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y);
+            ctx.lineTo(this.x + Math.cos(sAngle) * actLen, this.y + Math.sin(sAngle) * actLen);
+            ctx.stroke();
+          }
+          ctx.restore();
+        }
+      }
+    }
+
+
+    // --- 遺伝的アルゴリズム・マネージャークラス ---
+    class GeneticAlgorithm {
+      constructor() {
+        this.generation = 1;
+        this.population = [];
+        this.initPopulation();
+      }
+
+      initPopulation() {
+        this.population = [];
+        for (let i = 0; i < populationSize; i++) {
+          this.population.push(new Car());
+        }
+        this.generation = 1;
+        uiGeneration.innerText = this.generation;
+      }
+
+      evolve() {
+        let maxFitness = -1;
+        let bestCar = null;
+
+        this.population.forEach(car => {
+          if (car.fitness > maxFitness) {
+            maxFitness = car.fitness;
+            bestCar = car;
+          }
+        });
+
+        uiBestFitness.innerText = (maxFitness / 100).toFixed(1);
+
+        const nextGeneration = [];
+
+        if (bestCar) {
+          const elite = new Car();
+          elite.brain.loadGenome(bestCar.brain.getGenome());
+          elite.color = '#fbbf24'; 
+          elite.isElite = true;
+          nextGeneration.push(elite);
+        }
+
+        while (nextGeneration.length < populationSize) {
+          const parentA = this.rouletteSelect();
+          const parentB = this.rouletteSelect();
+
+          const child = new Car();
+          const childGenome = this.crossover(parentA.brain.getGenome(), parentB.brain.getGenome());
+          this.mutate(childGenome);
+
+          child.brain.loadGenome(childGenome);
+          nextGeneration.push(child);
+        }
+
+        this.population = nextGeneration;
+        this.generation++;
+        uiGeneration.innerText = this.generation;
+
+        sound.playGen();
+      }
+
+      rouletteSelect() {
+        let totalFitness = 0;
+        this.population.forEach(car => {
+          totalFitness += Math.max(1, car.fitness);
+        });
+
+        let r = Math.random() * totalFitness;
+        let sum = 0;
+        for (let i = 0; i < this.population.length; i++) {
+          sum += Math.max(1, this.population[i].fitness);
+          if (sum >= r) {
+            return this.population[i];
+          }
+        }
+        return this.population[0];
+      }
+
+      crossover(parentAGenome, parentBGenome) {
+        const childGenome = [];
+        for (let i = 0; i < parentAGenome.length; i++) {
+          childGenome[i] = Math.random() < 0.5 ? parentAGenome[i] : parentBGenome[i];
+        }
+        return childGenome;
+      }
+
+      mutate(genome) {
+        for (let i = 0; i < genome.length; i++) {
+          if (Math.random() < mutationRate) {
+            genome[i] += (Math.random() * 0.4 - 0.2);
+            if (genome[i] < -1) genome[i] = -1;
+            if (genome[i] > 1) genome[i] = 1;
+          }
+        }
+      }
+    }
+
+
+    // --- シミュレーション管理システム ---
+    const ga = new GeneticAlgorithm();
+
+    function getAllWalls() {
+      return [...outerWalls, ...innerWalls, ...trackObstacles, ...customObstacles];
+    }
+
+    function setupCanvas() {
+      canvas.width = BASE_WIDTH;
+      canvas.height = BASE_HEIGHT;
+      resizeBrainCanvas();
+    }
+
+    function resizeBrainCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = brainCanvas.parentElement.getBoundingClientRect();
+      brainCanvas.width = rect.width * dpr;
+      brainCanvas.height = rect.height * dpr;
+      bCtx.scale(dpr, dpr);
+    }
+
+    function drawBrainStructure(eliteCar) {
+      if (!eliteCar) return;
+
+      const bw = brainCanvas.width / (window.devicePixelRatio || 1);
+      const bh = brainCanvas.height / (window.devicePixelRatio || 1);
+      bCtx.clearRect(0, 0, bw, bh);
+
+      const net = eliteCar.brain;
+      const neurons = [net.inputSize, net.hiddenSize, net.outputSize];
+      
+      const layerX = [40, bw / 2, bw - 40];
+      const nodeY = [];
+
+      for (let layerIdx = 0; layerIdx < neurons.length; layerIdx++) {
+        nodeY[layerIdx] = [];
+        const count = neurons[layerIdx];
+        const step = bh / (count + 1);
+        for (let nodeIdx = 0; nodeIdx < count; nodeIdx++) {
+          nodeY[layerIdx][nodeIdx] = step * (nodeIdx + 1);
+        }
+      }
+
+      for (let i = 0; i < net.inputSize; i++) {
+        for (let h = 0; h < net.hiddenSize; h++) {
+          const weight = net.weightsIH[i][h];
+          const activeVal = eliteCar.sensors[i];
+
+          bCtx.strokeStyle = weight > 0 ? `rgba(16, 185, 129, ${0.1 + activeVal * 0.5})` : `rgba(239, 68, 68, ${0.1 + activeVal * 0.5})`;
+          bCtx.lineWidth = Math.abs(weight) * 3 * activeVal;
+          
+          bCtx.beginPath();
+          bCtx.moveTo(layerX[0], nodeY[0][i]);
+          bCtx.lineTo(layerX[1], nodeY[1][h]);
+          bCtx.stroke();
+        }
+      }
+
+      for (let h = 0; h < net.hiddenSize; h++) {
+        for (let o = 0; o < net.outputSize; o++) {
+          const weight = net.weightsHO[h][o];
+          const activeVal = eliteCar.lastHiddenState[h] || 0;
+
+          bCtx.strokeStyle = weight > 0 ? `rgba(16, 185, 129, ${0.1 + activeVal * 0.5})` : `rgba(239, 68, 68, ${0.1 + activeVal * 0.5})`;
+          bCtx.lineWidth = Math.abs(weight) * 3 * activeVal;
+          
+          bCtx.beginPath();
+          bCtx.moveTo(layerX[1], nodeY[1][h]);
+          bCtx.lineTo(layerX[2], nodeY[2][o]);
+          bCtx.stroke();
+        }
+      }
+
+      for (let l = 0; l < neurons.length; l++) {
+        const count = neurons[l];
+        for (let n = 0; n < count; n++) {
+          const x = layerX[l];
+          const y = nodeY[l][n];
+
+          let nodeVal = 0;
+          if (l === 0) nodeVal = eliteCar.sensors[n];
+          else if (l === 1) nodeVal = eliteCar.lastHiddenState[n] || 0;
+          else nodeVal = eliteCar.lastOutputs[n] || 0;
+
+          bCtx.save();
+          bCtx.shadowBlur = 10;
+          bCtx.shadowColor = '#00f0ff';
+          bCtx.fillStyle = `rgba(0, 240, 255, ${0.3 + nodeVal * 0.7})`;
+          bCtx.strokeStyle = '#ffffff';
+          bCtx.lineWidth = 1.5;
+
+          bCtx.beginPath();
+          bCtx.arc(x, y, 7, 0, Math.PI * 2);
+          bCtx.fill();
+          bCtx.stroke();
+          bCtx.restore();
+        }
+      }
+    }
+
+
+    // --- メイン描画＆シミュレーションループ ---
+    let frameCount = 0;
+    let fpsTimer = 0;
+    let lastTime = performance.now();
+
+    function loop(timestamp) {
+      const dt = timestamp - lastTime;
+      lastTime = timestamp;
+
+      frameCount++;
+      fpsTimer += dt;
+      if (fpsTimer >= 1000) {
+        fpsText.innerText = Math.round((frameCount * 1000) / fpsTimer);
+        frameCount = 0;
+        fpsTimer = 0;
+      }
+
+      const currentWalls = getAllWalls();
+      
+      for (let s = 0; s < simulationSpeed; s++) {
+        let aliveCount = 0;
+
+        ga.population.forEach(car => {
+          if (car.alive) {
+            car.update(currentWalls);
+            aliveCount++;
+          }
+        });
+
+        if (aliveCount === 0) {
+          ga.evolve();
+          break; 
+        }
+      }
+
+      ctx.clearRect(0, 0, BASE_WIDTH, BASE_HEIGHT);
+
+      drawCircuit(ctx);
+
+      ctx.save();
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = '#ef4444';
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 4;
+      customObstacles.forEach(o => {
+        ctx.beginPath();
+        ctx.moveTo(o.x1, o.y1);
+        ctx.lineTo(o.x2, o.y2);
+        ctx.stroke();
+      });
+      ctx.restore();
+
+      let aliveCount = 0;
+      let eliteCar = null;
+
+      ga.population.forEach(car => {
+        car.draw(ctx);
+        if (car.alive) {
+          aliveCount++;
+          if (!eliteCar || car.fitness > eliteCar.fitness) {
+            eliteCar = car;
+          }
+        }
+      });
+
+      if (!eliteCar) {
+        eliteCar = ga.population[0];
+      }
+      drawBrainStructure(eliteCar);
+
+      uiAlive.innerText = `${aliveCount}/${populationSize}`;
+
+      requestAnimationFrame(loop);
+    }
+
+    function drawCircuit(ctx) {
+      ctx.save();
+
+      ctx.fillStyle = '#090d16';
+      ctx.beginPath();
+      ctx.moveTo(outerWalls[0].x1, outerWalls[0].y1);
+      for(let i=1; i<outerWalls.length; i++) {
+        ctx.lineTo(outerWalls[i].x1, outerWalls[i].y1);
+      }
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = '#020617';
+      ctx.beginPath();
+      ctx.moveTo(innerWalls[0].x1, innerWalls[0].y1);
+      for(let i=1; i<innerWalls.length; i++) {
+        ctx.lineTo(innerWalls[i].x1, innerWalls[i].y1);
+      }
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = '#10b981'; 
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      outerWalls.forEach(w => {
+        ctx.moveTo(w.x1, w.y1);
+        ctx.lineTo(w.x2, w.y2);
+      });
+      ctx.stroke();
+
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = '#06b6d4'; 
+      ctx.strokeStyle = '#06b6d4';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      innerWalls.forEach(w => {
+        ctx.moveTo(w.x1, w.y1);
+        ctx.lineTo(w.x2, w.y2);
+      });
+      ctx.stroke();
+
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = '#f43f5e'; 
+      ctx.strokeStyle = '#f43f5e';
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      trackObstacles.forEach(o => {
+        ctx.moveTo(o.x1, o.y1);
+        ctx.lineTo(o.x2, o.y2);
+      });
+      ctx.stroke();
+
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = 'rgba(251, 191, 36, 0.08)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      checkLines.forEach(l => {
+        ctx.moveTo(l.x1, l.y1);
+        ctx.lineTo(l.x2, l.y2);
+      });
+      ctx.stroke();
+
+      ctx.save();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 4;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(170, 500);
+      ctx.lineTo(50, 500);
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.restore();
+    }
+
+
+    // --- 🛠️ ユーザーによるドラッグ障害物の設置 (iPad / タッチ完全対応版) ---
+    let dragStartPos = null;
+
+    function getMousePos(e) {
+      const rect = canvas.getBoundingClientRect();
+      let clientX, clientY;
+
+      // iOS/iPadOS Safariの `touchend` 時でも絶対に落ちない頑丈な座標判定
+      if (e.touches && e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else if (e.changedTouches && e.changedTouches.length > 0) {
+        clientX = e.changedTouches[0].clientX;
+        clientY = e.changedTouches[0].clientY;
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
+      
+      return {
+        x: ((clientX - rect.left) / rect.width) * BASE_WIDTH,
+        y: ((clientY - rect.top) / rect.height) * BASE_HEIGHT
+      };
+    }
+
+    function onDragStart(e) {
+      sound.init(); // 最初のインタラクションでオーディオのロックを解除
+      dragStartPos = getMousePos(e);
+    }
+
+    function onDragEnd(e) {
+      if (!dragStartPos) return;
+      const endPos = getMousePos(e);
+
+      const dist = Math.sqrt((endPos.x - dragStartPos.x)**2 + (endPos.y - dragStartPos.y)**2);
+      if (dist > 15) {
+        customObstacles.push({
+          x1: dragStartPos.x,
+          y1: dragStartPos.y,
+          x2: endPos.x,
+          y2: endPos.y
+        });
+        sound.playHit();
+      }
+      dragStartPos = null;
+    }
+
+    // イベント登録
+    canvas.addEventListener('mousedown', onDragStart);
+    canvas.addEventListener('mouseup', onDragEnd);
+    canvas.addEventListener('touchstart', onDragStart, { passive: true });
+    canvas.addEventListener('touchend', onDragEnd, { passive: true });
+
+
+    // --- ⚙️ コントロールパネルのイベント群 ---
+
+    slideMutation.addEventListener('input', (e) => {
+      mutationRate = e.target.value / 100;
+      valMutation.innerText = `${e.target.value}%`;
+      uiMutationLabel.innerText = `${e.target.value}%`;
+    });
+
+    slidePopulation.addEventListener('input', (e) => {
+      populationSize = parseInt(e.target.value);
+      valPopulation.innerText = populationSize;
+    });
+
+    const speedButtons = [speed1x, speed2x, speed5x, speed10x];
+    function setSpeed(speed, activeBtn) {
+      simulationSpeed = speed;
+      speedButtons.forEach(btn => {
+        btn.className = "px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition-all";
+      });
+      activeBtn.className = "px-2.5 py-1 rounded-md bg-emerald-600 text-white font-bold transition-all";
+    }
+
+    speed1x.addEventListener('click', () => setSpeed(1, speed1x));
+    speed2x.addEventListener('click', () => setSpeed(2, speed2x));
+    speed5x.addEventListener('click', () => setSpeed(5, speed5x));
+    speed10x.addEventListener('click', () => setSpeed(10, speed10x));
+
+    btnClearCustomObstacles.addEventListener('click', () => {
+      customObstacles = [];
+    });
+
+    btnNextGenForce.addEventListener('click', () => {
+      ga.evolve();
+    });
+
+    btnResetEvolution = document.getElementById('btnResetEvolution').addEventListener('click', () => {
+      customObstacles = [];
+      ga.initPopulation();
+    });
+
+
+    // --- 📐 幾何計算ヘルパー ---
+
+    function getIntersection(A, B, C, D) {
+      const tTop = (D.x - C.x) * (A.y - C.y) - (D.y - C.y) * (A.x - C.x);
+      const uTop = (C.y - A.y) * (A.x - B.x) - (C.x - A.x) * (A.y - B.y);
+      const bottom = (D.y - C.y) * (B.x - A.x) - (D.x - C.x) * (B.y - A.y);
+
+      if (bottom !== 0) {
+        const t = tTop / bottom;
+        const u = uTop / bottom;
+        if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
+          return {
+            x: lerp(A.x, B.x, t),
+            y: lerp(A.y, B.y, t),
+            offset: t
+          };
+        }
+      }
+      return null;
+    }
+
+    function lerp(A, B, t) {
+      return A + (B - A) * t;
+    }
+
+    function distToSegment(p, a, b) {
+      const l2 = (a.x - b.x)**2 + (a.y - b.y)**2;
+      if (l2 === 0) return Math.sqrt((p.x - a.x)**2 + (p.y - a.y)**2);
+      let t = ((p.x - a.x) * (b.x - a.x) + (p.y - a.y) * (b.y - a.y)) / l2;
+      t = Math.max(0, Math.min(1, t));
+      return Math.sqrt((p.x - (a.x + t * (b.x - a.x)))**2 + (p.y - (a.y + t * (b.y - a.y)))**2);
+    }
+
+
+    // --- 起動 ---
+    window.onload = function() {
+      setupCanvas();
+      window.addEventListener('resize', resizeBrainCanvas);
+      
+      ga.initPopulation();
+      lastTime = performance.now();
+      requestAnimationFrame(loop);
+    };
+  </script>
 </body>
 </html>
