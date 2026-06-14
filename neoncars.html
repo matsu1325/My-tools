@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Evolutionary Neon Cars (AI Evolution Simulator)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .font-mono-tech {
+      font-family: 'Share Tech Mono', monospace;
+    }
+    /* iOS安全領域 */
+    .safe-pt { padding-top: env(safe-area-inset-top); }
+    .safe-pb { padding-bottom: env(safe-area-inset-bottom); }
+    
+    /* スキップモード用のアラート点滅 */
+    @keyframes hyper-alert {
+      0% { opacity: 0.1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 0.1; }
+    }
+    .animate-hyper-alert {
+      animation: hyper-alert 1s infinite;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between overflow-hidden relative">
+
+  <!-- 背景演出 -->
+  <div class="absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.9)_2px,transparent_2px),linear-gradient(90deg,rgba(15,23,42,0.9)_2px,transparent_2px)] bg-[size:25px_25px] [mask-image:radial-gradient(ellipse_at_center,transparent_40%,black)] pointer-events-none z-0"></div>
+
+  <!-- MAXスピード時の背景警告 -->
+  <div id="maxSpeedWarning" class="absolute inset-0 bg-rose-900/20 z-0 pointer-events-none hidden animate-hyper-alert"></div>
+
+  <!-- ヘッダー -->
+  <header class="w-full px-5 py-3 border-b border-slate-900 bg-slate-950/80 backdrop-blur z-10 safe-pt flex items-center justify-between">
+    <div class="flex flex-col">
+      <h1 class="text-base font-extrabold tracking-wider bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent uppercase">Evo-Neon Cars</h1>
+      <span class="text-[9px] text-emerald-400 font-mono-tech tracking-widest uppercase">GENETIC ALGORITHM LAB // M3 PRO FAST EDITION</span>
+    </div>
+    <div class="flex items-center space-x-2 text-xs font-mono-tech bg-slate-900/90 border border-slate-800 px-3 py-1 rounded-full text-slate-300">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+      <span>GEN: <span id="uiGeneration" class="text-emerald-400 font-bold">1</span></span>
+    </div>
+  </header>
+
+  <!-- メインシミュレーションコンテナ -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-3 grid grid-cols-1 lg:grid-cols-12 gap-4 overflow-hidden z-10">
+    
+    <!-- 左：シミュレータ本体 (7カラム) -->
+    <div class="lg:col-span-7 flex flex-col space-y-3 relative h-full min-h-[350px]">
+      
+      <!-- コントロール簡易HUD -->
+      <div class="flex items-center justify-between bg-slate-900/60 border border-slate-800/80 rounded-xl p-2.5 text-xs">
+        <div class="flex items-center space-x-3">
+          <span class="text-slate-400">生存: <strong id="uiAlive" class="text-emerald-400 font-bold">0/0</strong></span>
+          <span class="text-slate-400">最高適応度: <strong id="uiBestFitness" class="text-cyan-400 font-bold">0.0</strong></span>
+        </div>
+        
+        <!-- 限界突破対応・倍速コントローラー -->
+        <div class="flex bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-[10px]">
+          <button id="speed1x" class="px-2.5 py-1 rounded-md bg-emerald-600 text-white font-bold transition-all">1x</button>
+          <button id="speed2x" class="px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition-all">2x</button>
+          <button id="speed10x" class="px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition-all">10x</button>
+          <button id="speedMax" class="px-2.5 py-1 rounded-md text-rose-400 hover:text-white transition-all hover:bg-rose-950 flex items-center gap-1" title="描画スキップ＆超高速計算モード">
+            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            MAX
+          </button>
+        </div>
+      </div>
+
+      <!-- キャンバスエリア -->
+      <div class="flex-1 flex items-center justify-center relative bg-slate-950/90 rounded-2xl border border-slate-800/80 overflow-hidden shadow-2xl">
+        
+        <!-- FPSカウンター -->
+        <div class="absolute top-4 left-6 bg-slate-950/80 border border-indigo-950/40 text-[9px] font-mono font-bold text-emerald-400 px-2 py-0.5 rounded-md z-30 pointer-events-none">
+          FPS: <span id="fpsText">120</span>
+        </div>
+
+        <!-- スキップモード中のオンスクリーン表示 -->
+        <div id="skipOverlay" class="absolute inset-0 bg-slate-950/90 z-20 flex flex-col items-center justify-center p-6 text-center transition-all duration-200 hidden">
+          <svg class="w-12 h-12 text-rose-500 animate-pulse mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.333-4zM19.933 12.8a1 1 0 000-1.6l-5.333-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.333-4z" />
+          </svg>
+          <h3 class="text-rose-400 font-bold tracking-widest text-sm mb-1">HYPER DRIVE COMPUTING</h3>
+          <p class="text-slate-400 text-xs font-mono-tech">描画を止め、複数CPUコアで世代を回しています...</p>
+        </div>
+
+        <!-- ゲーム終了 / 開始オーバーレイ -->
+        <div id="overlay" class="absolute inset-0 bg-slate-950/95 border border-slate-800/80 rounded-2xl z-20 flex flex-col items-center justify-center p-6 text-center shadow-2xl transition-all duration-300">
+          <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-emerald-500/10 mb-4 animate-bounce">
+            <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h2 class="text-2xl font-extrabold text-white tracking-wide">AI EVOLUTION LAB</h2>
+          <p class="text-xs text-slate-400 mt-2 max-w-xs leading-relaxed">
+            障害物のないサーキットで学習をスタートします。<br>
+            慣れてきたらドラッグで「意地悪な壁」を作り、AIをさらに進化させましょう。MAXでは同じ集団を保ったままWeb Workerで評価計算だけを並列化し、M3 ProのCPUコアを活用できます。
+          </p>
+          <button id="btnStart" class="mt-6 bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 text-white font-extrabold text-xs tracking-wider py-3.5 px-8 rounded-xl transition-all shadow-lg shadow-emerald-500/20 active:scale-95 cursor-pointer">
+            システム起動
+          </button>
+        </div>
+
+        <canvas id="simCanvas" class="max-w-full max-h-full aspect-[4/3] rounded-xl cursor-crosshair"></canvas>
+        
+        <!-- キャンバスオーバーレイメッセージ -->
+        <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between pointer-events-none text-[10px] text-slate-500 bg-slate-950/80 px-3 py-1.5 rounded-lg border border-slate-900 z-10">
+          <span>💡 ドラッグしてコース上に新しい壁を配置できます</span>
+          <button id="btnClearCustomObstacles" class="pointer-events-auto text-slate-400 hover:text-rose-400 active:scale-95 font-semibold transition-all">自作壁を消去</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右：AIステータス ＆ パラメータ -->
+    <div class="lg:col-span-5 flex flex-col space-y-4 h-full overflow-y-auto">
+      
+      <!-- パラメータコントロール -->
+      <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 shadow-xl space-y-4">
+        <h2 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+          <span class="w-1.5 h-3 bg-emerald-500 rounded-full inline-block"></span>
+          進化パラメータ
+        </h2>
+
+        <div class="space-y-3">
+          <!-- 突然変異率 -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label for="slideMutation" class="text-xs text-slate-300">突然変異率 (遺伝の多様性)</label>
+              <span id="valMutation" class="text-xs font-mono-tech font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">10%</span>
+            </div>
+            <input type="range" id="slideMutation" min="1" max="50" value="10" class="w-full h-1 bg-slate-950 rounded-lg appearance-none cursor-pointer">
+            <p class="text-[9px] text-slate-500 mt-1">高くすると変則的な天才が生まれやすく、低くすると安定した引き継ぎになります。</p>
+          </div>
+
+          <!-- 個体数 -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label for="slidePopulation" class="text-xs text-slate-300">個体数 (1世代あたりの車)</label>
+              <span id="valPopulation" class="text-xs font-mono-tech font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">50</span>
+            </div>
+            <input type="range" id="slidePopulation" min="10" max="100" value="50" class="w-full h-1 bg-slate-950 rounded-lg appearance-none cursor-pointer">
+            <p class="text-[9px] text-slate-500 mt-1">※変更は次世代から反映されます。</p>
+          </div>
+
+          <!-- タイムアウト制約時間 -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label for="slideTimeout" class="text-xs text-slate-300">タイムアウト制限 (お仕置きタイマー)</label>
+              <span id="valTimeout" class="text-xs font-mono-tech font-bold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded">3.0秒</span>
+            </div>
+            <input type="range" id="slideTimeout" min="1.0" max="10.0" step="0.5" value="3.0" class="w-full h-1 bg-slate-950 rounded-lg appearance-none cursor-pointer">
+            <p class="text-[9px] text-slate-500 mt-1">チェックポイントを通れない時間の上限。短くするとスピード狂、長くすると慎重派が育ちます。</p>
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <button id="btnNextGenForce" class="flex-1 bg-emerald-600/20 hover:bg-emerald-600 border border-emerald-500/40 hover:border-emerald-500 text-emerald-300 hover:text-white text-xs font-bold py-2.5 rounded-xl transition-all active:scale-95 cursor-pointer">
+            強制世代交代
+          </button>
+          <button id="btnResetEvolution" class="bg-slate-950 hover:bg-rose-950/20 border border-slate-800 hover:border-rose-900 text-slate-400 hover:text-rose-400 text-xs font-bold py-2.5 px-4 rounded-xl transition-all active:scale-95 cursor-pointer">
+            リセット
+          </button>
+        </div>
+      </div>
+
+      <!-- ✨ Gemini AI アシスタント -->
+      <div class="bg-slate-900/80 border border-indigo-500/50 rounded-2xl p-4 shadow-[0_0_20px_rgba(99,102,241,0.15)] flex flex-col relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="flex items-center justify-between mb-3 relative z-10">
+          <h2 class="text-xs font-extrabold text-indigo-300 uppercase tracking-widest flex items-center gap-1.5">
+            <span class="text-base">✨</span>
+            AI レースアナリスト
+          </h2>
+          <button id="btnGeminiAnalyze" class="bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition-all active:scale-95 shadow-lg shadow-indigo-500/30 flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed">
+            <span id="geminiBtnIcon">✨</span> <span id="geminiBtnText">状況を分析</span>
+          </button>
+        </div>
+        <div id="geminiResponseArea" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-[11px] text-slate-300 h-28 overflow-y-auto font-mono-tech leading-relaxed relative z-10">
+          <span class="text-slate-500">>> AIアナリスト待機中...<br>「状況を分析」を押して、現在の進化具合に対する実況とアドバイスを受け取ってください。</span>
+        </div>
+      </div>
+
+      <!-- 🧠 脳内可視化 -->
+      <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 shadow-xl flex-1 flex flex-col justify-between">
+        <div>
+          <h2 class="text-xs font-extrabold text-slate-400 uppercase tracking-widest flex items-center gap-1.5 mb-2">
+            <span class="w-1.5 h-3 bg-cyan-500 rounded-full inline-block"></span>
+            エリート脳のリアルタイム思考
+          </h2>
+          <p class="text-[10px] text-slate-400 leading-relaxed hidden md:block">
+            現在最も好成績を収めている車のニューラルネットワークです。センサー反応が、操舵角と加速にどう伝達されているかを可視化しています。
+          </p>
+        </div>
+
+        <!-- ネットワーク描画キャンバス -->
+        <div class="flex-1 flex items-center justify-center mt-3 bg-slate-950 rounded-xl border border-slate-900 relative min-h-[140px]">
+          <canvas id="brainCanvas" class="w-full h-full max-h-[220px]"></canvas>
+          <div class="absolute left-2 top-2 text-[8px] sm:text-[9px] text-slate-500 flex flex-col">
+            <span>LEFT</span>
+            <span>F-LEFT</span>
+            <span>FRONT</span>
+            <span>F-RIGHT</span>
+            <span>RIGHT</span>
+          </div>
+          <div class="absolute right-2 top-2 text-[8px] sm:text-[9px] text-slate-500 text-right flex flex-col justify-between h-[80%]">
+            <span>POWER</span>
+            <span class="mt-auto">STEER</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="w-full px-5 py-3 border-t border-slate-900 bg-slate-950/90 text-center text-xs text-slate-500 z-10 safe-pb flex flex-col sm:flex-row items-center justify-between gap-2">
+    <p>© 2026 AI Laboratory. M3 Pro Fast Edition: Parallel Evaluation GA & Continuity Preserved.</p>
+    <div class="flex items-center space-x-3 text-slate-400">
+      <span>突然変異: <strong id="uiMutationLabel" class="text-slate-300">10%</strong></span>
+      <span>|</span>
+      <span>選択アルゴリズム: <strong class="text-slate-300">エリート＋ルーレット</strong></span>
+    </div>
+  </footer>
+
+  
+  <script>
+    'use strict';
+
+    // ============================================================
+    // M3 Pro Fast Edition
+    // - 通常描画: オブジェクト生成を抑えた高速物理演算
+    // - MAX: 同一集団の評価だけを Web Worker に分散し、進化の連続性を維持
+    // ============================================================
+
+    // --- 音響システム ---
+    class Synth {
+      constructor() { this.ctx = null; }
+      init() {
+        try {
+          if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+          if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+        } catch (e) { console.warn('Audio blocked.'); }
+      }
+      playGen() {
+        if (simulationSpeed === 'MAX') return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+          const notes = [523.25, 659.25, 783.99];
+          for (let idx = 0; idx < notes.length; idx++) {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(notes[idx], now + idx * 0.08);
+            gain.gain.setValueAtTime(0.055, now + idx * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now + idx * 0.08);
+            osc.stop(now + idx * 0.08 + 0.3);
+          }
+        } catch (err) {}
+      }
+      playCrash() {
+        if (simulationSpeed === 'MAX') return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const bufferSize = Math.floor(this.ctx.sampleRate * 0.035);
+          const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+          const noise = this.ctx.createBufferSource();
+          const gain = this.ctx.createGain();
+          noise.buffer = buffer;
+          gain.gain.setValueAtTime(0.025, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.04);
+          noise.connect(gain);
+          gain.connect(this.ctx.destination);
+          noise.start();
+        } catch (err) {}
+      }
+      playHit() {
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(300, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.15);
+          gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.15);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.15);
+        } catch (err) {}
+      }
+    }
+    const sound = new Synth();
+
+    // --- HTML / Canvas 設定 ---
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d', { alpha: false });
+    const brainCanvas = document.getElementById('brainCanvas');
+    const bCtx = brainCanvas.getContext('2d');
+
+    const uiGeneration = document.getElementById('uiGeneration');
+    const uiAlive = document.getElementById('uiAlive');
+    const uiBestFitness = document.getElementById('uiBestFitness');
+    const fpsText = document.getElementById('fpsText');
+    const valMutation = document.getElementById('valMutation');
+    const valPopulation = document.getElementById('valPopulation');
+    const valTimeout = document.getElementById('valTimeout');
+    const uiMutationLabel = document.getElementById('uiMutationLabel');
+    const skipOverlay = document.getElementById('skipOverlay');
+    const maxSpeedWarning = document.getElementById('maxSpeedWarning');
+    const skipStatusText = skipOverlay ? skipOverlay.querySelector('p') : null;
+
+    const slideMutation = document.getElementById('slideMutation');
+    const slidePopulation = document.getElementById('slidePopulation');
+    const slideTimeout = document.getElementById('slideTimeout');
+
+    const speed1x = document.getElementById('speed1x');
+    const speed2x = document.getElementById('speed2x');
+    const speed10x = document.getElementById('speed10x');
+    const speedMax = document.getElementById('speedMax');
+    const btnNextGenForce = document.getElementById('btnNextGenForce');
+    const btnResetEvolution = document.getElementById('btnResetEvolution');
+    const btnClearCustomObstacles = document.getElementById('btnClearCustomObstacles');
+
+    const BASE_WIDTH = 800;
+    const BASE_HEIGHT = 600;
+    const SENSOR_RANGE = 150;
+    const SENSOR_RANGE_INV = 1 / SENSOR_RANGE;
+    const CAR_RADIUS = 9;
+    const CAR_RADIUS_SQ = CAR_RADIUS * CAR_RADIUS;
+    const CHECKPOINT_RADIUS = 18;
+    const CHECKPOINT_RADIUS_SQ = CHECKPOINT_RADIUS * CHECKPOINT_RADIUS;
+    const SENSOR_REL_ANGLES = [-Math.PI / 2, -Math.PI / 4, 0, Math.PI / 4, Math.PI / 2];
+    const SENSOR_REL_COS = SENSOR_REL_ANGLES.map(Math.cos);
+    const SENSOR_REL_SIN = SENSOR_REL_ANGLES.map(Math.sin);
+    const GENOME_LENGTH = 34;
+
+    let populationSize = 50;
+    let mutationRate = 0.10;
+    let timeoutSeconds = 3.0;
+    let simulationSpeed = 1;
+    let isRunning = false;
+
+    // 個体数上限をM3 Pro向けに拡張。MAX時も同じ集団を保ち、評価計算だけをワーカーへ分散します。
+    slidePopulation.max = '250';
+
+    // --- Gemini API 連携システム ---
+    const apiKey = '';
+
+    async function fetchGeminiAnalysis(prompt, maxRetries = 5) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+      const payload = {
+        contents: [{ parts: [{ text: prompt }] }],
+        systemInstruction: {
+          parts: [{ text: 'あなたは「Evo-Neon Cars」というAI自動運転進化シミュレーターの実況アナウンサー兼、遺伝的アルゴリズムの研究者です。状況に応じた実況と、学習を促進するためのパラメータ調整アドバイスを提供してください。' }]
+        }
+      };
+
+      for (let i = 0; i < maxRetries; i++) {
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+          const data = await response.json();
+          return data.candidates?.[0]?.content?.parts?.[0]?.text || '分析データの受信に失敗しました。';
+        } catch (error) {
+          if (i === maxRetries - 1) return '通信エラーが発生しました。時間をおいて再度お試しください。';
+          await new Promise(res => setTimeout(res, Math.pow(2, i) * 1000));
+        }
+      }
+    }
+
+    const btnGeminiAnalyze = document.getElementById('btnGeminiAnalyze');
+    const geminiBtnText = document.getElementById('geminiBtnText');
+    const geminiBtnIcon = document.getElementById('geminiBtnIcon');
+    const geminiResponseArea = document.getElementById('geminiResponseArea');
+
+    btnGeminiAnalyze.addEventListener('click', async () => {
+      btnGeminiAnalyze.disabled = true;
+      geminiBtnIcon.classList.add('animate-spin');
+      geminiBtnIcon.innerText = '⏳';
+      geminiBtnText.innerText = '分析中...';
+      geminiResponseArea.innerHTML = '<span class="text-indigo-400 animate-pulse">>> AIアナリストが現在のシミュレーションデータを解析中...</span>';
+
+      let maxFitness = 0;
+      if (simulationSpeed === 'MAX') {
+        maxFitness = turbo.bestFitnessSeen || 0;
+      } else {
+        for (let i = 0; i < ga.population.length; i++) {
+          if (ga.population[i].fitness > maxFitness) maxFitness = ga.population[i].fitness;
+        }
+      }
+      const customObstacleCount = customObstacles.length;
+      const workers = turbo.active ? turbo.workerCount : 0;
+
+      const prompt = `
+        【現在のシミュレーション状況】
+        - 世代数: ${ga.generation}世代目
+        - 現在の最高適応度: ${(maxFitness / 100).toFixed(1)}
+        - 突然変異率の設定: ${Math.round(mutationRate * 100)}%
+        - 個体数: ${populationSize}台
+        - MAXモードの並列ワーカー数: ${workers}
+        - タイムアウトの設定時間: ${timeoutSeconds}秒
+        - ユーザーが追加した自作の障害物: ${customObstacleCount}個
+
+        上記のデータをもとに、以下の2点を含めたコメントを日本語で生成してください。
+        1. 現在の世代の走りや進化具合に対する実況（2〜3文）
+        2. さらに進化させるための「突然変異率」「個体数」「タイムアウト時間」の調整アドバイス（1文）
+        マークダウンは使用せず、プレーンテキストで出力してください。
+      `;
+
+      const responseText = await fetchGeminiAnalysis(prompt);
+      geminiResponseArea.innerHTML = responseText.replace(/\n/g, '<br>');
+
+      btnGeminiAnalyze.disabled = false;
+      geminiBtnIcon.classList.remove('animate-spin');
+      geminiBtnIcon.innerText = '✨';
+      geminiBtnText.innerText = '状況を分析';
+    });
+
+    // --- コース壁 ---
+    const outerWalls = [
+      { x1: 50, y1: 50, x2: 750, y2: 50 },
+      { x1: 750, y1: 50, x2: 750, y2: 550 },
+      { x1: 750, y1: 550, x2: 50, y2: 550 },
+      { x1: 50, y1: 550, x2: 50, y2: 50 }
+    ];
+
+    const innerWalls = [
+      { x1: 170, y1: 170, x2: 630, y2: 170 },
+      { x1: 630, y1: 170, x2: 630, y2: 430 },
+      { x1: 630, y1: 430, x2: 170, y2: 430 },
+      { x1: 170, y1: 430, x2: 170, y2: 170 }
+    ];
+
+    const trackObstacles = [];
+    let customObstacles = [];
+
+    const checkLines = [
+      { x1: 170, y1: 430, x2: 50, y2: 430 },
+      { x1: 170, y1: 300, x2: 50, y2: 300 },
+      { x1: 170, y1: 170, x2: 50, y2: 170 },
+      { x1: 300, y1: 170, x2: 300, y2: 50 },
+      { x1: 450, y1: 170, x2: 450, y2: 50 },
+      { x1: 630, y1: 170, x2: 750, y2: 170 },
+      { x1: 630, y1: 300, x2: 750, y2: 300 },
+      { x1: 630, y1: 430, x2: 750, y2: 430 },
+      { x1: 450, y1: 430, x2: 450, y2: 550 },
+      { x1: 300, y1: 430, x2: 300, y2: 550 }
+    ];
+
+    const START_POS = { x: 110, y: 500 };
+    const START_ANGLE = -Math.PI / 2;
+
+    let wallData = null;
+    function compileWalls() {
+      const walls = outerWalls.concat(innerWalls, trackObstacles, customObstacles);
+      const n = walls.length;
+      const x1 = new Float64Array(n);
+      const y1 = new Float64Array(n);
+      const x2 = new Float64Array(n);
+      const y2 = new Float64Array(n);
+      for (let i = 0; i < n; i++) {
+        const w = walls[i];
+        x1[i] = w.x1; y1[i] = w.y1; x2[i] = w.x2; y2[i] = w.y2;
+      }
+      wallData = { x1, y1, x2, y2, count: n };
+      turbo.pushConfig();
+    }
+    function getAllWalls() {
+      return outerWalls.concat(innerWalls, trackObstacles, customObstacles);
+    }
+
+    // --- 高速ニューラルネットワーク ---
+    class NeuralNetwork {
+      constructor(inputSize, hiddenSize, outputSize) {
+        this.inputSize = inputSize;
+        this.hiddenSize = hiddenSize;
+        this.outputSize = outputSize;
+        this.weightsIH = new Float32Array(inputSize * hiddenSize);
+        this.weightsHO = new Float32Array(hiddenSize * outputSize);
+        this.biasesH = new Float32Array(hiddenSize);
+        this.biasesO = new Float32Array(outputSize);
+        this.initRandom();
+      }
+      initRandom() {
+        for (let i = 0; i < this.weightsIH.length; i++) this.weightsIH[i] = Math.random() * 2 - 1;
+        for (let i = 0; i < this.weightsHO.length; i++) this.weightsHO[i] = Math.random() * 2 - 1;
+        for (let i = 0; i < this.biasesH.length; i++) this.biasesH[i] = Math.random() * 2 - 1;
+        for (let i = 0; i < this.biasesO.length; i++) this.biasesO[i] = Math.random() * 2 - 1;
+      }
+      activate(x) { return 1 / (1 + Math.exp(-x)); }
+      feedForward(inputs, hiddenOutputs, outputs) {
+        const ih = this.weightsIH;
+        const ho = this.weightsHO;
+        let idx = 0;
+        for (let h = 0; h < this.hiddenSize; h++) {
+          let sum = this.biasesH[h];
+          for (let i = 0; i < this.inputSize; i++) sum += inputs[i] * ih[i * this.hiddenSize + h];
+          hiddenOutputs[h] = this.activate(sum);
+        }
+        for (let o = 0; o < this.outputSize; o++) {
+          let sum = this.biasesO[o];
+          for (let h = 0; h < this.hiddenSize; h++) sum += hiddenOutputs[h] * ho[h * this.outputSize + o];
+          outputs[o] = this.activate(sum);
+        }
+      }
+      getGenome() {
+        const genes = new Float32Array(GENOME_LENGTH);
+        let idx = 0;
+        genes.set(this.weightsIH, idx); idx += this.weightsIH.length;
+        genes.set(this.weightsHO, idx); idx += this.weightsHO.length;
+        genes.set(this.biasesH, idx); idx += this.biasesH.length;
+        genes.set(this.biasesO, idx);
+        return genes;
+      }
+      loadGenome(genes) {
+        let idx = 0;
+        this.weightsIH.set(genes.subarray ? genes.subarray(idx, idx + this.weightsIH.length) : genes.slice(idx, idx + this.weightsIH.length)); idx += this.weightsIH.length;
+        this.weightsHO.set(genes.subarray ? genes.subarray(idx, idx + this.weightsHO.length) : genes.slice(idx, idx + this.weightsHO.length)); idx += this.weightsHO.length;
+        this.biasesH.set(genes.subarray ? genes.subarray(idx, idx + this.biasesH.length) : genes.slice(idx, idx + this.biasesH.length)); idx += this.biasesH.length;
+        this.biasesO.set(genes.subarray ? genes.subarray(idx, idx + this.biasesO.length) : genes.slice(idx, idx + this.biasesO.length));
+      }
+    }
+
+    // --- AIカー個体 ---
+    class Car {
+      constructor() {
+        this.sensors = new Float32Array(5);
+        this.lastHiddenState = new Float32Array(4);
+        this.lastOutputs = new Float32Array(2);
+        this.brain = new NeuralNetwork(5, 4, 2);
+        this.color = `hsla(${Math.random() * 360}, 100%, 60%, 0.8)`;
+        this.isElite = false;
+        this.reset();
+      }
+      reset() {
+        this.x = START_POS.x;
+        this.y = START_POS.y;
+        this.angle = START_ANGLE;
+        this.speed = 0;
+        this.alive = true;
+        this.fitness = 0;
+        this.lastCheckpointIndex = -1;
+        this.timeSinceLastCheckpoint = 0;
+        this.checkpointsCleared = 0;
+        this.totalFramesAlive = 0;
+      }
+      scanFast(walls, cosA, sinA) {
+        const wx1 = walls.x1, wy1 = walls.y1, wx2 = walls.x2, wy2 = walls.y2;
+        for (let i = 0; i < 5; i++) {
+          const dx = cosA * SENSOR_REL_COS[i] - sinA * SENSOR_REL_SIN[i];
+          const dy = sinA * SENSOR_REL_COS[i] + cosA * SENSOR_REL_SIN[i];
+          let closest = SENSOR_RANGE;
+          for (let w = 0; w < walls.count; w++) {
+            const dist = raySegmentDistance(this.x, this.y, dx, dy, wx1[w], wy1[w], wx2[w], wy2[w]);
+            if (dist < closest) closest = dist;
+          }
+          this.sensors[i] = 1 - closest * SENSOR_RANGE_INV;
+        }
+      }
+      update(walls) {
+        if (!this.alive) return;
+
+        this.totalFramesAlive++;
+        this.timeSinceLastCheckpoint++;
+        const timeoutLimitFrames = Math.round(timeoutSeconds * 60);
+        if (this.timeSinceLastCheckpoint > timeoutLimitFrames) {
+          this.alive = false;
+          sound.playCrash();
+          return;
+        }
+
+        const cosBefore = Math.cos(this.angle);
+        const sinBefore = Math.sin(this.angle);
+        this.scanFast(walls, cosBefore, sinBefore);
+
+        this.brain.feedForward(this.sensors, this.lastHiddenState, this.lastOutputs);
+        const thrust = (this.lastOutputs[0] - 0.2) * 5;
+        const steering = (this.lastOutputs[1] - 0.5) * 0.12;
+
+        this.angle += steering;
+        this.speed = Math.max(0.5, Math.min(thrust, 4.5));
+
+        this.x += Math.cos(this.angle) * this.speed;
+        this.y += Math.sin(this.angle) * this.speed;
+
+        if (this.checkCollision(walls)) {
+          this.alive = false;
+          sound.playCrash();
+          return;
+        }
+        this.evalFitness();
+      }
+      checkCollision(walls) {
+        const wx1 = walls.x1, wy1 = walls.y1, wx2 = walls.x2, wy2 = walls.y2;
+        for (let i = 0; i < walls.count; i++) {
+          if (distToSegmentSq(this.x, this.y, wx1[i], wy1[i], wx2[i], wy2[i]) < CAR_RADIUS_SQ) return true;
+        }
+        return false;
+      }
+      evalFitness() {
+        // 1フレームに複数ラインを踏むケースにも対応するが、通常は1回で抜けます。
+        for (let guard = 0; guard < checkLines.length; guard++) {
+          const targetIdx = (this.lastCheckpointIndex + 1) % checkLines.length;
+          const line = checkLines[targetIdx];
+          const d2 = distToSegmentSq(this.x, this.y, line.x1, line.y1, line.x2, line.y2);
+          if (d2 < CHECKPOINT_RADIUS_SQ) {
+            this.lastCheckpointIndex = targetIdx;
+            this.checkpointsCleared++;
+            this.timeSinceLastCheckpoint = 0;
+          } else {
+            break;
+          }
+        }
+        this.fitness = this.checkpointsCleared * 500 + this.totalFramesAlive;
+      }
+      draw(ctx) {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+        if (this.isElite) {
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = '#fbbf24';
+          ctx.fillStyle = '#fbbf24';
+        } else {
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = this.color;
+          ctx.fillStyle = this.color;
+        }
+        ctx.beginPath();
+        ctx.moveTo(12, 0);
+        ctx.lineTo(-8, -7);
+        ctx.lineTo(-5, 0);
+        ctx.lineTo(-8, 7);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        if (this.isElite && this.alive && simulationSpeed !== 'MAX') {
+          ctx.save();
+          ctx.lineWidth = 1;
+          for (let i = 0; i < 5; i++) {
+            const sAngle = this.angle + SENSOR_REL_ANGLES[i];
+            const sensorVal = this.sensors[i];
+            const actLen = SENSOR_RANGE * (1 - sensorVal);
+            ctx.strokeStyle = sensorVal > 0.8 ? 'rgba(239, 68, 68, 0.4)' : 'rgba(16, 185, 129, 0.2)';
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y);
+            ctx.lineTo(this.x + Math.cos(sAngle) * actLen, this.y + Math.sin(sAngle) * actLen);
+            ctx.stroke();
+          }
+          ctx.restore();
+        }
+      }
+    }
+
+    // --- 遺伝的アルゴリズム・マネージャー ---
+    class GeneticAlgorithm {
+      constructor() {
+        this.generation = 1;
+        this.population = [];
+        this.bestFitnessSeen = 0;
+        this.initPopulation();
+      }
+      initPopulation() {
+        this.population = new Array(populationSize);
+        for (let i = 0; i < populationSize; i++) this.population[i] = new Car();
+        this.generation = 1;
+        this.bestFitnessSeen = 0;
+        uiGeneration.innerText = this.generation;
+        uiBestFitness.innerText = '0.0';
+      }
+      evolve() {
+        let maxFitness = -1;
+        let bestCar = null;
+        for (let i = 0; i < this.population.length; i++) {
+          const car = this.population[i];
+          if (car.fitness > maxFitness) {
+            maxFitness = car.fitness;
+            bestCar = car;
+          }
+        }
+        if (maxFitness > this.bestFitnessSeen) this.bestFitnessSeen = maxFitness;
+
+        const nextGeneration = new Array(populationSize);
+        if (bestCar) {
+          const elite = new Car();
+          elite.brain.loadGenome(bestCar.brain.getGenome());
+          elite.color = '#fbbf24';
+          elite.isElite = true;
+          nextGeneration[0] = elite;
+        }
+
+        for (let i = 1; i < populationSize; i++) {
+          const parentA = this.rouletteSelect();
+          const parentB = this.rouletteSelect();
+          const child = new Car();
+          const childGenome = this.crossover(parentA.brain.getGenome(), parentB.brain.getGenome());
+          this.mutate(childGenome);
+          child.brain.loadGenome(childGenome);
+          nextGeneration[i] = child;
+        }
+
+        this.population = nextGeneration;
+        this.generation++;
+        sound.playGen();
+      }
+      rouletteSelect() {
+        let totalFitness = 0;
+        for (let i = 0; i < this.population.length; i++) totalFitness += Math.max(1, this.population[i].fitness);
+        let r = Math.random() * totalFitness;
+        let sum = 0;
+        for (let i = 0; i < this.population.length; i++) {
+          sum += Math.max(1, this.population[i].fitness);
+          if (sum >= r) return this.population[i];
+        }
+        return this.population[0];
+      }
+      crossover(parentAGenome, parentBGenome) {
+        const childGenome = new Float32Array(GENOME_LENGTH);
+        for (let i = 0; i < GENOME_LENGTH; i++) childGenome[i] = Math.random() < 0.5 ? parentAGenome[i] : parentBGenome[i];
+        return childGenome;
+      }
+      mutate(genome) {
+        for (let i = 0; i < genome.length; i++) {
+          if (Math.random() < mutationRate) {
+            let v = genome[i] + (Math.random() * 0.4 - 0.2);
+            if (v < -1) v = -1;
+            else if (v > 1) v = 1;
+            genome[i] = v;
+          }
+        }
+      }
+      seedFromGenome(genome, generation, bestFitness) {
+        if (!genome || genome.length !== GENOME_LENGTH) return;
+        const source = new Float32Array(genome);
+        this.population = new Array(populationSize);
+        const elite = new Car();
+        elite.brain.loadGenome(source);
+        elite.color = '#fbbf24';
+        elite.isElite = true;
+        this.population[0] = elite;
+        for (let i = 1; i < populationSize; i++) {
+          const child = new Car();
+          const g = new Float32Array(source);
+          this.mutate(g);
+          child.brain.loadGenome(g);
+          this.population[i] = child;
+        }
+        this.generation = Math.max(1, generation || this.generation);
+        this.bestFitnessSeen = Math.max(this.bestFitnessSeen, bestFitness || 0);
+        uiGeneration.innerText = this.generation;
+        uiBestFitness.innerText = (this.bestFitnessSeen / 100).toFixed(1);
+      }
+    }
+
+    const ga = new GeneticAlgorithm();
+
+    function setupCanvas() {
+      canvas.width = BASE_WIDTH;
+      canvas.height = BASE_HEIGHT;
+      resizeBrainCanvas();
+    }
+
+    function resizeBrainCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = brainCanvas.parentElement.getBoundingClientRect();
+      brainCanvas.width = Math.max(1, Math.floor(rect.width * dpr));
+      brainCanvas.height = Math.max(1, Math.floor(rect.height * dpr));
+      bCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function drawBrainStructure(eliteCar) {
+      if (!eliteCar || simulationSpeed === 'MAX') return;
+      const dpr = window.devicePixelRatio || 1;
+      const bw = brainCanvas.width / dpr;
+      const bh = brainCanvas.height / dpr;
+      bCtx.clearRect(0, 0, bw, bh);
+
+      const net = eliteCar.brain;
+      const layerX = [30, bw / 2, bw - 30];
+      const nodeY = [new Float32Array(5), new Float32Array(4), new Float32Array(2)];
+      for (let layerIdx = 0; layerIdx < 3; layerIdx++) {
+        const count = nodeY[layerIdx].length;
+        const step = bh / (count + 1);
+        for (let nodeIdx = 0; nodeIdx < count; nodeIdx++) nodeY[layerIdx][nodeIdx] = step * (nodeIdx + 1);
+      }
+
+      for (let i = 0; i < net.inputSize; i++) {
+        for (let h = 0; h < net.hiddenSize; h++) {
+          const weight = net.weightsIH[i * net.hiddenSize + h];
+          const activeVal = eliteCar.sensors[i];
+          bCtx.strokeStyle = weight > 0 ? `rgba(16, 185, 129, ${0.1 + activeVal * 0.5})` : `rgba(239, 68, 68, ${0.1 + activeVal * 0.5})`;
+          bCtx.lineWidth = Math.abs(weight) * 3 * activeVal;
+          bCtx.beginPath();
+          bCtx.moveTo(layerX[0], nodeY[0][i]);
+          bCtx.lineTo(layerX[1], nodeY[1][h]);
+          bCtx.stroke();
+        }
+      }
+
+      for (let h = 0; h < net.hiddenSize; h++) {
+        for (let o = 0; o < net.outputSize; o++) {
+          const weight = net.weightsHO[h * net.outputSize + o];
+          const activeVal = eliteCar.lastHiddenState[h] || 0;
+          bCtx.strokeStyle = weight > 0 ? `rgba(16, 185, 129, ${0.1 + activeVal * 0.5})` : `rgba(239, 68, 68, ${0.1 + activeVal * 0.5})`;
+          bCtx.lineWidth = Math.abs(weight) * 3 * activeVal;
+          bCtx.beginPath();
+          bCtx.moveTo(layerX[1], nodeY[1][h]);
+          bCtx.lineTo(layerX[2], nodeY[2][o]);
+          bCtx.stroke();
+        }
+      }
+
+      for (let l = 0; l < 3; l++) {
+        const count = nodeY[l].length;
+        for (let n = 0; n < count; n++) {
+          const x = layerX[l];
+          const y = nodeY[l][n];
+          let nodeVal = 0;
+          if (l === 0) nodeVal = eliteCar.sensors[n];
+          else if (l === 1) nodeVal = eliteCar.lastHiddenState[n] || 0;
+          else nodeVal = eliteCar.lastOutputs[n] || 0;
+          bCtx.save();
+          bCtx.shadowBlur = 10;
+          bCtx.shadowColor = '#00f0ff';
+          bCtx.fillStyle = `rgba(0, 240, 255, ${0.3 + nodeVal * 0.7})`;
+          bCtx.strokeStyle = '#ffffff';
+          bCtx.lineWidth = 1.5;
+          bCtx.beginPath();
+          bCtx.arc(x, y, 7, 0, Math.PI * 2);
+          bCtx.fill();
+          bCtx.stroke();
+          bCtx.restore();
+        }
+      }
+    }
+
+    function drawCircuit(ctx) {
+      ctx.save();
+      ctx.fillStyle = '#090d16';
+      ctx.beginPath();
+      ctx.moveTo(outerWalls[0].x1, outerWalls[0].y1);
+      for (let i = 1; i < outerWalls.length; i++) ctx.lineTo(outerWalls[i].x1, outerWalls[i].y1);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = '#020617';
+      ctx.beginPath();
+      ctx.moveTo(innerWalls[0].x1, innerWalls[0].y1);
+      for (let i = 1; i < innerWalls.length; i++) ctx.lineTo(innerWalls[i].x1, innerWalls[i].y1);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = '#10b981';
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      for (let i = 0; i < outerWalls.length; i++) {
+        const w = outerWalls[i];
+        ctx.moveTo(w.x1, w.y1); ctx.lineTo(w.x2, w.y2);
+      }
+      ctx.stroke();
+
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = '#06b6d4';
+      ctx.strokeStyle = '#06b6d4';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      for (let i = 0; i < innerWalls.length; i++) {
+        const w = innerWalls[i];
+        ctx.moveTo(w.x1, w.y1); ctx.lineTo(w.x2, w.y2);
+      }
+      ctx.stroke();
+
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = 'rgba(251, 191, 36, 0.08)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let i = 0; i < checkLines.length; i++) {
+        const l = checkLines[i];
+        ctx.moveTo(l.x1, l.y1); ctx.lineTo(l.x2, l.y2);
+      }
+      ctx.stroke();
+
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 4;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(170, 500);
+      ctx.lineTo(50, 500);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+    }
+
+
+    // --- MAX並列評価用: メイン集団を維持するための補助メソッド ---
+    GeneticAlgorithm.prototype.getGenomeMatrix = function() {
+      const count = this.population.length;
+      const matrix = new Float32Array(count * GENOME_LENGTH);
+      for (let i = 0; i < count; i++) {
+        matrix.set(this.population[i].brain.getGenome(), i * GENOME_LENGTH);
+      }
+      return matrix;
+    };
+
+    GeneticAlgorithm.prototype.evolveFromFitnessArray = function(fitnesses) {
+      const count = Math.min(this.population.length, fitnesses.length);
+      for (let i = 0; i < count; i++) {
+        const f = fitnesses[i] || 0;
+        const car = this.population[i];
+        car.fitness = f;
+        car.alive = false;
+        if (f > this.bestFitnessSeen) this.bestFitnessSeen = f;
+      }
+      this.evolve();
+    };
+
+    // --- MAX用 Worker プール ---
+    // 島型GAではなく「同じ世代の評価だけ」を分散する。
+    // 親選択・交叉・突然変異はメインスレッドの ga が一元管理するため、進化の系譜は途切れません。
+    const TURBO_WORKER_SOURCE = `
+'use strict';
+const SENSOR_RANGE = 150;
+const SENSOR_RANGE_INV = 1 / SENSOR_RANGE;
+const CAR_RADIUS_SQ = 81;
+const CHECKPOINT_RADIUS_SQ = 324;
+const START_X = 110;
+const START_Y = 500;
+const START_ANGLE = -Math.PI / 2;
+const GENOME_LENGTH = 34;
+const SENSOR_REL_COS = [Math.cos(-Math.PI/2), Math.cos(-Math.PI/4), 1, Math.cos(Math.PI/4), Math.cos(Math.PI/2)];
+const SENSOR_REL_SIN = [Math.sin(-Math.PI/2), Math.sin(-Math.PI/4), 0, Math.sin(Math.PI/4), Math.sin(Math.PI/2)];
+const outerWalls = [
+  [50,50,750,50], [750,50,750,550], [750,550,50,550], [50,550,50,50]
+];
+const innerWalls = [
+  [170,170,630,170], [630,170,630,430], [630,430,170,430], [170,430,170,170]
+];
+const checkLines = [
+  [170,430,50,430], [170,300,50,300], [170,170,50,170], [300,170,300,50], [450,170,450,50],
+  [630,170,750,170], [630,300,750,300], [630,430,750,430], [450,430,450,550], [300,430,300,550]
+];
+let wallData = null;
+
+function compileWalls(customObstacles) {
+  const total = outerWalls.length + innerWalls.length + (customObstacles ? customObstacles.length : 0);
+  const x1 = new Float64Array(total), y1 = new Float64Array(total), x2 = new Float64Array(total), y2 = new Float64Array(total);
+  let idx = 0;
+  for (let i=0;i<outerWalls.length;i++,idx++) { const w=outerWalls[i]; x1[idx]=w[0]; y1[idx]=w[1]; x2[idx]=w[2]; y2[idx]=w[3]; }
+  for (let i=0;i<innerWalls.length;i++,idx++) { const w=innerWalls[i]; x1[idx]=w[0]; y1[idx]=w[1]; x2[idx]=w[2]; y2[idx]=w[3]; }
+  if (customObstacles) {
+    for (let i=0;i<customObstacles.length;i++,idx++) { const w=customObstacles[i]; x1[idx]=w.x1; y1[idx]=w.y1; x2[idx]=w.x2; y2[idx]=w.y2; }
+  }
+  wallData = { x1:x1, y1:y1, x2:x2, y2:y2, count:total };
+}
+
+function raySegmentDistance(px, py, dx, dy, ax, ay, bx, by) {
+  const rx = dx * SENSOR_RANGE;
+  const ry = dy * SENSOR_RANGE;
+  const sx = bx - ax;
+  const sy = by - ay;
+  const bottom = sy * rx - sx * ry;
+  if (bottom > -1e-9 && bottom < 1e-9) return SENSOR_RANGE;
+  const tTop = sx * (py - ay) - sy * (px - ax);
+  const uTop = (ay - py) * rx - (ax - px) * ry;
+  const t = tTop / bottom;
+  const u = uTop / bottom;
+  return (t >= 0 && t <= 1 && u >= 0 && u <= 1) ? t * SENSOR_RANGE : SENSOR_RANGE;
+}
+
+function distToSegmentSq(px, py, ax, ay, bx, by) {
+  const vx = bx - ax;
+  const vy = by - ay;
+  const wx = px - ax;
+  const wy = py - ay;
+  const l2 = vx * vx + vy * vy;
+  if (l2 === 0) { const dx = px - ax, dy = py - ay; return dx * dx + dy * dy; }
+  let t = (wx * vx + wy * vy) / l2;
+  if (t < 0) t = 0;
+  else if (t > 1) t = 1;
+  const dx = px - (ax + t * vx);
+  const dy = py - (ay + t * vy);
+  return dx * dx + dy * dy;
+}
+
+function sigmoid(x) {
+  return 1 / (1 + Math.exp(-x));
+}
+
+function evaluateGenome(genomes, offset, timeoutSeconds, maxFrames) {
+  let x = START_X;
+  let y = START_Y;
+  let angle = START_ANGLE;
+  let speed = 0;
+  let lastCheckpointIndex = -1;
+  let timeSinceLastCheckpoint = 0;
+  let checkpointsCleared = 0;
+  let totalFramesAlive = 0;
+  const timeoutFrames = Math.max(1, Math.round(timeoutSeconds * 60));
+  const sensors = new Float32Array(5);
+  const hidden = new Float32Array(4);
+  const outputs = new Float32Array(2);
+  const wx1 = wallData.x1, wy1 = wallData.y1, wx2 = wallData.x2, wy2 = wallData.y2;
+
+  for (let frame = 0; frame < maxFrames; frame++) {
+    totalFramesAlive++;
+    timeSinceLastCheckpoint++;
+    if (timeSinceLastCheckpoint > timeoutFrames) break;
+
+    const ca = Math.cos(angle);
+    const sa = Math.sin(angle);
+    for (let i=0;i<5;i++) {
+      const dx = ca * SENSOR_REL_COS[i] - sa * SENSOR_REL_SIN[i];
+      const dy = sa * SENSOR_REL_COS[i] + ca * SENSOR_REL_SIN[i];
+      let closest = SENSOR_RANGE;
+      for (let w=0; w<wallData.count; w++) {
+        const d = raySegmentDistance(x, y, dx, dy, wx1[w], wy1[w], wx2[w], wy2[w]);
+        if (d < closest) closest = d;
+      }
+      sensors[i] = 1 - closest * SENSOR_RANGE_INV;
+    }
+
+    for (let h=0; h<4; h++) {
+      let sum = genomes[offset + 28 + h];
+      for (let i=0; i<5; i++) sum += sensors[i] * genomes[offset + i * 4 + h];
+      hidden[h] = sigmoid(sum);
+    }
+    for (let o=0; o<2; o++) {
+      let sum = genomes[offset + 32 + o];
+      for (let h=0; h<4; h++) sum += hidden[h] * genomes[offset + 20 + h * 2 + o];
+      outputs[o] = sigmoid(sum);
+    }
+
+    const thrust = (outputs[0] - 0.2) * 5;
+    const steering = (outputs[1] - 0.5) * 0.12;
+    angle += steering;
+    speed = thrust < 0.5 ? 0.5 : (thrust > 4.5 ? 4.5 : thrust);
+    x += Math.cos(angle) * speed;
+    y += Math.sin(angle) * speed;
+
+    let crashed = false;
+    for (let w=0; w<wallData.count; w++) {
+      if (distToSegmentSq(x, y, wx1[w], wy1[w], wx2[w], wy2[w]) < CAR_RADIUS_SQ) { crashed = true; break; }
+    }
+    if (crashed) break;
+
+    for (let guard=0; guard<checkLines.length; guard++) {
+      const target = (lastCheckpointIndex + 1) % checkLines.length;
+      const l = checkLines[target];
+      if (distToSegmentSq(x, y, l[0], l[1], l[2], l[3]) < CHECKPOINT_RADIUS_SQ) {
+        lastCheckpointIndex = target;
+        checkpointsCleared++;
+        timeSinceLastCheckpoint = 0;
+      } else {
+        break;
+      }
+    }
+  }
+  return checkpointsCleared * 500 + totalFramesAlive;
+}
+
+self.onmessage = function(e) {
+  const msg = e.data;
+  if (!msg || msg.type !== 'eval') return;
+  compileWalls(msg.config.customObstacles || []);
+  const genomes = new Float32Array(msg.genomes);
+  const count = msg.count | 0;
+  const start = msg.start | 0;
+  const timeout = msg.config.timeoutSeconds || 3.0;
+  const maxFrames = msg.config.maxFrames || Math.max(1800, Math.round(timeout * 60 * 24));
+  const fitnesses = new Float64Array(count);
+  let bestFitness = -1;
+  let bestLocalIndex = 0;
+  for (let i=0; i<count; i++) {
+    const f = evaluateGenome(genomes, i * GENOME_LENGTH, timeout, maxFrames);
+    fitnesses[i] = f;
+    if (f > bestFitness) { bestFitness = f; bestLocalIndex = i; }
+  }
+  const bestGenome = Array.from(genomes.subarray(bestLocalIndex * GENOME_LENGTH, bestLocalIndex * GENOME_LENGTH + GENOME_LENGTH));
+  self.postMessage({
+    type: 'result',
+    jobId: msg.jobId,
+    workerIndex: msg.workerIndex,
+    start: start,
+    count: count,
+    fitnesses: fitnesses.buffer,
+    bestFitness: bestFitness,
+    bestGenome: bestGenome
+  }, [fitnesses.buffer]);
+};
+`;
+
+    class TurboPool {
+      constructor() {
+        this.active = false;
+        this.workers = [];
+        this.workerCount = 0;
+        this.blobUrl = null;
+        this.jobId = 0;
+        this.pending = 0;
+        this.results = null;
+        this.bestFitnessSeen = 0;
+        this.bestGenome = null;
+        this.generationsCompleted = 0;
+        this.lastGenTime = 0;
+        this.avgGenMs = 0;
+        this.configDirty = false;
+      }
+      desiredWorkerCount() {
+        const hc = navigator.hardwareConcurrency || 8;
+        return Math.min(8, Math.max(2, hc - 2));
+      }
+      currentConfig() {
+        return {
+          mutationRate,
+          timeoutSeconds,
+          maxFrames: Math.max(1800, Math.round(timeoutSeconds * 60 * 24)),
+          customObstacles: customObstacles.map(o => ({ x1: o.x1, y1: o.y1, x2: o.x2, y2: o.y2 }))
+        };
+      }
+      start() {
+        if (this.active) return;
+        this.active = true;
+        this.workerCount = Math.min(this.desiredWorkerCount(), Math.max(1, populationSize));
+        this.bestFitnessSeen = Math.max(this.bestFitnessSeen, ga.bestFitnessSeen || 0);
+        this.generationsCompleted = 0;
+        this.avgGenMs = 0;
+        this.lastGenTime = performance.now();
+        if (!this.blobUrl) this.blobUrl = URL.createObjectURL(new Blob([TURBO_WORKER_SOURCE], { type: 'application/javascript' }));
+        this.workers = [];
+        for (let i = 0; i < this.workerCount; i++) {
+          const w = new Worker(this.blobUrl);
+          w.onmessage = (ev) => this.handleWorkerMessage(ev.data);
+          this.workers.push(w);
+        }
+        if (skipStatusText) skipStatusText.textContent = `${this.workerCount} workersで同一集団の評価を並列化中。進化の系譜はメイン側で維持しています。`;
+        this.dispatchGeneration();
+      }
+      dispatchGeneration() {
+        if (!this.active || !this.workers.length) return;
+        const count = ga.population.length;
+        if (!count) return;
+        const genomes = ga.getGenomeMatrix();
+        this.results = new Float64Array(count);
+        this.pending = 0;
+        this.jobId++;
+        const cfg = this.currentConfig();
+        const workersToUse = Math.min(this.workers.length, count);
+        const chunk = Math.ceil(count / workersToUse);
+        for (let i = 0; i < workersToUse; i++) {
+          const start = i * chunk;
+          const end = Math.min(count, start + chunk);
+          const c = end - start;
+          if (c <= 0) continue;
+          const slice = genomes.slice(start * GENOME_LENGTH, end * GENOME_LENGTH);
+          this.pending++;
+          this.workers[i].postMessage({
+            type: 'eval',
+            jobId: this.jobId,
+            workerIndex: i,
+            start: start,
+            count: c,
+            genomes: slice.buffer,
+            config: cfg
+          }, [slice.buffer]);
+        }
+        fpsText.innerText = `MAX ${workersToUse}W`;
+      }
+      handleWorkerMessage(msg) {
+        if (!this.active || !msg || msg.type !== 'result' || msg.jobId !== this.jobId) return;
+        const fitnesses = new Float64Array(msg.fitnesses);
+        this.results.set(fitnesses, msg.start);
+        if (msg.bestFitness > this.bestFitnessSeen && msg.bestGenome) {
+          this.bestFitnessSeen = msg.bestFitness;
+          this.bestGenome = msg.bestGenome;
+        }
+        this.pending--;
+        if (this.pending > 0) return;
+
+        ga.evolveFromFitnessArray(this.results);
+        this.generationsCompleted++;
+        const now = performance.now();
+        const elapsed = now - this.lastGenTime;
+        this.avgGenMs = this.avgGenMs ? (this.avgGenMs * 0.82 + elapsed * 0.18) : elapsed;
+        this.lastGenTime = now;
+
+        uiGeneration.innerText = ga.generation;
+        uiBestFitness.innerText = (Math.max(ga.bestFitnessSeen, this.bestFitnessSeen) / 100).toFixed(1);
+        uiAlive.innerText = `評価完了/${populationSize}`;
+        if (skipStatusText) {
+          const gps = this.avgGenMs > 0 ? (1000 / this.avgGenMs).toFixed(1) : '-';
+          skipStatusText.textContent = `${this.workerCount} workersで評価分散中。${gps}世代/秒、同一集団で進化継続。`;
+        }
+        if (this.active) this.dispatchGeneration();
+      }
+      pushConfig() {
+        // 評価中のジョブはそのまま終わらせ、次世代から新設定を使う。
+        this.configDirty = true;
+      }
+      reset() {
+        this.bestFitnessSeen = 0;
+        this.bestGenome = null;
+        this.generationsCompleted = 0;
+        this.avgGenMs = 0;
+        this.jobId++;
+        if (this.active) this.dispatchGeneration();
+      }
+      stopAndAdopt() {
+        if (!this.active) return;
+        this.active = false;
+        this.jobId++;
+        for (let i = 0; i < this.workers.length; i++) {
+          try { this.workers[i].terminate(); } catch (e) {}
+        }
+        this.workers = [];
+        this.pending = 0;
+        this.results = null;
+        fpsText.innerText = '0';
+        if (skipStatusText) skipStatusText.textContent = '描画を止め、複数CPUコアで同一集団の評価を分散しています...';
+      }
+    }
+    const turbo = new TurboPool();
+
+    // --- メイン描画ループ ---
+    let frameCount = 0;
+    let fpsTimer = 0;
+    let lastTime = performance.now();
+    let uiAccum = 0;
+    let brainFrameSkip = 0;
+
+    function loop(timestamp) {
+      const dt = timestamp - lastTime;
+      lastTime = timestamp;
+
+      frameCount++;
+      fpsTimer += dt;
+      if (fpsTimer >= 1000 && simulationSpeed !== 'MAX') {
+        fpsText.innerText = Math.round((frameCount * 1000) / fpsTimer);
+        frameCount = 0;
+        fpsTimer = 0;
+      }
+
+      if (isRunning && simulationSpeed === 'MAX') {
+        turbo.start();
+        requestAnimationFrame(loop);
+        return;
+      }
+
+      if (isRunning) {
+        const steps = simulationSpeed | 0;
+        for (let s = 0; s < steps; s++) {
+          let aliveCount = 0;
+          for (let i = 0; i < ga.population.length; i++) {
+            const car = ga.population[i];
+            if (car.alive) {
+              car.update(wallData);
+              if (car.alive) aliveCount++;
+            }
+          }
+          if (aliveCount === 0) {
+            ga.evolve();
+            break;
+          }
+        }
+      }
+
+      ctx.clearRect(0, 0, BASE_WIDTH, BASE_HEIGHT);
+      drawCircuit(ctx);
+
+      if (customObstacles.length) {
+        ctx.save();
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = '#ef4444';
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 4;
+        for (let i = 0; i < customObstacles.length; i++) {
+          const o = customObstacles[i];
+          ctx.beginPath();
+          ctx.moveTo(o.x1, o.y1);
+          ctx.lineTo(o.x2, o.y2);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      let aliveCount = 0;
+      let eliteCar = null;
+      let maxFitness = -1;
+      for (let i = 0; i < ga.population.length; i++) {
+        const car = ga.population[i];
+        car.draw(ctx);
+        if (car.alive) aliveCount++;
+        if (car.fitness > maxFitness) {
+          maxFitness = car.fitness;
+          eliteCar = car;
+        }
+      }
+      if (!eliteCar) eliteCar = ga.population[0];
+
+      // 脳内可視化は毎フレーム描かず、通常時は1/2頻度に間引く。
+      brainFrameSkip = (brainFrameSkip + 1) % 2;
+      if (brainFrameSkip === 0) drawBrainStructure(eliteCar);
+
+      uiAccum += dt;
+      if (uiAccum > 90) {
+        uiAlive.innerText = `${aliveCount}/${populationSize}`;
+        uiGeneration.innerText = ga.generation;
+        uiBestFitness.innerText = ((Math.max(ga.bestFitnessSeen, maxFitness) || 0) / 100).toFixed(1);
+        uiAccum = 0;
+      }
+
+      requestAnimationFrame(loop);
+    }
+
+    // --- ドラッグ壁設置 ---
+    let dragStartPos = null;
+    function getMousePos(e) {
+      const rect = canvas.getBoundingClientRect();
+      let clientX, clientY;
+      if (e.touches && e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else if (e.changedTouches && e.changedTouches.length > 0) {
+        clientX = e.changedTouches[0].clientX;
+        clientY = e.changedTouches[0].clientY;
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
+      return {
+        x: ((clientX - rect.left) / rect.width) * BASE_WIDTH,
+        y: ((clientY - rect.top) / rect.height) * BASE_HEIGHT
+      };
+    }
+    canvas.addEventListener('mousedown', onDragStart);
+    canvas.addEventListener('mouseup', onDragEnd);
+    canvas.addEventListener('touchstart', onDragStart, { passive: true });
+    canvas.addEventListener('touchend', onDragEnd, { passive: true });
+
+    function onDragStart(e) {
+      if (!isRunning || simulationSpeed === 'MAX') return;
+      sound.init();
+      dragStartPos = getMousePos(e);
+    }
+    function onDragEnd(e) {
+      if (!dragStartPos || !isRunning || simulationSpeed === 'MAX') return;
+      const endPos = getMousePos(e);
+      const dx = endPos.x - dragStartPos.x;
+      const dy = endPos.y - dragStartPos.y;
+      if (dx * dx + dy * dy > 225) {
+        customObstacles.push({ x1: dragStartPos.x, y1: dragStartPos.y, x2: endPos.x, y2: endPos.y });
+        compileWalls();
+        sound.playHit();
+      }
+      dragStartPos = null;
+    }
+
+    // --- UIイベント設定 ---
+    slideMutation.addEventListener('input', (e) => {
+      mutationRate = e.target.value / 100;
+      valMutation.innerText = `${e.target.value}%`;
+      uiMutationLabel.innerText = `${e.target.value}%`;
+      turbo.pushConfig();
+    });
+    slidePopulation.addEventListener('input', (e) => {
+      populationSize = parseInt(e.target.value, 10);
+      valPopulation.innerText = populationSize;
+      turbo.pushConfig();
+    });
+    slideTimeout.addEventListener('input', (e) => {
+      timeoutSeconds = parseFloat(e.target.value);
+      valTimeout.innerText = `${timeoutSeconds.toFixed(1)}秒`;
+      turbo.pushConfig();
+    });
+
+    const speedButtons = [speed1x, speed2x, speed10x, speedMax];
+    const baseSpeedClasses = new Map([
+      [speed1x, 'px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition-all'],
+      [speed2x, 'px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition-all'],
+      [speed10x, 'px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition-all'],
+      [speedMax, 'px-2.5 py-1 rounded-md text-rose-400 hover:text-white transition-all hover:bg-rose-950 flex items-center gap-1']
+    ]);
+    function setSpeed(speed, activeBtn) {
+      if (simulationSpeed === 'MAX' && speed !== 'MAX') turbo.stopAndAdopt();
+      simulationSpeed = speed;
+      for (let i = 0; i < speedButtons.length; i++) speedButtons[i].className = baseSpeedClasses.get(speedButtons[i]);
+      activeBtn.classList.remove('text-slate-400');
+      activeBtn.classList.add('text-white');
+
+      if (speed === 'MAX') {
+        activeBtn.classList.add('bg-rose-600');
+        skipOverlay.classList.remove('hidden');
+        maxSpeedWarning.classList.remove('hidden');
+        turbo.start();
+      } else {
+        speedMax.classList.remove('bg-rose-600');
+        activeBtn.classList.add('bg-emerald-600');
+        skipOverlay.classList.add('hidden');
+        maxSpeedWarning.classList.add('hidden');
+        uiGeneration.innerText = ga.generation;
+      }
+    }
+    speed1x.addEventListener('click', () => setSpeed(1, speed1x));
+    speed2x.addEventListener('click', () => setSpeed(2, speed2x));
+    speed10x.addEventListener('click', () => setSpeed(10, speed10x));
+    speedMax.addEventListener('click', () => setSpeed('MAX', speedMax));
+
+    btnClearCustomObstacles.addEventListener('click', () => {
+      customObstacles = [];
+      compileWalls();
+      turbo.pushConfig();
+    });
+    btnNextGenForce.addEventListener('click', () => {
+      if (!isRunning) return;
+      if (simulationSpeed === 'MAX') return;
+      ga.evolve();
+    });
+    btnResetEvolution.addEventListener('click', () => {
+      if (simulationSpeed === 'MAX') turbo.stopAndAdopt();
+      customObstacles = [];
+      compileWalls();
+      timeoutSeconds = 3.0;
+      slideTimeout.value = '3.0';
+      valTimeout.innerText = '3.0秒';
+      ga.initPopulation();
+      turbo.reset();
+      setSpeed(1, speed1x);
+    });
+
+    const btnStart = document.getElementById('btnStart');
+    const overlay = document.getElementById('overlay');
+    btnStart.addEventListener('click', () => {
+      sound.init();
+      overlay.classList.add('opacity-0', 'pointer-events-none');
+      setTimeout(() => overlay.classList.add('hidden'), 300);
+      isRunning = true;
+    });
+
+    // --- 計算ヘルパー ---
+    function raySegmentDistance(px, py, dx, dy, ax, ay, bx, by) {
+      const rx = dx * SENSOR_RANGE;
+      const ry = dy * SENSOR_RANGE;
+      const sx = bx - ax;
+      const sy = by - ay;
+      const bottom = sy * rx - sx * ry;
+      if (bottom > -1e-9 && bottom < 1e-9) return SENSOR_RANGE;
+      const tTop = sx * (py - ay) - sy * (px - ax);
+      const uTop = (ay - py) * rx - (ax - px) * ry;
+      const t = tTop / bottom;
+      const u = uTop / bottom;
+      return (t >= 0 && t <= 1 && u >= 0 && u <= 1) ? t * SENSOR_RANGE : SENSOR_RANGE;
+    }
+    function distToSegmentSq(px, py, ax, ay, bx, by) {
+      const vx = bx - ax;
+      const vy = by - ay;
+      const wx = px - ax;
+      const wy = py - ay;
+      const l2 = vx * vx + vy * vy;
+      if (l2 === 0) {
+        const dx = px - ax, dy = py - ay;
+        return dx * dx + dy * dy;
+      }
+      let t = (wx * vx + wy * vy) / l2;
+      if (t < 0) t = 0;
+      else if (t > 1) t = 1;
+      const dx = px - (ax + t * vx);
+      const dy = py - (ay + t * vy);
+      return dx * dx + dy * dy;
+    }
+
+    // 互換用。Gemini等から直接呼ぶ可能性を残します。
+    function getIntersection(A, B, C, D) {
+      const tTop = (D.x - C.x) * (A.y - C.y) - (D.y - C.y) * (A.x - C.x);
+      const uTop = (C.y - A.y) * (A.x - B.x) - (C.x - A.x) * (A.y - B.y);
+      const bottom = (D.y - C.y) * (B.x - A.x) - (D.x - C.x) * (B.y - A.y);
+      if (bottom !== 0) {
+        const t = tTop / bottom;
+        const u = uTop / bottom;
+        if (t >= 0 && t <= 1 && u >= 0 && u <= 1) return { x: A.x + (B.x - A.x) * t, y: A.y + (B.y - A.y) * t, offset: t };
+      }
+      return null;
+    }
+    function lerp(A, B, t) { return A + (B - A) * t; }
+    function distToSegment(p, a, b) { return Math.sqrt(distToSegmentSq(p.x, p.y, a.x, a.y, b.x, b.y)); }
+
+    // --- 起動 ---
+    window.onload = function() {
+      setupCanvas();
+      compileWalls();
+      window.addEventListener('resize', resizeBrainCanvas);
+      ga.initPopulation();
+      lastTime = performance.now();
+      requestAnimationFrame(loop);
+    };
+  </script>
+</body>
+</html>
