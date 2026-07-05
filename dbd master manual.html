@@ -189,6 +189,56 @@ details.card summary{
 details.card summary .card-title{ flex:0 0 auto; }
 details.card summary .card-tags{ display:inline-flex; flex-wrap:wrap; gap:2px; }
 details.card summary .card-tags .tag{ font-size:.68rem; padding:1px 8px; }
+details.card summary .card-stats{
+  margin-left:auto; font-family:"Noto Sans JP", sans-serif; font-size:.72rem;
+  color: var(--text-faint); white-space:nowrap; font-weight:400;
+}
+details.card summary .card-stats.stat-caution{ color:#c99a5a; }
+
+/* お気に入り（ブックマーク） */
+.bookmark-star{
+  cursor:pointer; font-size:1rem; color: var(--text-faint); flex:0 0 auto;
+  padding:0 2px; transition: color .15s ease, transform .15s ease;
+  user-select:none;
+}
+.bookmark-star:hover{ color:#f2c14e; transform: scale(1.15); }
+.bookmark-star.active{ color:#f2c14e; }
+.bookmark-h3{ position:relative; }
+.bookmark-star.inline-h3{ font-size:.85rem; margin-left:8px; vertical-align:middle; }
+
+#bookmark-panel-btn{
+  position:relative; background: var(--bg-card); border:1px solid var(--border);
+  color: var(--text); padding:7px 13px; border-radius:18px; font-size:.8rem; cursor:pointer;
+  display:flex; align-items:center; gap:6px; flex:0 0 auto;
+}
+#bookmark-panel-btn:hover{ background: var(--bg-card-hover); }
+#bookmark-panel-btn .bm-count{
+  background: var(--accent); color:#fff; border-radius:10px; font-size:.68rem;
+  padding:1px 6px; min-width:16px; text-align:center;
+}
+.bookmark-panel{
+  position:absolute; top:110%; right:0; width:300px; max-height:60vh; overflow-y:auto;
+  background: var(--bg-panel); border:1px solid var(--border); border-radius:10px;
+  box-shadow: var(--shadow); display:none; z-index:65;
+}
+.bookmark-panel.show{ display:block; }
+.bookmark-panel .bm-item{
+  padding:9px 14px; border-bottom:1px solid var(--border-soft); cursor:pointer; font-size:.83rem;
+  display:flex; justify-content:space-between; align-items:center; gap:8px;
+}
+.bookmark-panel .bm-item:hover{ background: var(--bg-card-hover); }
+.bookmark-panel .bm-part{ color: var(--gold); font-size:.7rem; display:block; }
+.bookmark-panel .bm-remove{ color: var(--text-faint); flex:0 0 auto; cursor:pointer; }
+.bookmark-panel .bm-remove:hover{ color: var(--accent-bright); }
+.bookmark-panel .bm-empty{ padding:16px; color:var(--text-faint); font-size:.82rem; text-align:center; }
+
+/* 文字サイズ調整 */
+.font-size-ctrl{ display:flex; align-items:center; gap:2px; flex:0 0 auto; }
+.font-size-ctrl button{
+  background: var(--bg-card); border:1px solid var(--border); color:var(--text);
+  width:30px; height:30px; border-radius:8px; cursor:pointer; font-size:.85rem;
+}
+.font-size-ctrl button:hover{ background: var(--bg-card-hover); }
 details.card summary::-webkit-details-marker{ display:none; }
 details.card summary::before{
   content:"▸"; color: var(--accent-bright); font-size:.85em; transition: transform .18s ease;
@@ -225,6 +275,7 @@ details.card.filtered-out{ display:none; }
   display:none; align-items:center; gap:10px; margin: 0 0 14px;
   padding: 8px 14px; background: var(--bg-card); border:1px solid var(--gold-soft);
   border-radius: 20px; font-size:.82rem; color:#f1e2c4; width:fit-content;
+  flex-wrap:wrap;
 }
 .filter-status.show{ display:flex; }
 .filter-status .fs-clear{
@@ -232,6 +283,12 @@ details.card.filtered-out{ display:none; }
   border-radius:4px;
 }
 .filter-status .fs-clear:hover{ background: rgba(230,57,80,.15); }
+.fs-mode{ display:none; gap:2px; background:var(--bg); border-radius:12px; padding:2px; }
+.fs-mode-btn{
+  font-size:.72rem; padding:3px 10px; border-radius:10px; cursor:pointer; color:var(--text-faint);
+}
+.fs-mode-btn.active{ background: var(--accent-soft); color:#fff2e6; }
+.fs-mode-btn:hover{ color: var(--text); }
 .tag-info{ background:#123a4d; color:#8fd4f7; border-color:#1d5a78;}
 .tag-delay{ background:#4d1418; color:#f79d9d; border-color:#7a2028;}
 .tag-scout{ background:#4d2e0d; color:#f7c98f; border-color:#7a4a15;}
@@ -342,6 +399,16 @@ details.card.filtered-out{ display:none; }
       <input type="text" class="search-input" placeholder="キラー名・パーク名・用語で検索…">
       <div class="search-results"></div>
     </div>
+    <div class="font-size-ctrl">
+      <button id="font-dec" aria-label="文字を小さく" title="文字を小さく">A-</button>
+      <button id="font-inc" aria-label="文字を大きく" title="文字を大きく">A+</button>
+    </div>
+    <div style="position:relative">
+      <button id="bookmark-panel-btn" title="お気に入り一覧">
+        ⭐ お気に入り <span class="bm-count">0</span>
+      </button>
+      <div class="bookmark-panel"></div>
+    </div>
   </div>
   <div class="tabbar">
     <button class="tab-btn" data-target="cover">総論</button><button class="tab-btn" data-target="p1">第1部 キラー攻略</button><button class="tab-btn" data-target="p2">第2部 マップ</button><button class="tab-btn" data-target="p3">第3部 システム</button><button class="tab-btn" data-target="p4">第4部 ビルド</button><button class="tab-btn" data-target="p5">第5部 判断チャート</button><button class="tab-btn" data-target="p6">第6部 メタ環境</button><button class="tab-btn" data-target="p7">第7部 用語集</button><button class="tab-btn" data-target="p8">第8部 パーク大全</button>
@@ -373,7 +440,7 @@ details.card.filtered-out{ display:none; }
     <div class="part-content" data-slug="cover" data-title="Dead by Daylight 完全攻略マニュアル【統合版】"><div class="intro-block"><p><strong>最終更新日：2026年7月4日　／　対象パッチ：9.5.0〜10.0.1（All-Kill: Comeback〜The Life Road）</strong></p>
 <hr /></div>
 <section class="flow-section" id="cover-s-1"><h2>このマニュアルについて</h2><p>本書は、Dead by Daylightの実戦知識を「キラー別の個別対策」から「マップ」「システム」「ビルド」「状況判断」「環境動向」まで一冊に体系化した統合マニュアルである。全8部構成になっており、目的に応じて必要な部だけを参照することも、通読して全体像を掴むこともできる。</p>
-<h3 id="cover-t-2">全体構成</h3>
+<h3 id="cover-t-2">全体構成<span class="bookmark-star inline-h3" data-bm-id="cover-t-2" data-bm-title="全体構成" data-bm-part="cover" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -425,7 +492,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="cover-t-3">情報の性質について</h3>
+<h3 id="cover-t-3">情報の性質について<span class="bookmark-star inline-h3" data-bm-id="cover-t-3" data-bm-title="情報の性質について" data-bm-part="cover" title="お気に入りに登録">☆</span></h3>
 <p>第1部〜第5部および第7部は「evergreen（陳腐化しにくい）」な内容を中心にしている。第8部（パーク大全）は変化の速い領域のため、検証ステータス（無印／<span class="verify v-caution" title="細部（数値・発動条件）は最新パッチで要確認">▲</span>／<span class="verify v-note" title="補足情報">※</span>）を付した更新前提の設計になっている。チェイス理論やマップの地形、判断の型は、パーク単体の数値調整があっても大きくは変わらない。一方で<strong>第6部は環境の“今”を切り取ったスナップショット</strong>であり、パッチのたびに古くなることを前提に設計されている。ティア表や実装予定を鵜呑みにせず、時期が経ったら最新情報で読み替えてほしい。</p>
 <p>パーク・アドオンの記述は全編を通して「なぜそれが強いのか」という理由をセットで記載する方針を取っている。理由が分かっていれば、数値調整後も同系統の代替パークを自分で選べるようになるためである。</p>
 <hr /></section></div><div class="part-content" data-slug="p1" data-title="第1部：全キラー攻略編（全43キラー）"><div style="margin-bottom:14px"><span class="sb-toggle-all" data-slug="p1">すべて展開する</span></div><div class="intro-block"><p>本レポートでは、実装順に全キラーについて以下の5項目をまとめる。</p>
@@ -438,7 +505,8 @@ details.card.filtered-out{ display:none; }
 </ol>
 <p><span class="verify v-note" title="補足情報">※</span>パーク・アドオンの性能はアップデートで頻繁に調整されるため、「なぜそれが強いのか」という理由も併記する。理由が分かっていれば、調整後も同系統の代替を選べる。</p>
 <hr /></div>
-<details class="card" data-tags="徒歩,設置罠" id="p1-s-4"><summary><span class="card-title">1. トラッパー（The Trapper）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-trap" data-scope="killer">設置罠</span></span></summary><div class="card-body"><p><strong>能力：トラバサミ（設置罠）</strong></p>
+<details class="card" data-tags="徒歩,設置罠" id="p1-s-4"><summary><span class="bookmark-star" data-bm-id="p1-s-4" data-bm-title="1. トラッパー（The Trapper）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">1. トラッパー（The Trapper）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-trap" data-scope="killer">設置罠</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：トラバサミ（設置罠）</strong>
+儀式開始時にトラバサミを2つ所持し、さらに6つがマップ上のランダムな位置に生成される（合計8個）。トラッパーが同時に持てるのは2つまで。無傷のサバイバーが罠にかかると即座に負傷し、脱出を試みるか仲間に解除してもらうまで身動きが取れなくなる。罠はトラッパー自身も踏むと拘束されてしまい、サバイバーを担いでいる時に踏むと担ぎ落としてしまう点に注意。</p>
 <h3 id="p1-t-5">キラー側の立ち回り</h3>
 <ul>
 <li>序盤に罠を「通りそうな場所」ではなく「チェイスで必ず通る場所」（板の下、窓枠の着地点、草むらの獣道）へ集中的に仕掛ける。マップ全体にばら撒くより、守りたい発電機3台周辺のエリアに罠網を構築する方が強い。</li>
@@ -474,7 +542,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：地図（アドオン付き）</strong>：罠を記録でき、チーム全体で位置共有できる。工具箱・医療キットも標準的に有効。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="高速接近,隠密" id="p1-s-10"><summary><span class="card-title">2. レイス（The Wraith）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-stealth" data-scope="killer">隠密</span></span></summary><div class="card-body"><p><strong>能力：泣きの鐘（透明化）</strong></p>
+<details class="card" data-tags="高速接近,隠密" id="p1-s-10"><summary><span class="bookmark-star" data-bm-id="p1-s-10" data-bm-title="2. レイス（The Wraith）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">2. レイス（The Wraith）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-stealth" data-scope="killer">隠密</span></span><span class="card-stats stat-ok">移動速度 4.6m/s（透明時は心音0m）／心音範囲 32m（透明時0m）</span></summary><div class="card-body"><p><strong>能力：泣きの鐘（透明化）</strong>
+「悲哀の鐘」を鳴らして透明化すると脅威範囲が消滅し、透明中は攻撃ができない代わりに発見されにくくなる。再度能力ボタンを押して透明化を解除すると、解除の瞬間に加速状態になり奇襲攻撃がしやすくなる。ただし透明化・解除の両方で鐘の音が周囲に響くため、接近に気づかれる隙もある。透明時でも近づきすぎると空間の歪みで視認されることがある。</p>
 <h3 id="p1-t-11">キラー側の立ち回り</h3>
 <ul>
 <li>透明化中は移動速度が非常に速い。巡回・接近は常に透明状態で行い、解除時の加速を使って奇襲の初撃を確実に入れる。</li>
@@ -510,7 +579,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：ヒット＆アウェイで負傷をばら撒かれるマッチアップのため、素早い治療で「ワンパン圏内の人数」を減らす価値が特に高い。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="高速接近,一撃" id="p1-s-16"><summary><span class="card-title">3. ヒルビリー（The Hillbilly）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-oneshot" data-scope="killer">一撃</span></span></summary><div class="card-body"><p><strong>能力：チェーンソーダッシュ（高速移動＋ワンパン）</strong></p>
+<details class="card" data-tags="高速接近,一撃" id="p1-s-16"><summary><span class="bookmark-star" data-bm-id="p1-s-16" data-bm-title="3. ヒルビリー（The Hillbilly）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">3. ヒルビリー（The Hillbilly）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-oneshot" data-scope="killer">一撃</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 40m</span></summary><div class="card-body"><p><strong>能力：チェーンソーダッシュ（高速移動＋ワンパン）</strong>
+チェーンソーの回転数を上げてチャージすると「チェーンソーダッシュ」が発動し、高速で長距離を直進する。命中すれば健康状態のサバイバーでも即座にダウンさせられるが、チャージしすぎるとチェーンソーがオーバーヒートして自身が硬直する。障害物に衝突した場合も同様に長い硬直が発生するため、直進性の高さが長所であり弱点でもある。</p>
 <h3 id="p1-t-17">キラー側の立ち回り</h3>
 <ul>
 <li>チェーンソーは「移動手段」と「ワンパン攻撃」の二刀流。長距離の巡回は必ずチェーンソーで行い、試合全体のテンポを上げる。</li>
@@ -546,7 +616,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：ワンパン圏内を避けるため常時健康を保つ価値が高い。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="ワープ" id="p1-s-22"><summary><span class="card-title">4. ナース（The Nurse）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span></span></summary><div class="card-body"><p><strong>能力：ブリンク（壁を無視した瞬間移動）</strong></p>
+<details class="card" data-tags="ワープ" id="p1-s-22"><summary><span class="bookmark-star" data-bm-id="p1-s-22" data-bm-title="4. ナース（The Nurse）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">4. ナース（The Nurse）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span></span><span class="card-stats stat-ok">移動速度 3.8m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：ブリンク（壁を無視した瞬間移動）</strong>
+「ブリンク」をチャージして発動すると、壁や障害物を無視して指定方向へ瞬間移動できる。1回目のブリンク後、短時間だけ2回目のブリンクを追加でチャージ可能。全てのブリンクを使い切ると数秒間「疲労」状態になり攻撃も含めた行動に制限がかかる（ブリンク直後の攻撃はこの疲労がさらに延長される）。ブリンクの距離・軌道はチャージ時間に応じて変化する。</p>
 <h3 id="p1-t-23">キラー側の立ち回り</h3>
 <ul>
 <li>板・窓・壁を全て無視できるため、「サバイバーの移動先を読む」ことが全て。逃走方向の癖（板に向かう／視線を切る）を早期に把握する。</li>
@@ -582,7 +653,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：常時健康を維持し、2回の読み合いに耐えられる状態を保つ。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="徒歩,一撃" id="p1-s-28"><summary><span class="card-title">5. シェイプ（The Shape／マイケル・マイヤーズ）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-oneshot" data-scope="killer">一撃</span></span></summary><div class="card-body"><p><strong>能力：内なる邪悪（凝視によるステージ進行、ワンパン化）</strong></p>
+<details class="card" data-tags="徒歩,一撃" id="p1-s-28"><summary><span class="bookmark-star" data-bm-id="p1-s-28" data-bm-title="5. シェイプ（The Shape／マイケル・マイヤーズ）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">5. シェイプ（The Shape／マイケル・マイヤーズ）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-oneshot" data-scope="killer">一撃</span></span><span class="card-stats stat-ok">移動速度 4.2m/s→4.6m/s（レベルで変動）／心音範囲 0m→32m（レベルで変動）</span></summary><div class="card-body"><p><strong>能力：内なる邪悪（凝視によるステージ進行、ワンパン化）</strong>
+「内なる邪悪」システムにより、サバイバーを凝視し続けることでレベルが1→2→3と進行する。レベル1は隠密性が高いが基礎能力は低め、レベル2は標準的なキラーと同等の性能になり心音範囲も16mまで縮小、レベル3に到達すると通常攻撃が健康状態のサバイバーを問答無用で瀕死にする一撃必殺となり、攻撃の判定も広がる。レベル3は一定時間で自動的にレベル1へ低下する（アドオンで無期限化も可能）。</p>
 <h3 id="p1-t-29">キラー側の立ち回り</h3>
 <ul>
 <li>序盤（邪悪Ⅰ）は脅威範囲が極小の隠密キラー。遮蔽越しの凝視でゲージを素早く貯め、邪悪Ⅱへ最短で移行する。</li>
@@ -618,7 +690,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：常時健康を維持し、邪悪Ⅱの通常攻撃に対する猶予を確保する。ライトで凝視自体を妨害することはできない点に注意。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="ワープ,設置罠" id="p1-s-34"><summary><span class="card-title">6. ハグ（The Hag）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-trap" data-scope="killer">設置罠</span></span></summary><div class="card-body"><p><strong>能力：泥の徴（罠テレポート）</strong></p>
+<details class="card" data-tags="ワープ,設置罠" id="p1-s-34"><summary><span class="bookmark-star" data-bm-id="p1-s-34" data-bm-title="6. ハグ（The Hag）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">6. ハグ（The Hag）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-trap" data-scope="killer">設置罠</span></span><span class="card-stats stat-ok">移動速度 4.4m/s／心音範囲 24m</span></summary><div class="card-body"><p><strong>能力：泥の徴（罠テレポート）</strong>
+地面に最大10個までの「泥の幻像の罠」を仕掛けられる。罠の範囲にサバイバーが足を踏み入れると幻像が発動し、ハグはその瞬間に罠の設置場所へ瞬間移動できる。発動した罠は偽の脅威範囲を展開してサバイバーを混乱させる効果もある。サバイバーがしゃがみ移動で通過した場合、罠は発動しない。</p>
 <h3 id="p1-t-35">キラー側の立ち回り</h3>
 <ul>
 <li>フック周辺と主要な通路に罠を集中配置し、「救助＝罠を踏む」構図を作る守りのキラー。キャンプ・ゾーニングが最も輝く。</li>
@@ -654,7 +727,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：地図</strong>：罠の位置を記録でき、フック周辺の罠網を可視化できる。医療キットも標準装備として有効。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="徒歩,索敵" id="p1-s-40"><summary><span class="card-title">7. ドクター（The Doctor）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-scout" data-scope="killer">索敵</span></span></summary><div class="card-body"><p><strong>能力：放電爆破・ショック療法（狂気付与、隠密潰し）</strong></p>
+<details class="card" data-tags="徒歩,索敵" id="p1-s-40"><summary><span class="bookmark-star" data-bm-id="p1-s-40" data-bm-title="7. ドクター（The Doctor）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">7. ドクター（The Doctor）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-scout" data-scope="killer">索敵</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：放電爆破・ショック療法（狂気付与、隠密潰し）</strong>
+「カーターの電光」により、特殊アビリティ「ショック療法」または「放電爆破」を命中させたサバイバーの狂気度が段階的に上昇する。狂気度1で1回だけ叫んで位置が判明、狂気度2で幻覚のドクターが出現し始め、狂気度3では持続的に叫び声を上げ、正気を取り戻すまで修理・治療・破壊工作・開錠・浄化ができなくなる。ショック療法は前方へ電流を放って行動を中断させる直接攻撃、放電爆破は脅威範囲内の全サバイバーへ一斉に狂気度を与える範囲攻撃で、後者はクールダウン制。</p>
 <h3 id="p1-t-41">キラー側の立ち回り</h3>
 <ul>
 <li>放電爆破は「索敵ボタン」。発電機密集地帯で定期的に撃ち、悲鳴で位置を炙り出してから追う対象を選ぶ。</li>
@@ -690,7 +764,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：狂気治療とは別に負傷を素早く消し、チェイス回数の余裕を作る。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="徒歩,遠距離" id="p1-s-46"><summary><span class="card-title">8. ハントレス（The Huntress）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span></summary><div class="card-body"><p><strong>能力：手斧投擲（遠距離攻撃）</strong></p>
+<details class="card" data-tags="徒歩,遠距離" id="p1-s-46"><summary><span class="bookmark-star" data-bm-id="p1-s-46" data-bm-title="8. ハントレス（The Huntress）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">8. ハントレス（The Huntress）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span><span class="card-stats stat-ok">移動速度 4.4m/s／心音範囲 20m（鼻歌は45m）</span></summary><div class="card-body"><p><strong>能力：手斧投擲（遠距離攻撃）</strong>
+儀式開始時に5つの狩猟用手斧を所持し、ロッカーで補充できる。手斧は正確な曲線を描いて飛び、命中すると負傷させられる遠距離攻撃。「血の渇望」状態になると脅威範囲と赤い光が消失し、追跡中の動きを読まれにくくなる。素の移動速度が遅めなのが弱点。</p>
 <h3 id="p1-t-47">キラー側の立ち回り</h3>
 <ul>
 <li>板グルは「斧を当てるチャンス」。板越し・窓越えモーション中のサバイバーは軌道が固定されるため、そこに合わせて投げる。</li>
@@ -726,7 +801,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：中距離被弾が避けにくい相手のため、回復手段の自前確保が重要。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="高速接近,一撃" id="p1-s-52"><summary><span class="card-title">9. カニバル（The Cannibal／レザーフェイス）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-oneshot" data-scope="killer">一撃</span></span></summary><div class="card-body"><p><strong>能力：チェーンソー（連続攻撃可能なワンパン）</strong></p>
+<details class="card" data-tags="高速接近,一撃" id="p1-s-52"><summary><span class="bookmark-star" data-bm-id="p1-s-52" data-bm-title="9. カニバル（The Cannibal／レザーフェイス）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">9. カニバル（The Cannibal／レザーフェイス）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-oneshot" data-scope="killer">一撃</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：チェーンソー（連続攻撃可能なワンパン）</strong>
+チェーンソーを構えて振り回すことで、健康状態のサバイバーでも一撃で瀕死にできる範囲攻撃が可能。トークン（チャージ）が溜まっているほど長く振り回せ、障害物に衝突するかチャージを使い切ると「癇癪」状態になり大幅に減速する。振り回し中は板や壊せる壁も高速で破壊できる。</p>
 <h3 id="p1-t-53">キラー側の立ち回り</h3>
 <ul>
 <li>チェーンソーは3チャージ連続で振れるため、近距離での確実なワンパン性能はトップクラス。密着したら迷わずソーで仕留める。</li>
@@ -762,7 +838,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：ワンパン持ちのため健康維持の価値が高い。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="ワープ,隠密" id="p1-s-58"><summary><span class="card-title">10. ナイトメア（The Nightmare／フレディ）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-stealth" data-scope="killer">隠密</span></span></summary><div class="card-body"><p><strong>能力：ドリームワールド（夢の蛇・夢の板、発電機テレポート）</strong></p>
+<details class="card" data-tags="ワープ,隠密" id="p1-s-58"><summary><span class="bookmark-star" data-bm-id="p1-s-58" data-bm-title="10. ナイトメア（The Nightmare／フレディ）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">10. ナイトメア（The Nightmare／フレディ）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-stealth" data-scope="killer">隠密</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：ドリームワールド（夢の蛇・夢の板、発電機テレポート）</strong>
+時間経過でサバイバーを強制的に「ドリームワールド」に引き込む。ドリームワールド内のサバイバーは脅威範囲が消え、代わりに子守唄が聞こえるようになる。「ドリームスネア」で罠を設置して移動を妨害し、「ドリームパレット」で偽の板を配置して欺くことができる。さらに発電機へ瞬間移動する能力を持ち、マップ内の巡回時間を大幅に短縮できる（使用にはクールタイムあり）。</p>
 <h3 id="p1-t-59">キラー側の立ち回り</h3>
 <ul>
 <li>発電機テレポートで巡回時間を大幅短縮し、マップ全体に圧をかけ続けるのが基本。回されている発電機へ跳んで奇襲。</li>
@@ -798,7 +875,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：負傷＋入眠の二重デバフ状態を素早く解消するために有効。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="徒歩,隠密,設置罠" id="p1-s-64"><summary><span class="card-title">11. ピッグ（The Pig）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-stealth" data-scope="killer">隠密</span><span class="tag tag-trap" data-scope="killer">設置罠</span></span></summary><div class="card-body"><p><strong>能力：逆トラバサミ＋しゃがみ奇襲</strong></p>
+<details class="card" data-tags="徒歩,隠密,設置罠" id="p1-s-64"><summary><span class="bookmark-star" data-bm-id="p1-s-64" data-bm-title="11. ピッグ（The Pig）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">11. ピッグ（The Pig）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-stealth" data-scope="killer">隠密</span><span class="tag tag-trap" data-scope="killer">設置罠</span></span><span class="card-stats stat-ok">移動速度 4.6m/s（しゃがみ時0m）／心音範囲 24m（しゃがみ時0m）</span></summary><div class="card-body"><p><strong>能力：逆トラバサミ＋しゃがみ奇襲</strong>
+瀕死状態のサバイバーに「逆トラバサミ」を装着できる。装着されたサバイバーが救助されて起き上がると罠が有効化され、そのラウンド中にいずれかの発電機が修理完了すると爆発してサバイバーを即座に処刑する。サバイバーはマップ上のジグソウボックスを探して鍵を見つけることで、この罠を安全に解除できる。しゃがみ移動中は脅威範囲が完全に0になり、しゃがみからの奇襲攻撃（ダッシュ攻撃）も可能。</p>
 <h3 id="p1-t-65">キラー側の立ち回り</h3>
 <ul>
 <li>ダウンさせたら逆トラバサミを装着し、フックへ。装着されたサバイバーは発電機を回せず解除装置へ走るため、強力な遅延になる。</li>
@@ -834,7 +912,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：地図</strong>：解除装置の記録に使え、装着時の移動時間を短縮できる。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="高速接近,遠距離" id="p1-s-70"><summary><span class="card-title">12. クラウン（The Clown）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span></summary><div class="card-body"><p><strong>能力：ガス瓶（紫＝鈍化、黄＝加速）</strong></p>
+<details class="card" data-tags="高速接近,遠距離" id="p1-s-70"><summary><span class="bookmark-star" data-bm-id="p1-s-70" data-bm-title="12. クラウン（The Clown）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">12. クラウン（The Clown）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：ガス瓶（紫＝鈍化、黄＝加速）</strong>
+儀式開始時に5つの調合薬瓶を所持。紫色の「寸劇のトニック」は着弾地点にガスを発生させ、触れたサバイバーの方向感覚を狂わせて移動速度を低下させ、2秒間咳き込ませる（追跡の手がかりにもなる）。黄色の「寸劇の解毒剤」はガスに触れた者（クラウン自身を含む）の移動速度を急上昇させる。ボトルは能力ボタンの長押しで補充できる。</p>
 <h3 id="p1-t-71">キラー側の立ち回り</h3>
 <ul>
 <li>紫瓶は板・窓の先へ投げて逃走ルートを潰すのが基本。サバイバーの足元より「行き先」に撒く。</li>
@@ -870,7 +949,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：工具箱</strong>：同上の理由で発電加速の価値が高い。医療キットも標準装備として有効。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="高速接近,隠密" id="p1-s-76"><summary><span class="card-title">13. スピリット（The Spirit／山岡凛）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-stealth" data-scope="killer">隠密</span></span></summary><div class="card-body"><p><strong>能力：フェイズウォーク（高速移動、姿は見えないが本体も視認不可）</strong></p>
+<details class="card" data-tags="高速接近,隠密" id="p1-s-76"><summary><span class="bookmark-star" data-bm-id="p1-s-76" data-bm-title="13. スピリット（The Spirit／山岡凛）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">13. スピリット（The Spirit／山岡凛）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-stealth" data-scope="killer">隠密</span></span><span class="card-stats stat-ok">移動速度 4.4m/s／心音範囲 24m</span></summary><div class="card-body"><p><strong>能力：フェイズウォーク（高速移動、姿は見えないが本体も視認不可）</strong>
+「山岡の祟り」を発動すると「フェイズウォーク」状態になり、スピリット・サバイバー双方の姿が互いに見えなくなる代わりに、スピリットの移動が加速する。追跡は赤い傷マークや足音・オブジェクト操作の物音を頼りに行うことになり、発動中の効果音がサバイバー側に聞こえる場合がある読み合いのキラー。</p>
 <h3 id="p1-t-77">キラー側の立ち回り</h3>
 <ul>
 <li>フェイズ中はサバイバーが見えないため、音（足音・呻き声・草むら）と傷マークで追う。ヘッドホン推奨のサウンドプレイヤー。</li>
@@ -906,7 +986,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：負傷＝呻き声＝敗北に直結するため、即時回復の価値が全キラー中でも特に高い。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="高速接近" id="p1-s-82"><summary><span class="card-title">14. リージョン（The Legion）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span></span></summary><div class="card-body"><p><strong>能力：愚連の狂奔（高速移動＋連続深手付与）</strong></p>
+<details class="card" data-tags="高速接近" id="p1-s-82"><summary><span class="bookmark-star" data-bm-id="p1-s-82" data-bm-title="14. リージョン（The Legion）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">14. リージョン（The Legion）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：愚連の狂奔（高速移動＋連続深手付与）</strong>
+「愚連の狂奔」を発動すると加速し、発動中は複数のサバイバーを連続して攻撃できる（命中するとパワーゲージが回復し、脅威範囲内の全サバイバーの位置が殺人鬼の本能で判明する）。発動中は板や窓を乗り越えられるが、攻撃を外す・怯む・パワー切れのいずれかで効果が解除される。命中したサバイバーは「深手」状態になり、放置すると瀕死に至る。</p>
 <h3 id="p1-t-83">キラー側の立ち回り</h3>
 <ul>
 <li>狂奔で複数人に深手を連鎖させるのが本体。1人殴ったら殺人鬼の本能で見えた次のターゲットへ即座に走る。</li>
@@ -942,7 +1023,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット（チャージ多め）</strong>：治療回数がそのまま生存力になるマッチアップ。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="徒歩,遠距離,一撃" id="p1-s-88"><summary><span class="card-title">15. プレイグ（The Plague）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-ranged" data-scope="killer">遠距離</span><span class="tag tag-oneshot" data-scope="killer">一撃</span></span></summary><div class="card-body"><p><strong>能力：不浄の吐瀉（感染）／穢れの吐瀉（浄化の泉を使わせるジレンマ）</strong></p>
+<details class="card" data-tags="徒歩,遠距離,一撃" id="p1-s-88"><summary><span class="bookmark-star" data-bm-id="p1-s-88" data-bm-title="15. プレイグ（The Plague）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">15. プレイグ（The Plague）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-ranged" data-scope="killer">遠距離</span><span class="tag tag-oneshot" data-scope="killer">一撃</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：不浄の吐瀉（感染）／穢れの吐瀉（浄化の泉を使わせるジレンマ）</strong>
+「黒死の吐瀉」でオブジェクトやサバイバーを感染させられる。感染したサバイバーは行動のたびに感染ゲージが蓄積し、上限に達すると「衰弱」状態になり負傷から回復できなくなる。マップ上の「献身の淀み」で浄化すると感染は解除されるが、プレイグがその淀みを摂取すると吐瀉が「汚濁の吐瀉」に変化し、直接命中させることで健康なサバイバーを一瞬でダウンさせられる強力な遠距離攻撃に変わる。</p>
 <h3 id="p1-t-89">キラー側の立ち回り</h3>
 <ul>
 <li>感染をばら撒いて全員を「衰弱状態（実質負傷）」にするのが基本。発電機やオブジェクトにも吐いて間接感染を狙う。</li>
@@ -978,7 +1060,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：工具箱</strong>：医療キットの価値が下がるマッチアップの代表格。発電加速に振り切る。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="徒歩,隠密,一撃" id="p1-s-94"><summary><span class="card-title">16. ゴーストフェイス（The Ghost Face）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-stealth" data-scope="killer">隠密</span><span class="tag tag-oneshot" data-scope="killer">一撃</span></span></summary><div class="card-body"><p><strong>能力：夜の帳（隠密＋ストーキングによるワンパン化）</strong></p>
+<details class="card" data-tags="徒歩,隠密,一撃" id="p1-s-94"><summary><span class="bookmark-star" data-bm-id="p1-s-94" data-bm-title="16. ゴーストフェイス（The Ghost Face）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">16. ゴーストフェイス（The Ghost Face）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-stealth" data-scope="killer">隠密</span><span class="tag tag-oneshot" data-scope="killer">一撃</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 24m</span></summary><div class="card-body"><p><strong>能力：夜の帳（隠密＋ストーキングによるワンパン化）</strong>
+「闇の包容」を発動すると探知不可になり脅威範囲と赤い光が消える。この状態でサバイバーを一定時間見つめ続けると「ストーキングゲージ」が溜まり、満タンになるとマーキングされたサバイバーが無防備状態になり、次の攻撃で健康状態から一撃でダウンする。ただしサバイバーがゴーストフェイスを画面中央に捉えて1.5秒見つめ返すと、ストーキングを中断・解除できる。</p>
 <h3 id="p1-t-95">キラー側の立ち回り</h3>
 <ul>
 <li>隠密状態で遮蔽物から覗き込み（リーン）、無防備なサバイバーをストーキングして「マーク（ワンパン状態）」を付与。マーク完了までは姿を晒さない。</li>
@@ -1014,7 +1097,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：マーク（暴露）中の被弾は即ダウンに直結するため、負傷を持ち越さない自己完結治療の価値が高い。暴露返しはあくまで「視認」で行う（ライト照射に解除効果はない）。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="ワープ,高速接近" id="p1-s-100"><summary><span class="card-title">17. デモゴルゴン（The Demogorgon）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-dash" data-scope="killer">高速接近</span></span></summary><div class="card-body"><p><strong>能力：異次元の渦（ポータル移動）＋シュレッド（突進攻撃）</strong></p>
+<details class="card" data-tags="ワープ,高速接近" id="p1-s-100"><summary><span class="bookmark-star" data-bm-id="p1-s-100" data-bm-title="17. デモゴルゴン（The Demogorgon）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">17. デモゴルゴン（The Demogorgon）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-dash" data-scope="killer">高速接近</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：異次元の渦（ポータル移動）＋シュレッド（突進攻撃）</strong>
+「深淵のいざない」をチャージすることで、発動済みポータル付近のサバイバーの位置を殺人鬼の本能で探知できる。チャージ・保持中に攻撃ボタンを押すと前方へ飛び込む「シュレッド」を繰り出し、パレットや破壊可能な壁を破壊しつつサバイバーを攻撃できる。地面に設置したポータル同士を移動する「テレポート」も可能で、移動後は短時間探知不可になる。設置できるポータル数には上限がある。</p>
 <h3 id="p1-t-101">キラー側の立ち回り</h3>
 <ul>
 <li>序盤に主要発電機間へポータルを敷設し、マップを高速で行き来する巡回網を作る。</li>
@@ -1050,7 +1134,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：ポータル奇襲の被弾をリカバリーする標準装備。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="高速接近,一撃" id="p1-s-106"><summary><span class="card-title">18. 鬼（The Oni／山岡崋山）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-oneshot" data-scope="killer">一撃</span></span></summary><div class="card-body"><p><strong>能力：血の怒り（血の玉収集→高速移動＋ワンパン鬼化）</strong></p>
+<details class="card" data-tags="高速接近,一撃" id="p1-s-106"><summary><span class="bookmark-star" data-bm-id="p1-s-106" data-bm-title="18. 鬼（The Oni／山岡崋山）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">18. 鬼（The Oni／山岡崋山）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-oneshot" data-scope="killer">一撃</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：血の怒り（血の玉収集→高速移動＋ワンパン鬼化）</strong>
+サバイバーを負傷させると出現する「血の玉」を回収することで「血の怒り」ゲージが蓄積する。ゲージが満タンになると「血の怒り」状態を発動でき、移動速度が大幅に上昇するとともに、通常攻撃が健康状態のサバイバーを一撃でダウンさせる強力なモードに変化する。血の怒り状態には時間制限があり、発動までの下準備（負傷者を作ること）に時間がかかるハイリスク・ハイリターンなキラー。</p>
 <h3 id="p1-t-107">キラー側の立ち回り</h3>
 <ul>
 <li>序盤は通常キラーとして初撃を取り、血の玉を回収してゲージを貯める。最初の負傷を早く作ることが全て。</li>
@@ -1086,7 +1171,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：負傷を残さないことが能力対策に直結する数少ないマッチアップ。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="徒歩,遠距離" id="p1-s-112"><summary><span class="card-title">19. デススリンガー（The Deathslinger）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span></summary><div class="card-body"><p><strong>能力：贖いの死神（銛銃で射抜いて引き寄せ）</strong></p>
+<details class="card" data-tags="徒歩,遠距離" id="p1-s-112"><summary><span class="bookmark-star" data-bm-id="p1-s-112" data-bm-title="19. デススリンガー（The Deathslinger）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">19. デススリンガー（The Deathslinger）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span><span class="card-stats stat-ok">移動速度 4.4m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：贖いの死神（銛銃で射抜いて引き寄せ）</strong>
+「贖い主」という手製の銃を構え、視界内のサバイバーへ鎖付きの銛を発射する。命中すると対象は「もがき」状態になり、能力ボタンで鎖を巻き取って引き寄せながらそのまま攻撃できる。サバイバーは鎖を引きちぎる、または障害物に鎖を引っ掛けることで拘束から逃れられ、外された場合デススリンガーは短時間怯む。銃を構えている間は移動速度が低下する。</p>
 <h3 id="p1-t-113">キラー側の立ち回り</h3>
 <ul>
 <li>構えが速く、照準を見せた瞬間に撃てる「クイックスコープ」の読み合いが本体。構えフェイントで移動を誘ってから撃つ。</li>
@@ -1122,7 +1208,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：中距離被弾が構造的に避けにくいため、回復の自己完結が重要。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="徒歩,遠距離" id="p1-s-118"><summary><span class="card-title">20. エクセキューショナー（The Executioner／ピラミッド・ヘッド）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span></summary><div class="card-body"><p><strong>能力：贖罪の儀式（地面の溝）・冥府の罰（地を這う遠距離攻撃）・懲罰の檻</strong></p>
+<details class="card" data-tags="徒歩,遠距離" id="p1-s-118"><summary><span class="bookmark-star" data-bm-id="p1-s-118" data-bm-title="20. エクセキューショナー（The Executioner／ピラミッド・ヘッド）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">20. エクセキューショナー（The Executioner／ピラミッド・ヘッド）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：贖罪の儀式（地面の溝）・冥府の罰（地を這う遠距離攻撃）・懲罰の檻</strong>
+地面に「トレイル」を設置でき、踏んだサバイバーに「煩悶」状態を付与する。「裁きの儀式」の発動中は、障害物を貫通する遠距離攻撃「地獄の罰」を放てる。ダウンさせたサバイバーはフックに吊るす代わりに「贖罪の檻」へ送ることもでき、檻は元の場所から離れた位置に生成される（吊り回数に応じて檻からの処刑までの猶予が変わる）。</p>
 <h3 id="p1-t-119">キラー側の立ち回り</h3>
 <ul>
 <li>冥府の罰は板・窓・壁を貫通する。板グル中の膠着を一方的に崩せるため、乗り越えモーションに合わせて撃つ。</li>
@@ -1158,7 +1245,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：貫通攻撃で負傷が嵩みやすいマッチアップの標準装備。<span class="verify v-note" title="補足情報">※</span>決死の一撃などフック前提のパークは檻で機能しない点を理解して構成を組む。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="高速接近" id="p1-s-124"><summary><span class="card-title">21. ブライト（The Blight）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span></span></summary><div class="card-body"><p><strong>能力：死穢のラッシュ（連続バウンドダッシュ）</strong></p>
+<details class="card" data-tags="高速接近" id="p1-s-124"><summary><span class="bookmark-star" data-bm-id="p1-s-124" data-bm-title="21. ブライト（The Blight）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">21. ブライト（The Blight）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 40m</span></summary><div class="card-body"><p><strong>能力：死穢のラッシュ（連続バウンドダッシュ）</strong>
+トークンを消費して「死の突進」を発動し、高速で直進する（発動中は攻撃不能）。何かに衝突すると「激突」状態になり、再度トークンを使うことで別方向へ跳ね返りながら攻撃可能な状態に移行する。所持トークンの数だけ連続で突進でき、直進中は左右への急な旋回ができない。</p>
 <h3 id="p1-t-125">キラー側の立ち回り</h3>
 <ul>
 <li>ラッシュは障害物にバウンドさせて連続使用するのが本体。マップの岩・壁の配置を覚え、バウンド角度を体で覚える練習が必須。</li>
@@ -1194,7 +1282,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：チェイス開始前に健康を保ち、2回の読み合い猶予を確保する。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="高速接近" id="p1-s-130"><summary><span class="card-title">22. ツインズ（The Twins／シャルロット＆ヴィクトル）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span></span></summary><div class="card-body"><p><strong>能力：ヴィクトル分離（小さな分身の突進）</strong></p>
+<details class="card" data-tags="高速接近" id="p1-s-130"><summary><span class="bookmark-star" data-bm-id="p1-s-130" data-bm-title="22. ツインズ（The Twins／シャルロット＆ヴィクトル）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">22. ツインズ（The Twins／シャルロット＆ヴィクトル）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span></span><span class="card-stats stat-ok">移動速度 4.6m/s（ヴィクトルは心音0m）／心音範囲 32m（ヴィクトルは0m）</span></summary><div class="card-body"><p><strong>能力：ヴィクトル分離（小さな分身の突進）</strong>
+本体シャルロットとは別に、小さな分身ヴィクトルを分離して単独操作できる。ヴィクトルは高速で走り、飛びついたサバイバーを拘束できる（拘束中は対象がシャルロットの方向へ引き寄せられる）。サバイバーは自力でヴィクトルを振り払うか、仲間に救助してもらうことで拘束を解除できる。負傷せずに振り払われた場合は「妨害」状態になる。ヴィクトル操作中、本体シャルロットはその場に停止する。</p>
 <h3 id="p1-t-131">キラー側の立ち回り</h3>
 <ul>
 <li>ヴィクトルで索敵・負傷付与を行い、シャルロット本体で仕留める二段構え。ヴィクトルの飛びつきで負傷させたら本体で挟む。</li>
@@ -1230,7 +1319,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：負傷ばら撒き型のため回復リソースの価値が高い。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="徒歩,遠距離" id="p1-s-136"><summary><span class="card-title">23. トリックスター（The Trickster）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span></summary><div class="card-body"><p><strong>能力：ショーが始まる（投げナイフ連投）</strong></p>
+<details class="card" data-tags="徒歩,遠距離" id="p1-s-136"><summary><span class="bookmark-star" data-bm-id="p1-s-136" data-bm-title="23. トリックスター（The Trickster）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">23. トリックスター（The Trickster）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span><span class="card-stats stat-ok">移動速度 4.4m/s／心音範囲 24m</span></summary><div class="card-body"><p><strong>能力：ショーが始まる（投げナイフ連投）</strong>
+儀式開始時にナイフを36本所持し、連射できる（使用分はロッカーで補充可能）。命中するたびに対象の「裂傷メーター」が蓄積し、8つ貯まると1段階負傷する。裂傷メーターはナイフが当たらない時間が続くと自然に減少する。「メインイベント」を発動すると、短時間だけ無制限のナイフを高速連射できる。</p>
 <h3 id="p1-t-137">キラー側の立ち回り</h3>
 <ul>
 <li>ナイフは複数ヒットで1ダメージ。遮蔽の少ないチェイスルートへ誘導し、リコイルを抑えて連続ヒットを重ねる。</li>
@@ -1266,7 +1356,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：削り主体の相手のため、こまめな回復が生存時間に直結する。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="徒歩,遠距離,索敵" id="p1-s-142"><summary><span class="card-title">24. ネメシス（The Nemesis）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-ranged" data-scope="killer">遠距離</span><span class="tag tag-scout" data-scope="killer">索敵</span></span></summary><div class="card-body"><p><strong>能力：T-ウイルス（触手攻撃＋ゾンビ2体）</strong></p>
+<details class="card" data-tags="徒歩,遠距離,索敵" id="p1-s-142"><summary><span class="bookmark-star" data-bm-id="p1-s-142" data-bm-title="24. ネメシス（The Nemesis）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">24. ネメシス（The Nemesis）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-ranged" data-scope="killer">遠距離</span><span class="tag tag-scout" data-scope="killer">索敵</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：T-ウイルス（触手攻撃＋ゾンビ2体）</strong>
+触手打撃をチャージして放つ「T-ウイルス」を持つ。触手が未感染のサバイバーに命中すると感染させ、変異度ゲージが上昇する。変異度2で板・壊せる壁の破壊速度が上昇し、変異度3では射程がさらに伸び、チャージ中の移動速度も上がる。AI制御のゾンビが2体徘徊しており、サバイバーへの妨害・感染や、発電機の監視・脱出経路の封鎖に使える（感染済みサバイバーがゾンビの攻撃を受けると負傷が1段階悪化する）。</p>
 <h3 id="p1-t-143">キラー側の立ち回り</h3>
 <ul>
 <li>触手は板・窓越しに当たる。まず感染（1段階目は汚染のみ）→以降は触手でダメージという二段構造を理解し、序盤に感染をばら撒く。</li>
@@ -1302,7 +1393,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：懐中電灯</strong>：ゾンビを焼いて無力化できる。医療キットも標準装備。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="徒歩,設置罠,索敵" id="p1-s-148"><summary><span class="card-title">25. セノバイト（The Cenobite／ピンヘッド）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-trap" data-scope="killer">設置罠</span><span class="tag tag-scout" data-scope="killer">索敵</span></span></summary><div class="card-body"><p><strong>能力：鎖の召喚（設置型の拘束鎖）＋ラメントの器（箱）</strong></p>
+<details class="card" data-tags="徒歩,設置罠,索敵" id="p1-s-148"><summary><span class="bookmark-star" data-bm-id="p1-s-148" data-bm-title="25. セノバイト（The Cenobite／ピンヘッド）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">25. セノバイト（The Cenobite／ピンヘッド）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-trap" data-scope="killer">設置罠</span><span class="tag tag-scout" data-scope="killer">索敵</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：鎖の召喚（設置型の拘束鎖）＋ラメントの器（箱）</strong>
+マップに1個生成される「ルマルシャンの箱」を使用すると、全サバイバー周辺に鎖を召喚する「チェーンハンティング」が発動し、鎖に触れた相手を拘束・移動速度低下させる。能力ボタンで離れた位置に「門」を開き、狙った相手へ鎖を撃ち込むことも可能（ナースのブリンクに近い操作感）。サバイバーが箱を解除すると「忘却」状態になり鎖の妨害を受け続け、ダウンさせたサバイバーが箱を所持していれば強制的に使用させられる。</p>
 <h3 id="p1-t-149">キラー側の立ち回り</h3>
 <ul>
 <li>鎖はチェイス中の板・窓手前のサバイバーへ。拘束でアクションを遅らせて殴るのが基本コンボ。</li>
@@ -1338,7 +1430,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：箱管理に時間を取られる分、治療は自己完結できると強い。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="徒歩,遠距離" id="p1-s-154"><summary><span class="card-title">26. アーティスト（The Artist）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span></summary><div class="card-body"><p><strong>能力：ディレクションソーン（カラスの群れを飛ばす遠距離攻撃）</strong></p>
+<details class="card" data-tags="徒歩,遠距離" id="p1-s-154"><summary><span class="bookmark-star" data-bm-id="p1-s-154" data-bm-title="26. アーティスト（The Artist）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">26. アーティスト（The Artist）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：ディレクションソーン（カラスの群れを飛ばす遠距離攻撃）</strong>
+カラスの群れを召喚して放つ「ディレクションソーン」を持ち、飛翔中のカラスは障害物を越えて着弾しサバイバーを負傷させられる。設置型の「カラスの巣」を配置して長距離の索敵・進路封鎖にも応用できる。総じて中〜遠距離からの牽制を軸にしたキラー。</p>
 <h3 id="p1-t-155">キラー側の立ち回り</h3>
 <ul>
 <li>カラスは障害物を貫通して飛ぶ。板グルの膠着に対し、逃走ルートへカラスを置いて挟む「詰将棋」型のチェイスが本体。</li>
@@ -1374,7 +1467,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：工具箱</strong>：同上。妨害込みでも発電を完走させる推進力になる。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="ワープ,隠密" id="p1-s-160"><summary><span class="card-title">27. 貞子（The Onryō）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-stealth" data-scope="killer">隠密</span></span></summary><div class="card-body"><p><strong>能力：漂流（テレビテレポート）＋実体化／非実体化、呪い（テープ）</strong></p>
+<details class="card" data-tags="ワープ,隠密" id="p1-s-160"><summary><span class="bookmark-star" data-bm-id="p1-s-160" data-bm-title="27. 貞子（The Onryō）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">27. 貞子（The Onryō）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-stealth" data-scope="killer">隠密</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 24m</span></summary><div class="card-body"><p><strong>能力：漂流（テレビテレポート）＋実体化／非実体化、呪い（テープ）</strong>
+「幽体化」と「実体化」を切り替えられる。幽体化中は心音が消え、姿も断続的に不可視になるが攻撃はできない。実体化して攻撃する必要がある。テレビへの「念写」でテレポートでき、ワープ後は約3秒の加速と探知不可を得る。ワープ時、電源の入ったテレビから16m以内にいるサバイバーには「呪い」を蓄積させられる（一度使ったテレビは再使用まで一定時間の充電が必要）。呪いが上限（7つ）に達したサバイバーは即座に処刑される。</p>
 <h3 id="p1-t-161">キラー側の立ち回り</h3>
 <ul>
 <li>テレビ間テレポートで神出鬼没に巡回し、非実体化での奇襲で初撃を取る。姿を現すタイミングの緩急が鍵。</li>
@@ -1410,7 +1504,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：地図</strong>：テレビ位置の記録に有用。医療キットも標準装備として有効。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="ワープ,隠密" id="p1-s-166"><summary><span class="card-title">28. ドレッジ（The Dredge）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-stealth" data-scope="killer">隠密</span></span></summary><div class="card-body"><p><strong>能力：残滓の宿主（ロッカーテレポート）＋宵闇（マップ暗転）</strong></p>
+<details class="card" data-tags="ワープ,隠密" id="p1-s-166"><summary><span class="bookmark-star" data-bm-id="p1-s-166" data-bm-title="28. ドレッジ（The Dredge）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">28. ドレッジ（The Dredge）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-stealth" data-scope="killer">隠密</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：残滓の宿主（ロッカーテレポート）＋宵闇（マップ暗転）</strong>
+「黄昏」を発動するとその場に残留部を残し、発動中はマップ上の全ロッカーへテレポートできる（サバイバーはロッカーをバリケードして妨害可能）。「日没」ゲージはテレポート・吊り・負傷付与で進行し、満タンになるとマップ全体が暗転する「夜」が訪れる。夜間はドレッジの脅威範囲が消失し奇襲のチャンスが増え、ロッカーテレポートのクールダウンも短縮される。</p>
 <h3 id="p1-t-167">キラー側の立ち回り</h3>
 <ul>
 <li>ロッカー間テレポートで巡回・奇襲する。発電機に隣接するロッカーの位置を把握し、作業中のサバイバーの背後へ跳ぶ。</li>
@@ -1446,7 +1541,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：暗闇での味方探しに時間を使わないための自己完結治療。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="高速接近,一撃" id="p1-s-172"><summary><span class="card-title">29. マスターマインド（The Mastermind／ウェスカー）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-oneshot" data-scope="killer">一撃</span></span></summary><div class="card-body"><p><strong>能力：ウロボロスの猛襲（バウンドダッシュ掴み＋ウイルス感染）</strong></p>
+<details class="card" data-tags="高速接近,一撃" id="p1-s-172"><summary><span class="bookmark-star" data-bm-id="p1-s-172" data-bm-title="29. マスターマインド（The Mastermind／ウェスカー）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">29. マスターマインド（The Mastermind／ウェスカー）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-oneshot" data-scope="killer">一撃</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 40m</span></summary><div class="card-body"><p><strong>能力：ウロボロスの猛襲（バウンドダッシュ掴み＋ウイルス感染）</strong>
+「猛毒バウンド」をチャージして突進する。命中すると対象を掴んでウロボロスウイルスに感染させ、①何かに衝突すれば対象を負傷させる、②衝突しなければ前方に投げ飛ばす（投げ飛ばした先で何かに衝突すれば同様に負傷）のいずれかの展開になる。ウイルスが完全感染すると、その後のバウンド命中で健康状態から即座に担ぎ状態に移行させられる。</p>
 <h3 id="p1-t-173">キラー側の立ち回り</h3>
 <ul>
 <li>猛襲は2連続で使える突進掴み。1回目で距離を詰め、2回目で掴む・壁に叩きつける流れが基本。板・窓も猛襲で飛び越えられる。</li>
@@ -1482,7 +1578,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：スプレーは感染用に温存し、負傷回復は自前で行う分担が理想。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="徒歩,設置罠,索敵" id="p1-s-178"><summary><span class="card-title">30. ナイト（The Knight）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-trap" data-scope="killer">設置罠</span><span class="tag tag-scout" data-scope="killer">索敵</span></span></summary><div class="card-body"><p><strong>能力：衛兵召喚（カーニフェックス／アサシン／ジェイラーの3衛兵）</strong></p>
+<details class="card" data-tags="徒歩,設置罠,索敵" id="p1-s-178"><summary><span class="bookmark-star" data-bm-id="p1-s-178" data-bm-title="30. ナイト（The Knight）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">30. ナイト（The Knight）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-trap" data-scope="killer">設置罠</span><span class="tag tag-scout" data-scope="killer">索敵</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：衛兵召喚（カーニフェックス／アサシン／ジェイラーの3衛兵）</strong>
+看守・暗殺者・処刑人の3種の衛兵を召喚できる。まず巡回進路を作成し、衛兵を召喚してその進路を巡回させる（発電機へのダメージや障害物破壊も代行させられる）。衛兵が進路周辺でサバイバーを検知すると「狩り」が始まり、記章旗を設置して追跡を開始する。サバイバーは記章旗を掴む、仲間に救助してもらう、時間経過を待つのいずれかで狩りから逃れられる。衛兵ごとに特性が異なり、処刑人は障害物破壊が速く、暗殺者は狩りの時間が長く、看守は巡回時間が長く移動速度も最速。</p>
 <h3 id="p1-t-179">キラー側の立ち回り</h3>
 <ul>
 <li>衛兵とサバイバーを挟む「二正面」を作るのが本体。チェイス中に逃走ルートへ衛兵の巡回線を引き、本体と衛兵で板グルを崩す。</li>
@@ -1518,7 +1615,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：工具箱</strong>：同上。妨害込みの発電計画を押し切る。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="徒歩,設置罠,索敵" id="p1-s-184"><summary><span class="card-title">31. スカルマーチャント（The Skull Merchant）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-trap" data-scope="killer">設置罠</span><span class="tag tag-scout" data-scope="killer">索敵</span></span></summary><div class="card-body"><p><strong>能力：目には目を（ドローンによる索敵・鉤爪トラップ）</strong></p>
+<details class="card" data-tags="徒歩,設置罠,索敵" id="p1-s-184"><summary><span class="bookmark-star" data-bm-id="p1-s-184" data-bm-title="31. スカルマーチャント（The Skull Merchant）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">31. スカルマーチャント（The Skull Merchant）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-trap" data-scope="killer">設置罠</span><span class="tag tag-scout" data-scope="killer">索敵</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 24m</span></summary><div class="card-body"><p><strong>能力：目には目を（ドローンによる索敵・鉤爪トラップ）</strong>
+マップ上にドローンを複数配置できる（初期所持6個）。ドローンは「有効モード」で検出範囲を展開し、範囲内にいる間スカルマーチャントは探知不可になる。サバイバーが検出範囲に入るとロックオンメーターが蓄積し、満タンで殺人鬼の本能により位置が判明＋無防備状態になる。一定時間検出がないと「偵察モード」に切り替わり、回転する視界でサバイバーを探す。サバイバーはドローンをハッキングして停止できるが、失敗すると即座にロックオン＋無防備を受ける（成功しても「クロートラップ」を装着され、位置が専用レーダーに表示される）。</p>
 <h3 id="p1-t-185">キラー側の立ち回り</h3>
 <ul>
 <li>ドローンは守りたい発電機群とチェイスエリアに設置し、スキャンで「鉤爪トラップ」を蓄積させて移動妨害・探知を行う。</li>
@@ -1554,7 +1652,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：工具箱</strong>：縄張り外速攻の推進力。籠城の完成前に外周を終わらせる。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="ワープ,設置罠" id="p1-s-190"><summary><span class="card-title">32. シンギュラリティ（The Singularity）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-trap" data-scope="killer">設置罠</span></span></summary><div class="card-body"><p><strong>能力：至上の適応（バイオポッド＋スリップストリームテレポート）</strong></p>
+<details class="card" data-tags="ワープ,設置罠" id="p1-s-190"><summary><span class="bookmark-star" data-bm-id="p1-s-190" data-bm-title="32. シンギュラリティ（The Singularity）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">32. シンギュラリティ（The Singularity）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-trap" data-scope="killer">設置罠</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：至上の適応（バイオポッド＋スリップストリームテレポート）</strong>
+マップ各所にバイオポッドを設置でき、遠隔でアクセスして周辺のサバイバーを偵察できる。ポッド越しにサバイバーをロックオンすると「スリップストリーム」に感染させられ、感染者の背後へ瞬間移動して追跡を開始できる（感染は近くの別サバイバーにも伝播する）。スリップストリーム感染者へテレポートすると「オーバークロックモード」に入り、壊れる壁・パレットの破壊や発電機への攻撃、乗り越えの速度が一時的に上昇する（能力は使用不可になるが、板の怯み効果を受けない）。サバイバー側はマップに出現するEMPアイテムでバイオポッドを一時無効化できる。</p>
 <h3 id="p1-t-191">キラー側の立ち回り</h3>
 <ul>
 <li>バイオポッド（監視カメラ）を発電機・チェイスポジションへ設置し、ポッド越しにサバイバーへタグ（スリップストリーム）を付与→本体がテレポートして奇襲。</li>
@@ -1590,7 +1689,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム</strong>：EMPが手持ちアイテム枠を使うため、持ち込みは軽装（または医療キットを序盤で使い切る運用）が現実的。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="ワープ,隠密" id="p1-s-196"><summary><span class="card-title">33. ゼノモーフ（The Xenomorph）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-stealth" data-scope="killer">隠密</span></span></summary><div class="card-body"><p><strong>能力：秘められた捕食者（地下坑道移動＋尻尾攻撃）</strong></p>
+<details class="card" data-tags="ワープ,隠密" id="p1-s-196"><summary><span class="bookmark-star" data-bm-id="p1-s-196" data-bm-title="33. ゼノモーフ（The Xenomorph）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">33. ゼノモーフ（The Xenomorph）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-stealth" data-scope="killer">隠密</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：秘められた捕食者（地下坑道移動＋尻尾攻撃）</strong>
+地下の坑道網を移動でき、坑道内から近くのサバイバーの動きを察知できる。複数ある操作装置のいずれかから出現可能で、出現時は周辺のサバイバーが殺人鬼の本能で判明する。四足歩行の「ランナーモード」では脅威範囲が大きく縮小し、窓・パレット・その他の障害物を貫通する尻尾攻撃が使える。サバイバーは「遠隔火炎タレット」を設置してゼノモーフの接近を妨害・通知できる（タレットはゼノモーフが攻撃して破壊可能）。</p>
 <h3 id="p1-t-197">キラー側の立ち回り</h3>
 <ul>
 <li>坑道（トンネル）でマップを高速移動し、出口から探知不可で奇襲する。坑道内ではサバイバーの足音が振動で分かる。</li>
@@ -1626,7 +1726,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム</strong>：タレット優先のため持ち込みは軽め、または医療キットを早期消費する運用が現実的。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="高速接近,隠密" id="p1-s-202"><summary><span class="card-title">34. グッドガイ（The Good Guy／チャッキー）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-stealth" data-scope="killer">隠密</span></span></summary><div class="card-body"><p><strong>能力：ハイディッヒ（隠密しゃがみ移動）＋スライス＆ダイス（突進攻撃）</strong></p>
+<details class="card" data-tags="高速接近,隠密" id="p1-s-202"><summary><span class="bookmark-star" data-bm-id="p1-s-202" data-bm-title="34. グッドガイ（The Good Guy／チャッキー）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">34. グッドガイ（The Good Guy／チャッキー）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-stealth" data-scope="killer">隠密</span></span><span class="card-stats stat-ok">移動速度 4.4m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：ハイディッヒ（隠密しゃがみ移動）＋スライス＆ダイス（突進攻撃）</strong>
+「ハイディホーモード」を発動すると、あらゆる方向から音や足跡を発生させてサバイバーの索敵を混乱させる。モード中は「駆け抜け」（窓乗り越え・倒れた板くぐり抜けによる奇襲）と「スライス＆ダイス」（飛びかかりのナイフ攻撃）の2つの追加行動を使用できる。小柄な体格ゆえに視認されにくい。</p>
 <h3 id="p1-t-203">キラー側の立ち回り</h3>
 <ul>
 <li>極端に背が低く、障害物・草むらで姿が消える。ハイディッヒ（足音・赤い光なしのしゃがみ移動）で接近して初撃を奇襲で取る。</li>
@@ -1662,7 +1763,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：初撃を貰いやすい相手のため、回復の自己完結が重要。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="ワープ,遠距離" id="p1-s-208"><summary><span class="card-title">35. アンノウン（The Unknown）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span></summary><div class="card-body"><p><strong>能力：UVX（バウンドする投射物）＋幻影テレポート</strong></p>
+<details class="card" data-tags="ワープ,遠距離" id="p1-s-208"><summary><span class="bookmark-star" data-bm-id="p1-s-208" data-bm-title="35. アンノウン（The Unknown）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">35. アンノウン（The Unknown）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：UVX（バウンドする投射物）＋幻影テレポート</strong>
+「UVX」をチャージして発射すると、地形に一度跳ね返ってから着弾・爆発する。爆発範囲に触れたサバイバーは「弱体化」状態になり、再び範囲に触れると1段階負傷する（弱体化はアンノウンを一定時間見つめることで解除できる）。断続的に自身そっくりの「幻影」を残し、強調表示された幻影へテレポート可能（テレポート時はその場に自身のおとりを残す）。サバイバーは静止した状態で見つめ続けることで幻影を払いのけて消せるが、弱体化中は所要時間が延び、中断すると弱体化＋殺人鬼の本能で位置が発覚する。</p>
 <h3 id="p1-t-209">キラー側の立ち回り</h3>
 <ul>
 <li>UVXは地面や壁でバウンドする爆発弾。直撃ではなく「跳ねさせて足元で爆発」させるのが本体。板・窓の向こう側へ跳ねさせて当てる。</li>
@@ -1698,7 +1800,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：弱化→被弾の二段構造ゆえ、負傷を持ち越さないことが重要。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="徒歩,遠距離" id="p1-s-214"><summary><span class="card-title">36. リッチ（The Lich／ヴェクナ）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span></summary><div class="card-body"><p><strong>能力：非業の最期（4種の呪文：魔力の手・空飛ぶ死・ドラゴンの飛翔・死者の霊柩）</strong></p>
+<details class="card" data-tags="徒歩,遠距離" id="p1-s-214"><summary><span class="bookmark-star" data-bm-id="p1-s-214" data-bm-title="36. リッチ（The Lich／ヴェクナ）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">36. リッチ（The Lich／ヴェクナ）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：非業の最期（4種の呪文：魔力の手・空飛ぶ死・ドラゴンの飛翔・死者の霊柩）</strong>
+4種の呪文を切り替えて使用できる：「メイジ・ハンド」（倒れた板を持ち上げる／立った板をブロックする）、「フライト・オヴ・ザ・ダムド」（障害物を貫通する幽霊5体を召喚して負傷させる）、「ディスペリング・スフィアー」（移動する球状領域でサバイバーの位置を暴き、魔法アイテムを一時無効化する）、「フライ」（飛行速度上昇で窓・パレットを飛び越え長距離を素早く移動）。マップ上のチェスト由来の魔法アイテム（靴・籠手）を装備したサバイバーは、対応する呪文が唱えられた瞬間に特殊な効果を受ける。</p>
 <h3 id="p1-t-215">キラー側の立ち回り</h3>
 <ul>
 <li>「魔力の手」で板を持ち上げ・窓を封鎖して板グルを崩し、「ドラゴンの飛翔」で距離を詰める。呪文のクールタイム管理が本体。</li>
@@ -1734,7 +1837,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：鍵よりも通常アイテム＋現地の魔法アイテム</strong>：持ち込みは医療キット等の標準装備とし、指輪・靴は現地調達で上書きする意識が効率的。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="ワープ,高速接近,遠距離,隠密" id="p1-s-220"><summary><span class="card-title">37. ダークロード（The Dark Lord／ドラキュラ）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-ranged" data-scope="killer">遠距離</span><span class="tag tag-stealth" data-scope="killer">隠密</span></span></summary><div class="card-body"><p><strong>能力：黒夜の君主（吸血鬼／狼／コウモリの3形態変化）</strong></p>
+<details class="card" data-tags="ワープ,高速接近,遠距離,隠密" id="p1-s-220"><summary><span class="bookmark-star" data-bm-id="p1-s-220" data-bm-title="37. ダークロード（The Dark Lord／ドラキュラ）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">37. ダークロード（The Dark Lord／ドラキュラ）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-ranged" data-scope="killer">遠距離</span><span class="tag tag-stealth" data-scope="killer">隠密</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：黒夜の君主（吸血鬼／狼／コウモリの3形態変化）</strong>
+吸血鬼・オオカミ・コウモリの3形態を切り替えられる。吸血鬼形態は前方に炎の柱を放つ「ヘルファイア」で板・窓を貫通する遠距離攻撃が可能。オオカミ形態は三人称視点になり、傷マーク・血痕が見やすくなるほか、逃げるサバイバーが残す「香りのオーブ」を追跡でき、飛びつき攻撃も使える。コウモリ形態は脅威範囲が消失し、近くの窓や倒れた板へ障害物を無視してテレポートできる（クールタイム約15秒）。形態変更にはクールタイムがあり、変更直後は行動に制限がかかる。</p>
 <h3 id="p1-t-221">キラー側の立ち回り</h3>
 <ul>
 <li>吸血鬼形態はヘルファイア（地を這う炎柱）で板・窓越しに攻撃。板グルの膠着を崩す主力。</li>
@@ -1770,7 +1874,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：狼追跡の起点となる負傷状態を素早く消す。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="徒歩,索敵,遠距離" id="p1-s-226"><summary><span class="card-title">38. ハウンドマスター（The Houndmaster）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-scout" data-scope="killer">索敵</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span></summary><div class="card-body"><p><strong>能力：スカージハウンド（猟犬による捜索・追跡・拘束）</strong></p>
+<details class="card" data-tags="徒歩,索敵,遠距離" id="p1-s-226"><summary><span class="bookmark-star" data-bm-id="p1-s-226" data-bm-title="38. ハウンドマスター（The Houndmaster）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">38. ハウンドマスター（The Houndmaster）</span><span class="card-tags"><span class="tag tag-walk" data-scope="killer">徒歩</span><span class="tag tag-scout" data-scope="killer">索敵</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：スカージハウンド（猟犬による捜索・追跡・拘束）</strong>
+愛犬に「追いかけ」「探知」の指示を出せる。追いかけを指示すると犬が高速で走ってサバイバーに接近し、捕まえると拘束が始まる（拘束中は対象がハウンドマスターの方へ引き寄せられる。負傷せず逃れると「妨害」状態になる）。探知を指示すると犬が移動しながら周囲の「嗅ぎつけ範囲」を広げ、範囲内のサバイバーの位置を明らかにする。「嗅ぎつけ」効果を受けたサバイバーは、負傷すると深手になり、瀕死時の這う速度低下・うめき声増大・血痕増加という追加ペナルティも受ける。</p>
 <h3 id="p1-t-227">キラー側の立ち回り</h3>
 <ul>
 <li>犬に「追跡（グラブ）」を命じてサバイバーを拘束し、本体が追いついて殴る二人一組のチェイスが基本。板・窓へ向かうサバイバーに犬を差し込む。</li>
@@ -1806,7 +1911,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：拘束からの被弾が構造的に発生しやすいため回復手段を確保。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="高速接近" id="p1-s-232"><summary><span class="card-title">39. グール（The Ghoul／金木研）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span></span></summary><div class="card-body"><p><strong>能力：赫子（カグネ）跳躍＋狂化モード</strong></p>
+<details class="card" data-tags="高速接近" id="p1-s-232"><summary><span class="bookmark-star" data-bm-id="p1-s-232" data-bm-title="39. グール（The Ghoul／金木研）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">39. グール（The Ghoul／金木研）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 40m</span></summary><div class="card-body"><p><strong>能力：赫子（カグネ）跳躍＋狂化モード</strong>
+赫子（カグネ）による跳躍でマップを立体的に移動でき、ゲージを消費して発動する「狂化モード」中は攻撃性能が向上する。跳躍を活かした高低差のある奇襲が持ち味。</p>
 <h3 id="p1-t-233">キラー側の立ち回り</h3>
 <ul>
 <li>赫子の跳躍（グラップル移動）で障害物・板グルを無視して立体的に距離を詰める。跳躍→空中からの襲撃で初撃を取る。</li>
@@ -1842,7 +1948,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：負傷＝狂化の燃料。素早い治療が能力対策を兼ねる。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="ワープ,遠距離" id="p1-s-238"><summary><span class="card-title">40. アニマトロニック（The Animatronic／スプリングトラップ）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span></summary><div class="card-body"><p><strong>能力：セキュリティドア（警備室経由のワープ）＋消防斧投擲</strong></p>
+<details class="card" data-tags="ワープ,遠距離" id="p1-s-238"><summary><span class="bookmark-star" data-bm-id="p1-s-238" data-bm-title="40. アニマトロニック（The Animatronic／スプリングトラップ）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">40. アニマトロニック（The Animatronic／スプリングトラップ）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span><span class="card-stats stat-ok">移動速度 4.4m/s／心音範囲 24m</span></summary><div class="card-body"><p><strong>能力：セキュリティドア（警備室経由のワープ）＋消防斧投擲</strong>
+警備室のセキュリティドアを経由して、マップ上の別の警備室へ短時間でワープできる。移動の道中や待ち伏せ時には消防斧の投擲による遠距離攻撃も行える。ドアの管理と経路把握が立ち回りの軸になる。</p>
 <h3 id="p1-t-239">キラー側の立ち回り</h3>
 <ul>
 <li>マップに出現する7つのセキュリティドアから警備室を経由して別のドアへワープできる。ワープ後は約20秒の探知不可が付くため、開幕から奇襲・巡回に全力で使う。スポーン位置を予測した初手ワープ奇襲が強力。</li>
@@ -1878,7 +1985,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：衰弱（斧）が解除された後の素早い立て直しに。工具箱で発電速度を押し付けるのも有効。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="高速接近,遠距離" id="p1-s-244"><summary><span class="card-title">41. ガスー（The Krasue／英名直読みで「クラスー」とも）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span></summary><div class="card-body"><p><strong>能力：コーポリアルウィーブ（身体形態⇔頭部形態の変身）＋腸の鞭</strong></p>
+<details class="card" data-tags="高速接近,遠距離" id="p1-s-244"><summary><span class="bookmark-star" data-bm-id="p1-s-244" data-bm-title="41. ガスー（The Krasue／英名直読みで「クラスー」とも）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">41. ガスー（The Krasue／英名直読みで「クラスー」とも）</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span><span class="card-stats stat-ok">移動速度 4.6m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：コーポリアルウィーブ（身体形態⇔頭部形態の変身）＋腸の鞭</strong>
+身体形態と、生首だけが浮遊して飛行する頭部形態を切り替えられる。頭部形態は高い機動力を持つ反面、本体（身体）はその場に無防備で残される。腸の鞭によるリーチのある攻撃も可能。</p>
 <h3 id="p1-t-245">キラー側の立ち回り</h3>
 <ul>
 <li>身体形態（通常キラー・脅威範囲32m）と、内臓を引き連れて飛行する頭部形態（脅威範囲40m・三人称視点）を切り替えて戦う。</li>
@@ -1914,7 +2022,8 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：マーク＋負傷の二重リスクを早期に解消する。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="ワープ,遠距離" id="p1-s-250"><summary><span class="card-title">42. ファースト（The First／ヴェクナ〈ストレンジャー・シングス〉）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span></summary><div class="card-body"><p><strong>能力：裏側の世界の顕現（地中潜行・蔦の襲撃・呪い付与）</strong></p>
+<details class="card" data-tags="ワープ,遠距離" id="p1-s-250"><summary><span class="bookmark-star" data-bm-id="p1-s-250" data-bm-title="42. ファースト（The First／ヴェクナ〈ストレンジャー・シングス〉）" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">42. ファースト（The First／ヴェクナ〈ストレンジャー・シングス〉）</span><span class="card-tags"><span class="tag tag-warp" data-scope="killer">ワープ</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span><span class="card-stats stat-ok">移動速度 4.4m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：裏側の世界の顕現（地中潜行・蔦の襲撃・呪い付与）</strong>
+呪いのトークンを蓄積すると「世界の破壊」状態に移行し、発動中は「蔦」による攻撃でサバイバーにダメージを与えられるようになる。蔦攻撃の判定発生には時間差があるため、板・窓の乗り越え後や位置の先読みが命中の鍵になる。障害物越しに攻撃を通せる点が最大の武器。</p>
 <h3 id="p1-t-251">キラー側の立ち回り</h3>
 <ul>
 <li>地面に姿を消して移動し、不意を突いた場所から蔦でサバイバーを襲う奇襲型。潜行からの出現位置で読み合いを制する。</li>
@@ -1950,12 +2059,13 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：地図</strong>：古時計・発電機の位置記録に有用。医療キットも標準装備。</li>
 </ul>
 <hr /></div></details>
-<details class="card" data-tags="高速接近,隠密,遠距離" id="p1-s-256"><summary><span class="card-title">43. スラッシャー（The Slasher／ジェイソン・ボーヒーズ）※2026年6月19日実装・10周年記念チャプター・最新キラー</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-stealth" data-scope="killer">隠密</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span></summary><div class="card-body"><p><strong>能力：神出鬼没の悪（透明高速移動）＋ジャンプスケア（板・窓・壊せる壁から出現）＋投げ棒</strong></p>
+<details class="card" data-tags="高速接近,隠密,遠距離" id="p1-s-256"><summary><span class="bookmark-star" data-bm-id="p1-s-256" data-bm-title="43. スラッシャー（The Slasher／ジェイソン・ボーヒーズ）※2026年6月19日実装・10周年記念チャプター・最新キラー" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">43. スラッシャー（The Slasher／ジェイソン・ボーヒーズ）※2026年6月19日実装・10周年記念チャプター・最新キラー</span><span class="card-tags"><span class="tag tag-dash" data-scope="killer">高速接近</span><span class="tag tag-stealth" data-scope="killer">隠密</span><span class="tag tag-ranged" data-scope="killer">遠距離</span></span><span class="card-stats stat-ok">移動速度 4.4m/s／心音範囲 32m</span></summary><div class="card-body"><p><strong>能力：神出鬼没の悪（透明高速移動）＋ジャンプスケア（板・窓・壊せる壁から出現）＋投げ棒</strong>
+「神出鬼没の悪」を発動すると探知不可になり、サバイバーからは姿も傷マークも見えなくなる（足跡と静止時の霧の雲は視認可能のまま）。発動中に板・破壊可能な壁・窓を選択すると即座にその場所へ移動し「ジャンプスケア」で出現、周囲のサバイバーを殺人鬼の本能で探知しつつ迅速を得る。別能力の「投げ棒」は1本のみ所持し、命中すると後方に吹き飛ばして負傷させる。吹き飛ばされて壁に衝突すると「串刺し」状態になり動けなくなるが、無傷のサバイバーがこの状態になるのはフックから補充した特殊な投げ棒による場合のみ。</p>
 <h3 id="p1-t-257">キラー側の立ち回り</h3>
 <ul>
 <li>「神出鬼没の悪」で透明化＋探知不可となり高速移動。透明中はサバイバーの姿は見えないが、静止中の相手は霧の雲、移動中の相手は足跡で探知できる。開幕から能力で索敵を始めるのが基本形。</li>
 <li>「ジャンプスケア」で板・窓・壊せる壁から出現。倒れた板や壊せる壁は破壊、未使用の板・窓は約4秒封鎖し、出現時に25秒の迅速＋殺人鬼の本能による周囲探知を得る。出現の向きはセカンダリアクションで変更でき、小屋や高低差窓では「外から内へ入る向き」を選ぶと追撃が繋がる。なお、吊られた直後・救助直後のサバイバー付近でのジャンプスケアは所要時間が3倍になるキャンプ対策仕様があるため、フック周りの出現待ち伏せは非効率。</li>
-<li>投げ棒は1本のみ所持でき、板・窓に差し掛かったサバイバーへの狙撃が基本。命中で負傷＋吹き飛ばし効果があり、吹き飛ばした先に別のサバイバーがいれば同時に負傷（すでに負傷中なら深手）させられる。使用後はクズ山やフックから補充する（素の移動速度は4.4m/sのため、投げ棒なしの追跡は時間を取られやすい）。フックから補充した特殊な投げ棒は命中時に衰弱を付与し、刺さっている間は対象のオーラが視え続けるため見失いにくい。ただしフックから補充すると対象フックが30秒間使用不可になるため、吊り運搬の動線とは要相談。</li>
+<li>投げ棒は1本のみ所持でき、板・窓に差し掛かったサバイバーへの狙撃が基本。命中すると後方に吹き飛ばされて負傷する。吹き飛ばされた勢いで壁に叩きつけられると「串刺し」状態となり動けなくなるが、<strong>無傷のサバイバーがこの串刺し状態になるのは、フックから補充した特殊な投げ棒による場合のみ</strong>（既に負傷しているサバイバーは通常の投げ棒でも串刺しになりうる）。使用後はクズ山やフックから補充する（素の移動速度は4.4m/sのため、投げ棒なしの追跡は時間を取られやすい）。フックから補充すると対象フックが30秒間使用不可になるため、吊り運搬の動線とは要相談。</li>
 <li>ロッカー内のサバイバーも透明中は赤いモヤで視認できる。ロッカー隠密は通用しない前提で、モヤ・霧の雲・足跡の3情報を組み合わせて索敵する。</li>
 </ul>
 <h3 id="p1-t-258">おすすめパーク（キラー）</h3>
@@ -1986,7 +2096,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>アイテム：医療キット</strong>：投げ棒による負傷からの立て直しに。地図でクズ山・フックの位置（補充ポイント）を意識するのも一考。</li>
 </ul>
 <hr /></div></details>
-<details class="card" id="p1-s-262"><summary><span class="card-title">付録A：全キラー共通のサバイバー基本方針</span></summary><div class="card-body"><ol>
+<details class="card" id="p1-s-262"><summary><span class="bookmark-star" data-bm-id="p1-s-262" data-bm-title="付録A：全キラー共通のサバイバー基本方針" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">付録A：全キラー共通のサバイバー基本方針</span></summary><div class="card-body"><ol>
 <li><strong>キラーの正体を最速で特定する</strong>：脅威範囲・移動速度・能力音から相手を判別し、上記の個別対策へ即座に切り替える。</li>
 <li><strong>チェイス担当と発電担当の分業</strong>：チェイスが上手い人が追われている間、残り3人は発電に集中する。全員が隠密すると時間だけが溶ける。</li>
 <li><strong>強ポジの温存</strong>：板は「倒すべき時に倒す」。序盤に強ポジを消費し尽くすと終盤に逃げ場がなくなる。</li>
@@ -1994,7 +2104,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>能力対策オブジェクトの管理</strong>：泉（プレイグ）、テープ（貞子）、箱（セノバイト）、EMP（シンギュラリティ）、タレット（ゼノモーフ）、古時計（ファースト）、南京錠（ドレッジ）など、「発電機以外にやるべきこと」があるキラーでは、その管理コストをチームで分担する。</li>
 <li><strong>汎用パークの軸</strong>：ウィンドウズ・オブ・オポチュニティ（情報）、全力疾走またはしなやか（加速）、与えられた猶予／オフレコ（救助・被救助）、医療キット（自己完結）は、ほぼ全キラーに対して腐らない土台になる。相手が読めないソロプレイでは、この土台＋好みの1枠が安定構成。</li>
 </ol></div></details>
-<details class="card" id="p1-s-263"><summary><span class="card-title">付録B：全キラー共通のキラー基本方針</span></summary><div class="card-body"><ol>
+<details class="card" id="p1-s-263"><summary><span class="bookmark-star" data-bm-id="p1-s-263" data-bm-title="付録B：全キラー共通のキラー基本方針" data-bm-part="p1" title="お気に入りに登録">☆</span><span class="card-title">付録B：全キラー共通のキラー基本方針</span></summary><div class="card-body"><ol>
 <li><strong>発電機3台を結ぶ縄張り防衛</strong>：全部を守ろうとせず、固まった3〜4台のエリアを決めて巡回する。</li>
 <li><strong>チェイスの損切り</strong>：上手いサバイバーを深追いしない。20秒追って当たりが見えなければターゲットを変える。</li>
 <li><strong>能力は「移動」にも使う</strong>：多くの機動系能力（チェーンソー、ラッシュ、テレポート、ワープ等）は巡回時間の短縮こそが最大の価値。</li>
@@ -2005,7 +2115,7 @@ details.card.filtered-out{ display:none; }
 <hr />
 <p><em>第1部は2026年7月時点の全43キラー（実装順：トラッパー〜スラッシャー）を対象としています。パーク・アドオンの数値や仕様はバランス調整で頻繁に変動するため、系統・理由ベースの記述を優先しています。次期キラー「ジャッジメント」（2026年8月26日実装予定）は実装後に追補可能です。</em></p></div></details></div><div class="part-content" data-slug="p2" data-title="第2部：マップ知識編"><div class="intro-block"><p>キラー別・状況別の立ち回りを実戦で使うには、「今どのマップにいるか」を知っている必要がある。同じキラーでも、マップによって強さが大きく変わる。本部ではレルム（地域）ごとの特徴、派生マップ、強ポジの傾向、タイル（生成パターン）の基礎理論、地下室・ハッチの法則を整理する。</p>
 <hr /></div>
-<section class="flow-section" id="p2-s-264"><h2>第1章：総論——マップの読み方</h2><h3 id="p2-t-265">1-1. 開幕チェックリスト</h3>
+<section class="flow-section" id="p2-s-264"><h2>第1章：総論——マップの読み方</h2><h3 id="p2-t-265">1-1. 開幕チェックリスト<span class="bookmark-star inline-h3" data-bm-id="p2-t-265" data-bm-title="1-1. 開幕チェックリスト" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p>新しい試合が始まったら、以下の順で情報を取ると効率が良い。</p>
 <ol>
 <li><strong>レルムを特定する</strong>：外観の雰囲気で判別する（工場地帯・農場・住宅街・森・雪山・洋館・屋内施設など）。レルムが分かれば板の総量・強ポジの傾向・地下室候補地まで推測できる。</li>
@@ -2014,7 +2124,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>マップの規模感を把握する</strong>：発電機の間隔が広い＝機動力のあるキラー有利、狭い＝設置・索敵型キラー有利。</li>
 <li><strong>窓・板の密度を目視確認する</strong>：強ポジが多いか少ないかで、チェイスに使える時間の見積もりが変わる。</li>
 </ol>
-<h3 id="p2-t-266">1-2. タイル理論の基礎（生成パターンを読む）</h3>
+<h3 id="p2-t-266">1-2. タイル理論の基礎（生成パターンを読む）<span class="bookmark-star inline-h3" data-bm-id="p2-t-266" data-bm-title="1-2. タイル理論の基礎（生成パターンを読む）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p>ランダム生成マップは、実際には「タイル」と呼ばれる決まったパーツの組み合わせで作られている。代表的なタイルを覚えると、初見の配置でも即座にチェイスルートを判断できる。</p>
 <ul>
 <li><strong>ジャングルジム</strong>：L字・コの字型の壁に窓1つ＋板1枚（または窓2つ）が付いた定番タイル。2つ連結して生成されることが多く、連結部は非常に強いチェイスエリアになる。</li>
@@ -2024,10 +2134,10 @@ details.card.filtered-out{ display:none; }
 <li><strong>小屋（キラーシャック）</strong>：上述の最強タイル。窓と板の二重構造で、板を温存したまま長時間粘れる。</li>
 </ul>
 <p>サバイバーは「今いるタイルの次にどのタイルへ繋ぐか」を常に考え、キラーは「どのタイルで攻撃が通るか／通らないか」を判断してチェイス継続か損切りかを決める。これがマップ知識の実戦的な使い方になる。</p>
-<h3 id="p2-t-267">1-3. 指定オファリング</h3>
+<h3 id="p2-t-267">1-3. 指定オファリング<span class="bookmark-star inline-h3" data-bm-id="p2-t-267" data-bm-title="1-3. 指定オファリング" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p>各レルムには対応するオファリング（お供え物）が存在し、燃やすことでそのレルムへ行ける確率を大きく上げられる。得意マップに寄せる・苦手マップを避けるための実用的な手段であり、キラー練習時（例：ナースをミッドウィッチで練習する）にも役立つ。</p>
 <hr /></section>
-<section class="flow-section" id="p2-s-268"><h2>第2章：レルム別詳解</h2><h3 id="p2-t-269">2-1. マクミラン・エステート（The MacMillan Estate）</h3>
+<section class="flow-section" id="p2-s-268"><h2>第2章：レルム別詳解</h2><h3 id="p2-t-269">2-1. マクミラン・エステート（The MacMillan Estate）<span class="bookmark-star inline-h3" data-bm-id="p2-t-269" data-bm-title="2-1. マクミラン・エステート（The MacMillan Estate）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：鉱山・製材の工業地帯／ゆかりのキラー：トラッパー</strong></p>
 <p><strong>派生マップ</strong>：コール・タワー／うめき声の倉庫／苦悶の鉄工所／シェルター・ウッズ／窒息ピット</p>
 <ul>
@@ -2038,7 +2148,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>窒息ピット</strong>：中央に採掘の縦坑と坑道が走る。坑道内の窓は強力だが、逃げ込みすぎると挟まれる地形でもある。</li>
 </ul>
 <p><strong>傾向と対策</strong>：全体に石壁・木材の目隠しが多く、隠密キラーが機能しやすい。発電機の間隔は標準的。サバイバーは固有建築と小屋の位置関係を最初に把握し、板の消費を建築物間の「繋ぎ」に集中させると長生きしやすい。</p>
-<h3 id="p2-t-270">2-2. オートヘイヴン・レッカーズ（Autohaven Wreckers）</h3>
+<h3 id="p2-t-270">2-2. オートヘイヴン・レッカーズ（Autohaven Wreckers）<span class="bookmark-star inline-h3" data-bm-id="p2-t-270" data-bm-title="2-2. オートヘイヴン・レッカーズ（Autohaven Wreckers）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：廃車置き場・解体場／ゆかりのキラー：レイス</strong></p>
 <p><strong>派生マップ</strong>：アザロフの休憩所／ブラッド・ロッジ／ガス・ヘヴン／レッカーズ・ヤード／うらぶれた店</p>
 <ul>
@@ -2049,7 +2159,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>うらぶれた店（レッチド・ショップ）</strong>：修理工場が固有建築。工場内の2階と長い窓が強く、周辺の廃車タイルとの連結も良い。</li>
 </ul>
 <p><strong>傾向と対策</strong>：廃車の列が視線を切る中障害物として優秀で、板グルよりも「車列を挟んだ読み合い」が多発する。夜間らしい暗さがあり、青みがかった視界で傷マークがやや見づらい。レイスのホームレルムらしく、奇襲系キラー全般が戦いやすい。</p>
-<h3 id="p2-t-271">2-3. コールドウィンド・ファーム（Coldwind Farm）</h3>
+<h3 id="p2-t-271">2-3. コールドウィンド・ファーム（Coldwind Farm）<span class="bookmark-star inline-h3" data-bm-id="p2-t-271" data-bm-title="2-3. コールドウィンド・ファーム（Coldwind Farm）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：とうもろこし畑の農場／ゆかりのキラー：ヒルビリー・カニバル</strong></p>
 <p><strong>派生マップ</strong>：腐敗した草原／苦悶のクリーク／饐えた屠殺場／トンプソン・ハウス／壊れた牛舎</p>
 <ul>
@@ -2060,7 +2170,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>壊れた牛舎</strong>：半壊した牛舎が固有建築。壁が抜けた開放的な構造で、建物内外の出入りが自由なぶん、窓の強さは控えめ。</li>
 </ul>
 <p><strong>傾向と対策</strong>：畑（コーン）の中は視界がほぼ通らず、音と傷マークだけが頼りになる。しゃがみ移動でも茎の揺れる音とエフェクトが出るため完全な無音ではない。開けた農地は直線が長く、ヒルビリー・ブライトなど直進系キラーの独壇場になりやすい。サバイバーは畑を「視線切りの道具」として使いつつ、深追いされたら建築物へ繋ぐ意識を持つ。</p>
-<h3 id="p2-t-272">2-4. クロータス・プレン精神病院（Crotus Prenn Asylum）</h3>
+<h3 id="p2-t-272">2-4. クロータス・プレン精神病院（Crotus Prenn Asylum）<span class="bookmark-star inline-h3" data-bm-id="p2-t-272" data-bm-title="2-4. クロータス・プレン精神病院（Crotus Prenn Asylum）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：廃病院／ゆかりのキラー：ナース・クラウン</strong></p>
 <p><strong>派生マップ</strong>：乱心した病棟／キャンベル神父の礼拝堂</p>
 <ul>
@@ -2068,7 +2178,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>キャンベル神父の礼拝堂</strong>：礼拝堂が固有建築。堂内は板1枚と複数の窓を持ち、正面・側面・裏口と出入口が多い。クラウンのモチーフが散りばめられたサーカス風の装飾が目印。</li>
 </ul>
 <p><strong>傾向と対策</strong>：どちらの派生も「固有建築が非常に強く、周辺の平地はやや弱い」という極端な構造。サバイバーは建築を軸に据え、キラーは建築の窓をまやかし等で機能停止させるか、建築の外で捕まえる設計が必要になる。</p>
-<h3 id="p2-t-273">2-5. ハドンフィールド（Haddonfield）</h3>
+<h3 id="p2-t-273">2-5. ハドンフィールド（Haddonfield）<span class="bookmark-star inline-h3" data-bm-id="p2-t-273" data-bm-title="2-5. ハドンフィールド（Haddonfield）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：映画『ハロウィン』の住宅街／ゆかりのキラー：シェイプ</strong></p>
 <p><strong>派生マップ</strong>：ランプキン・レーン</p>
 <ul>
@@ -2076,7 +2186,7 @@ details.card.filtered-out{ display:none; }
 <li>庭のフェンス（乗り越え可能な柵）が板とは別のチェイス資源として機能する、レルム独自の要素がある。</li>
 </ul>
 <p><strong>傾向と対策</strong>：シェイプ（マイケル）のホームで、家々の窓から凝視される原作再現的な恐怖が体験できる。家屋内はロッカーも多く隠密向きだが、探知系能力には弱い。キラーはバルコニー・窓からの飛び降り読みが上達の鍵。改修で家屋の窓配置が調整された経緯があり、現在は極端な無限ループは解消されている。</p>
-<h3 id="p2-t-274">2-6. バックウォーター・スワンプ（Backwater Swamp）</h3>
+<h3 id="p2-t-274">2-6. バックウォーター・スワンプ（Backwater Swamp）<span class="bookmark-star inline-h3" data-bm-id="p2-t-274" data-bm-title="2-6. バックウォーター・スワンプ（Backwater Swamp）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：沼地・湿地帯</strong></p>
 <p><strong>派生マップ</strong>：ペイル・ローズ／グリム・パントリー</p>
 <ul>
@@ -2084,7 +2194,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>グリム・パントリー</strong>：沼にせり出した高床の貯蔵小屋が固有建築。小屋は2階建てで、周囲を桟橋と浅瀬が囲む。</li>
 </ul>
 <p><strong>傾向と対策</strong>：全体に薄暗く、枯れ木・葦・小屋のシルエットが視界を刻む。地面の起伏と浅瀬で移動感覚が狂いやすい。板は「弱い板が広く分散する」傾向で、固有建築以外での長時間チェイスは難しい。ハグ・レイスなど奇襲型が戦いやすく、遠距離キラーは視線の通らなさに苦しむ。</p>
-<h3 id="p2-t-275">2-7. レリー記念研究所（Léry's Memorial Institute）</h3>
+<h3 id="p2-t-275">2-7. レリー記念研究所（Léry's Memorial Institute）<span class="bookmark-star inline-h3" data-bm-id="p2-t-275" data-bm-title="2-7. レリー記念研究所（Léry&#x27;s Memorial Institute）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：屋内型の精神医学研究所／ゆかりのキラー：ドクター</strong></p>
 <p><strong>派生マップ</strong>：治療シアター</p>
 <ul>
@@ -2092,7 +2202,7 @@ details.card.filtered-out{ display:none; }
 <li>部屋と部屋を繋ぐ窓・ドアが多く、視線が数メートル先までしか通らない。心音の反響も相まって、キラーの位置把握が全マップ中で最も難しい部類。</li>
 </ul>
 <p><strong>傾向と対策</strong>：ドクターのホームであり、放電爆破による壁越し索敵が最大限機能する。ナース・スピリットなど壁を無視・すり抜けるキラーも強い。一方でハントレス・デススリンガーなど射線が必要なキラーには最悪級の相性。サバイバーは負傷時の呻き声が反響で拾われやすいため、鋼の意志の価値が高い。</p>
-<h3 id="p2-t-276">2-8. レッド・フォレスト（Red Forest）</h3>
+<h3 id="p2-t-276">2-8. レッド・フォレスト（Red Forest）<span class="bookmark-star inline-h3" data-bm-id="p2-t-276" data-bm-title="2-8. レッド・フォレスト（Red Forest）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：血に染まった森／ゆかりのキラー：ハントレス・プレイグ</strong></p>
 <p><strong>派生マップ</strong>：マザーズ・ドウェリング／贖罪の神殿</p>
 <ul>
@@ -2100,7 +2210,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>贖罪の神殿</strong>：プレイグの神殿が固有建築。神殿は地下通路を持つ立体構造で、地下に降りる・地上へ抜けるルートの把握が攻略の要。</li>
 </ul>
 <p><strong>傾向と対策</strong>：広さゆえに機動力のないキラーは巡回だけで時間が溶ける。キラー側は索敵・遅延パークでの補強がほぼ必須。サバイバー側は広さを利用した「遠くの発電機から順に外周を崩す」進行が安定する。</p>
-<h3 id="p2-t-277">2-9. スプリングウッド（Springwood）</h3>
+<h3 id="p2-t-277">2-9. スプリングウッド（Springwood）<span class="bookmark-star inline-h3" data-bm-id="p2-t-277" data-bm-title="2-9. スプリングウッド（Springwood）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：映画『エルム街の悪夢』の学校と住宅街／ゆかりのキラー：ナイトメア</strong></p>
 <p><strong>派生マップ</strong>：バダム幼稚園Ⅰ〜Ⅴ（5バリエーション）</p>
 <ul>
@@ -2108,7 +2218,7 @@ details.card.filtered-out{ display:none; }
 <li>校舎は地下ボイラー室（フレディの原点となった場所）を持ち、地下室候補にもなる。校舎＋隣接する家々の窓が連続する一帯は非常に粘れる。</li>
 </ul>
 <p><strong>傾向と対策</strong>：住宅の窓・板が多く、全体としてサバイバー有利寄りと評されることが多いレルム。キラー側は校舎周辺を捨てて外周の発電機で勝負する判断も要る。フレディ戦では地下ボイラー室の目覚まし時計の位置も併せて覚えたい。</p>
-<h3 id="p2-t-278">2-10. ギデオン食肉プラント（Gideon Meat Plant）</h3>
+<h3 id="p2-t-278">2-10. ギデオン食肉プラント（Gideon Meat Plant）<span class="bookmark-star inline-h3" data-bm-id="p2-t-278" data-bm-title="2-10. ギデオン食肉プラント（Gideon Meat Plant）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：映画『ソウ』の工場／ゆかりのキラー：ピッグ</strong></p>
 <p><strong>派生マップ</strong>：ゲーム（The Game）</p>
 <ul>
@@ -2116,7 +2226,7 @@ details.card.filtered-out{ display:none; }
 <li>板の枚数が全マップ中トップクラスに多い一方、窓が極端に少ない「板の国」。ほとんどの板が安全板（当て身の取りやすい強板）で、キラーは板破壊に多くの時間を割かされる。</li>
 </ul>
 <p><strong>傾向と対策</strong>：板が多いためサバイバー有利に見えるが、視界が悪く奇襲されやすい・フロア間の連携が取りにくいという弱点もある。キラーは野蛮な力・まやかし等の板対策パーク、あるいは板を無視できる能力（ナース、ブライト、ジェイソンのジャンプスケア等）で強く戦える。ピッグのビリー人形などソウ原作のギミック演出も豊富。</p>
-<h3 id="p2-t-279">2-11. 山岡邸（Yamaoka Estate）</h3>
+<h3 id="p2-t-279">2-11. 山岡邸（Yamaoka Estate）<span class="bookmark-star inline-h3" data-bm-id="p2-t-279" data-bm-title="2-11. 山岡邸（Yamaoka Estate）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：日本家屋と竹林／ゆかりのキラー：スピリット・鬼</strong></p>
 <p><strong>派生マップ</strong>：家宅／怒りの聖域</p>
 <ul>
@@ -2124,7 +2234,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>怒りの聖域</strong>：山岡崋山（鬼）ゆかりの神社が固有建築。本殿と鳥居、石段の高低差が特徴的。</li>
 </ul>
 <p><strong>傾向と対策</strong>：竹林は視界を刻むが完全には隠せない、独特の「半透過」の遮蔽。地面の草むらが多く、しゃがみ隠密の価値が高い。スピリット戦のホームだけに、音を意識した立ち回り（歩き移動・呻き声対策）の重要性を体感的に学べるレルムでもある。</p>
-<h3 id="p2-t-280">2-12. オーモンド（Ormond）</h3>
+<h3 id="p2-t-280">2-12. オーモンド（Ormond）<span class="bookmark-star inline-h3" data-bm-id="p2-t-280" data-bm-title="2-12. オーモンド（Ormond）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：雪山のスキーリゾート／ゆかりのキラー：リージョン・ハウンドマスター</strong></p>
 <p><strong>派生マップ</strong>：オーモンドのリゾート山／オーモンド湖の鉱山</p>
 <ul>
@@ -2132,7 +2242,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>オーモンド湖の鉱山</strong>：凍った湖と鉱山の入口が特徴の派生マップ。ハウンドマスター実装に合わせて追加された、レルム内では新しいマップ。</li>
 </ul>
 <p><strong>傾向と対策</strong>：雪原の視界が良好で、隠密キラーは接近が丸見えになりやすい。全体に広く、板は「弱めの板が多数」という構成。リージョンの狂奔のような広範囲移動能力が映えるレルム。雪面は傷マークがやや見やすい。</p>
-<h3 id="p2-t-281">2-13. ホーキンス国立研究所（Hawkins National Laboratory）</h3>
+<h3 id="p2-t-281">2-13. ホーキンス国立研究所（Hawkins National Laboratory）<span class="bookmark-star inline-h3" data-bm-id="p2-t-281" data-bm-title="2-13. ホーキンス国立研究所（Hawkins National Laboratory）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：『ストレンジャー・シングス』の地下研究施設／ゆかりのキラー：デモゴルゴン</strong></p>
 <p><strong>派生マップ</strong>：地下施設</p>
 <ul>
@@ -2140,7 +2250,7 @@ details.card.filtered-out{ display:none; }
 <li>実験室・通路・中2階の連結構造で、乗り越え可能な段差や低い窓が多い。天井が低く、視界が細切れになる。</li>
 </ul>
 <p><strong>傾向と対策</strong>：屋内型の常としてナース・スピリット等が強く、射線型キラーは苦しい。デモゴルゴンのポータルは部屋の隅に置かれると発見が非常に難しい。板は少なめで、乗り越え段差を活かした小刻みなチェイスが中心になる。</p>
-<h3 id="p2-t-282">2-14. グレンベールの墓場（Grave of Glenvale）</h3>
+<h3 id="p2-t-282">2-14. グレンベールの墓場（Grave of Glenvale）<span class="bookmark-star inline-h3" data-bm-id="p2-t-282" data-bm-title="2-14. グレンベールの墓場（Grave of Glenvale）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：西部劇の街／ゆかりのキラー：デススリンガー</strong></p>
 <p><strong>派生マップ</strong>：デッド・ドウグ・サルーン</p>
 <ul>
@@ -2148,7 +2258,7 @@ details.card.filtered-out{ display:none; }
 <li>マップ自体は全レルム中でも小さめの部類で、発電機同士が近い。</li>
 </ul>
 <p><strong>傾向と対策</strong>：狭さゆえキラーの巡回が楽で、3ジェネ（発電機の三角固め）が成立しやすい。サバイバーは序盤から「固まった発電機を先に崩す」意識が特に重要になるマップ。デススリンガーのホームらしく、通りの直線では銃線が通るため遮蔽移動を徹底する。</p>
-<h3 id="p2-t-283">2-15. サイレント・ヒル（Silent Hill）</h3>
+<h3 id="p2-t-283">2-15. サイレント・ヒル（Silent Hill）<span class="bookmark-star inline-h3" data-bm-id="p2-t-283" data-bm-title="2-15. サイレント・ヒル（Silent Hill）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：『サイレントヒル』コラボ／ゆかりのキラー：エクセキューショナー</strong></p>
 <p><strong>派生マップ</strong>：ミッドウィッチ小学校</p>
 <ul>
@@ -2156,7 +2266,7 @@ details.card.filtered-out{ display:none; }
 <li>発電機・地下室候補・強窓の位置がほぼ固定されているため、覚えた者が圧倒的に有利。バリケードや潰れた通路など、通れそうで通れない箇所の把握が重要。</li>
 </ul>
 <p><strong>傾向と対策</strong>：廊下の直線は長いが曲がり角が多く、ナースが最も強いマップの一つとして知られる。サバイバーは校舎の対角へ抜ける階段位置を体で覚えること。原作再現のサイレンや異世界演出など、雰囲気面でも特異なマップ。</p>
-<h3 id="p2-t-284">2-16. ラクーンシティ（Raccoon City）</h3>
+<h3 id="p2-t-284">2-16. ラクーンシティ（Raccoon City）<span class="bookmark-star inline-h3" data-bm-id="p2-t-284" data-bm-title="2-16. ラクーンシティ（Raccoon City）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：『バイオハザード』コラボ／ゆかりのキラー：ネメシス・マスターマインド</strong></p>
 <p><strong>派生マップ</strong>：ラクーンシティ警察署 東棟／ラクーンシティ警察署 西棟</p>
 <ul>
@@ -2164,7 +2274,7 @@ details.card.filtered-out{ display:none; }
 <li>メインホールを中心に、複数階の廊下・事務室・留置場などが連結する。上下移動の階段・はしごの位置把握が攻略の生命線。</li>
 </ul>
 <p><strong>傾向と対策</strong>：屋内固定マップの中でも複雑さは随一で、初見のキラーは索敵で迷子になりやすい。逆に構造を覚えれば、巡回ルートを完全に最適化できる。ネメシス戦ではゾンビが狭い廊下を塞ぐ「動く障害物」として機能し、原作さながらの圧迫感がある。</p>
-<h3 id="p2-t-285">2-17. 見捨てられた墓場（Forsaken Boneyard）</h3>
+<h3 id="p2-t-285">2-17. 見捨てられた墓場（Forsaken Boneyard）<span class="bookmark-star inline-h3" data-bm-id="p2-t-285" data-bm-title="2-17. 見捨てられた墓場（Forsaken Boneyard）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：砂漠の墓場／ゆかりのキラー：アーティスト</strong></p>
 <p><strong>派生マップ</strong>：鴉の巣（Eyrie of Crows）</p>
 <ul>
@@ -2172,7 +2282,7 @@ details.card.filtered-out{ display:none; }
 <li>明るい砂地に黒いカラスと影が映える、視認性の高いビジュアル。</li>
 </ul>
 <p><strong>傾向と対策</strong>：見通しが良く、アーティストのカラスやハントレスの斧など「射線を使う能力」が最大限機能する。サバイバーは固有建築の塔と点在する岩タイルを繋いで戦う。隠密はほぼ機能しないため、チェイス力と発電効率での勝負になる。</p>
-<h3 id="p2-t-286">2-18. 枯死の島（Withered Isle）</h3>
+<h3 id="p2-t-286">2-18. 枯死の島（Withered Isle）<span class="bookmark-star inline-h3" data-bm-id="p2-t-286" data-bm-title="2-18. 枯死の島（Withered Isle）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：崩壊した庭園と街並み／ゆかりのキラー：ドレッジ・アンノウン</strong></p>
 <p><strong>派生マップ</strong>：喜びの庭／グリーンヴィル・スクエア／落ちた避難所</p>
 <ul>
@@ -2181,7 +2291,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>落ちた避難所</strong>：固有建築が非常に小さく（ジャングルジム1個分程度のL字構造）、強ポジが少ない。殺人鬼の小屋の窓を軸に時間を稼ぐことになる、キラー寄りのマップ。</li>
 </ul>
 <p><strong>傾向と対策</strong>：同一レルム内でマップごとの性格差が激しいのが特徴。喜びの庭はサバイバー有利、落ちた避難所はキラー有利と、当たったマップによって方針を切り替える柔軟さが要る。</p>
-<h3 id="p2-t-287">2-19. 荒廃したボルゴ（The Decimated Borgo）</h3>
+<h3 id="p2-t-287">2-19. 荒廃したボルゴ（The Decimated Borgo）<span class="bookmark-star inline-h3" data-bm-id="p2-t-287" data-bm-title="2-19. 荒廃したボルゴ（The Decimated Borgo）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：中世の滅びた城塞都市／ゆかりのキラー：ナイト・スカルマーチャント・リッチ</strong></p>
 <p><strong>派生マップ</strong>：壊れた広場／忘れられた遺跡</p>
 <ul>
@@ -2189,7 +2299,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>忘れられた遺跡</strong>：リッチ（ヴェクナ）実装に合わせて追加された城塞の遺跡マップ。地下へ降りる構造を持つ。</li>
 </ul>
 <p><strong>傾向と対策</strong>：実装当初は全体が赤一色で傷マークが見づらいとキラー側から不評だったが、後の調整で色味が改善された経緯がある。石壁の低いタイルが多く、視線が通る中で細かく回るチェイスが中心。ナイトの衛兵の巡回線が引きやすい地形でもある。</p>
-<h3 id="p2-t-288">2-20. ドヴァルカ・ディープウッド（Dvarka Deepwood）</h3>
+<h3 id="p2-t-288">2-20. ドヴァルカ・ディープウッド（Dvarka Deepwood）<span class="bookmark-star inline-h3" data-bm-id="p2-t-288" data-bm-title="2-20. ドヴァルカ・ディープウッド（Dvarka Deepwood）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <p><strong>テーマ：SF・宇宙船の残骸と密林／ゆかりのキラー：シンギュラリティ・ゼノモーフ</strong></p>
 <p><strong>派生マップ</strong>：トバ・ランディング／ノストロモの残骸</p>
 <ul>
@@ -2197,26 +2307,26 @@ details.card.filtered-out{ display:none; }
 <li><strong>ノストロモの残骸</strong>：『エイリアン』の宇宙船ノストロモ号の残骸を中心としたマップ。船内エリアと船外の荒野で構成され、ゼノモーフの坑道ギミックと世界観が噛み合う。</li>
 </ul>
 <p><strong>傾向と対策</strong>：どちらも中規模で、固有建築（船体）内部の通路構造を覚えることが攻略の中心。トバ・ランディングは草木の視界カットが強く、奇襲系も機能する。</p>
-<h3 id="p2-t-289">2-21. 近年の固定レイアウト系マップ（コラボ・新規）</h3>
+<h3 id="p2-t-289">2-21. 近年の固定レイアウト系マップ（コラボ・新規）<span class="bookmark-star inline-h3" data-bm-id="p2-t-289" data-bm-title="2-21. 近年の固定レイアウト系マップ（コラボ・新規）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li><strong>トリックスターの妄想（9.5.0実装／新領域「眠らない界隈」）</strong>：韓国の繁華街をモチーフにした完全固定レイアウトマップ。ナイトクラブ／伝統市場と公園／近代的なハイストリート／薄暗いローストリートの4区画で構成される。視認性が低いぶん、発電機のある場所には雷マークの緑看板が設置されており、看板を目印に探すのがセオリー。</li>
 <li><strong>アニマトロニックの警備室ギミック</strong>：FNAFコラボでは専用の新マップではなく、各マップに警備室のセキュリティドア（ワープの出入口・7箇所）が配置される方式（貞子のテレビと同系統のマップ横断ギミック）。ドアの位置を覚えることが、キラー側はワープ運用、サバイバー側は奇襲警戒の両面で最重要になる。</li>
 <li><strong>注意</strong>：ジェイソン（スラッシャー）の10周年チャプターでは<strong>新マップは実装されていない</strong>（新キラーのみの実装）。クリスタルレイク風マップの登場を期待する声は多いが、2026年7月時点で公式発表はない。</li>
 </ul>
 <hr /></section>
-<section class="flow-section" id="p2-s-290"><h2>第3章：地下室・ハッチ・ゲートの法則</h2><h3 id="p2-t-291">3-1. 地下室（ベースメント）</h3>
+<section class="flow-section" id="p2-s-290"><h2>第3章：地下室・ハッチ・ゲートの法則</h2><h3 id="p2-t-291">3-1. 地下室（ベースメント）<span class="bookmark-star inline-h3" data-bm-id="p2-t-291" data-bm-title="3-1. 地下室（ベースメント）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>地下室は「殺人鬼の小屋」か「固有建築」のどちらかに生成される（マップごとに候補は原則この2箇所）。開幕にどちらへ湧いたかを確認しておくと、吊り位置の予測と危険地帯の把握に繋がる。</li>
 <li>地下室にはフックが4本並び、チェストが1つ確定配置される。キラーに地下へ吊られると救助経路が階段1本に限定されるため、全フック中で最も救助が難しい。</li>
 <li>カニバル・ハグ・トラッパーなど「守りが強いキラー」の地下吊りは半ば詰み筋になり得る。地下救助は2人以上での連携か、キラーが確実に離れた瞬間を狙う。</li>
 </ul>
-<h3 id="p2-t-292">3-2. ハッチ</h3>
+<h3 id="p2-t-292">3-2. ハッチ<span class="bookmark-star inline-h3" data-bm-id="p2-t-292" data-bm-title="3-2. ハッチ" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>ハッチは<strong>残りサバイバーが1人になった瞬間</strong>にマップのどこかへ開いた状態で出現する。それ以前は存在自体が生成されない（かつての鍵による複数人ハッチ脱出は廃止済み）。</li>
 <li>開いたハッチは独特の風音を発しており、音を頼りに探せる。キラーが先に発見した場合は閉じることができ、閉じられるとゲートに通電してエンドゲームコラプスが始まる。</li>
 <li>鍵（アイテム）を持っていれば、閉じられたハッチを再び開けて脱出できる。最後の1人になりがちなソロプレイでは保険として機能する。</li>
 </ul>
-<h3 id="p2-t-293">3-3. ゲート（非常口）</h3>
+<h3 id="p2-t-293">3-3. ゲート（非常口）<span class="bookmark-star inline-h3" data-bm-id="p2-t-293" data-bm-title="3-3. ゲート（非常口）" data-bm-part="p2" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>ゲートはマップ外周に2箇所生成される。2つのゲートが近い位置（同じ壁面や角を挟んだ隣接）に湧くと、キラーの往復監視が容易になり脱出難度が上がる。</li>
 <li>ゲートのスイッチは押し続けて開放する（約16秒）。開放途中で手を離してもゲージは維持されるが、キラー側パークや仕様によっては後退する場合もあるため、開けきれる時に開けきるのが基本。</li>
@@ -2291,20 +2401,20 @@ details.card.filtered-out{ display:none; }
 <hr />
 <p><em>第2部は2026年7月3日時点の情報に基づく。マップの生成・板の枚数はパッチごとに微調整が入るため、細部の数値よりも「レルムごとの性格」と「タイル理論」を軸に活用してほしい。</em></p></section></div><div class="part-content" data-slug="p3" data-title="第3部：共通システム編"><div class="intro-block"><p>キラー個別の対策よりも先に習得すべきなのが「どのキラーにも通用する基礎理論」。本部ではチェイス理論、ステータス効果、基本アクションの仕様、育成システムに加えて、トーテム（呪術・恵み）、発電機の後退仕様、エンドゲームコラプス、キャンプ対策システム、マッチメイキングの仕組みまで、試合を構成するルールを実戦で使えるレベルまで掘り下げる。</p>
 <hr /></div>
-<section class="flow-section" id="p3-s-296"><h2>第1章：チェイス理論の基礎</h2><h3 id="p3-t-297">1-1. 心音（テラーレディウス）の仕組み</h3>
+<section class="flow-section" id="p3-s-296"><h2>第1章：チェイス理論の基礎</h2><h3 id="p3-t-297">1-1. 心音（テラーレディウス）の仕組み<span class="bookmark-star inline-h3" data-bm-id="p3-t-297" data-bm-title="1-1. 心音（テラーレディウス）の仕組み" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>キラーは通常「32m」の心音範囲（テラーレディウス）を持つ。心音が聞こえ始めたら32m以内にキラーがいる合図。</li>
 <li>心音は距離に応じて音量・鼓動の速さが変わり、近づくほど大きく速くなる。チェイスが始まると専用のチェイスBGMに切り替わるため、「心音の強さ」と「BGMの変化」の2つで距離感と状況を掴む。</li>
 <li>ステルスキラー（隠密状態のゴーストフェイス、しゃがみ移動のピッグなど）は心音範囲が0mになる場合があり、心音だけに頼るのは危険。</li>
 <li>心音は指向性がない（どの方向から聞こえても同じ音量に聞こえる）ため、「心音が聞こえたらどの方角にいるか」を判断するのは実は難しい。複数回同じ場所で心音の増減を確認し、線で追う意識を持つと精度が上がる。</li>
 </ul>
-<h3 id="p3-t-298">1-2. 傷マーク（引っかき傷）とオーラの基本</h3>
+<h3 id="p3-t-298">1-2. 傷マーク（引っかき傷）とオーラの基本<span class="bookmark-star inline-h3" data-bm-id="p3-t-298" data-bm-title="1-2. 傷マーク（引っかき傷）とオーラの基本" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>チェイス中に負傷した状態で走ると、地面に赤い傷マークが残る。キラーはこれを頼りに追跡できる。</li>
 <li>傷マークは時間経過で消える。健康状態やしゃがみ移動では発生しない。</li>
 <li>オーラ（味方・キラー・オブジェクトの輪郭が透けて見える効果）は多くのパーク・アイテムで発生する。壁越しでも見えるため、索敵・警戒の両面で重要な情報源になる。</li>
 </ul>
-<h3 id="p3-t-299">1-3. 板（パレット）の基本理論</h3>
+<h3 id="p3-t-299">1-3. 板（パレット）の基本理論<span class="bookmark-star inline-h3" data-bm-id="p3-t-299" data-bm-title="1-3. 板（パレット）の基本理論" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>板は「置かれた状態」で存在し、サバイバーが操作して倒す（スタン）ことでキラーの足を止められる。</li>
 <li><strong>早倒し</strong>：キラーが遠い距離から板を倒すこと。安全だが「板の消費」という代償を払う。</li>
@@ -2312,30 +2422,30 @@ details.card.filtered-out{ display:none; }
 <li><strong>偽情報（フェイク）</strong>：板を持つ素振りだけ見せてキラーの攻撃を誘発し、実際には倒さずに逃げる高等テクニック。読み合いの最上級。</li>
 <li>板を使い切ったマップは「壊れた板（デッドハード板）」として残り、乗り越えだけは可能。板の総数はマップごとに決まっており、終盤になるほど貴重になる。</li>
 </ul>
-<h3 id="p3-t-300">1-4. 窓（ウィンドウ）の基本理論</h3>
+<h3 id="p3-t-300">1-4. 窓（ウィンドウ）の基本理論<span class="bookmark-star inline-h3" data-bm-id="p3-t-300" data-bm-title="1-4. 窓（ウィンドウ）の基本理論" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>窓は板と違い消費されない無限リソース。ただし「両方向から使える窓」と「片方向しか使えない窓」がある。</li>
 <li>キラーが窓の反対側で待ち構える「窓待ち」をされたら、無理に近づかず様子を見る。窓を挟んだ膠着状態は基本的にサバイバー有利（時間切れを待てる）。</li>
 <li>一部の窓と板が連続する「無限（インフィニット）」に近い構造も存在するが、多くは近年のマップ調整で解消されている。</li>
 </ul>
-<h3 id="p3-t-301">1-5. ループ（周回）の考え方</h3>
+<h3 id="p3-t-301">1-5. ループ（周回）の考え方<span class="bookmark-star inline-h3" data-bm-id="p3-t-301" data-bm-title="1-5. ループ（周回）の考え方" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>障害物（発電機・岩・小屋など）を周回してキラーとの距離を維持する基本戦術。</li>
 <li>ループの強さは「障害物の大きさ」「窓・板の有無」「周辺の接続（次のループへ繋がるか）」で決まる。</li>
 <li><strong>「3ジェネ理論」</strong>：強ポジは限られているため、キラーは巡回ルート上のポジションを事前に把握し、サバイバーはそこへ逃げ込む動線を意識する。単体のループより「ループからループへの接続」を意識できるプレイヤーがチェイスに強い。</li>
 </ul>
-<h3 id="p3-t-302">1-6. 視線切り（ロス・オブ・ビジョン）</h3>
+<h3 id="p3-t-302">1-6. 視線切り（ロス・オブ・ビジョン）<span class="bookmark-star inline-h3" data-bm-id="p3-t-302" data-bm-title="1-6. 視線切り（ロス・オブ・ビジョン）" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>キラーの視界から一瞬でも外れることを「視線切り」と呼ぶ。角を曲がった瞬間、遮蔽物の裏に回った瞬間が該当する。</li>
 <li>視線を切った直後に方向転換すると、キラーは「直進しているはず」という予測を外され、追跡ロスに繋がる。</li>
 <li>隠密読み合い系キラー（ナース、スピリット）に対しては視線切りの質がそのまま生存率に直結する。</li>
 </ul>
-<h3 id="p3-t-303">1-7. 45度の法則・軸ずらし</h3>
+<h3 id="p3-t-303">1-7. 45度の法則・軸ずらし<span class="bookmark-star inline-h3" data-bm-id="p3-t-303" data-bm-title="1-7. 45度の法則・軸ずらし" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>直線でキラーに追われている時、真後ろに走るより「斜め45度」に軌道をずらすと、キラーの攻撃タイミングを外しやすい。</li>
 <li>特に突進系能力（ヒルビリーのチェーンソー、ブライトのラッシュ、鬼の血の怒り）に対しては、この軸ずらしが被弾率を大きく左右する。</li>
 </ul>
-<h3 id="p3-t-304">1-8. スキルチェックの基礎</h3>
+<h3 id="p3-t-304">1-8. スキルチェックの基礎<span class="bookmark-star inline-h3" data-bm-id="p3-t-304" data-bm-title="1-8. スキルチェックの基礎" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>発電機修理・治療・脱出などの作業中にランダムで発生するミニゲーム。バーの正しい位置でクリックすると「グレートスキルチェック」（作業効率ボーナス＋通知音なし）になる。</li>
 <li>失敗すると作業が後退し、大きな通知音でキラーに位置がバレる。</li>
@@ -2343,7 +2453,7 @@ details.card.filtered-out{ display:none; }
 </ul>
 <hr /></section>
 <section class="flow-section" id="p3-s-305"><h2>第2章：ステータス効果一覧</h2><p>DbDには多数のステータス効果（バフ・デバフ）が存在する。名前と効果を正確に知っておくことは、あらゆるキラー対策の土台になる。</p>
-<h3 id="p3-t-306">サバイバー側の主なステータス</h3>
+<h3 id="p3-t-306">サバイバー側の主なステータス<span class="bookmark-star inline-h3" data-bm-id="p3-t-306" data-bm-title="サバイバー側の主なステータス" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -2405,7 +2515,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p3-t-307">キラー側の主なステータス</h3>
+<h3 id="p3-t-307">キラー側の主なステータス<span class="bookmark-star inline-h3" data-bm-id="p3-t-307" data-bm-title="キラー側の主なステータス" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -2429,67 +2539,67 @@ details.card.filtered-out{ display:none; }
 </tbody>
 </table>
 <hr /></section>
-<section class="flow-section" id="p3-s-308"><h2>第3章：基本アクションの仕様と小技</h2><h3 id="p3-t-309">3-1. 発電機修理</h3>
+<section class="flow-section" id="p3-s-308"><h2>第3章：基本アクションの仕様と小技</h2><h3 id="p3-t-309">3-1. 発電機修理<span class="bookmark-star inline-h3" data-bm-id="p3-t-309" data-bm-title="3-1. 発電機修理" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>発電機1台の修理には1人あたり基本90秒かかる。マップには7台の発電機が生成され、うち5台の修理完了で通電する。複数人で同時修理すると実時間は縮むが、1人あたりの作業効率には人数が増えるごとに約15%のペナルティがかかる（人数を増やすほど「合計作業量」は損をする）。</li>
 <li>発電機蹴り（キラーの妨害アクション）を受けると進捗が後退し、一定時間ブロックされる。</li>
 <li><strong>並行修理の落とし穴</strong>：2人以上で同じ発電機を修理すると「不協和音」等のパークで丸見えになるリスクがある。分散修理が基本方針。</li>
 </ul>
-<h3 id="p3-t-310">3-2. 治療</h3>
+<h3 id="p3-t-310">3-2. 治療<span class="bookmark-star inline-h3" data-bm-id="p3-t-310" data-bm-title="3-2. 治療" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>素の治療は16秒（相互作業のため実質もう少しかかる）。医療キットのチャージ・アドオンで短縮可能。</li>
 <li>自己治療は「内なる力」等のパークがない限り基本的に不可（"セルフケア"系のパークが必要）。</li>
 <li>治療中はしゃがみができず、無防備な時間が生まれる。安全な場所（強ポジ付近、キラーの巡回から外れた位置）で行う。</li>
 </ul>
-<h3 id="p3-t-311">3-3. 救助と担ぎ・暴れ</h3>
+<h3 id="p3-t-311">3-3. 救助と担ぎ・暴れ<span class="bookmark-star inline-h3" data-bm-id="p3-t-311" data-bm-title="3-3. 救助と担ぎ・暴れ" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>フックにかけられたサバイバーは「1st→2nd→処刑（3rd）」の3段階。2段階目からは背景に呪いのオーラが見えるようになる。</li>
 <li><strong>フックからの自力脱出（もがき）は、現行仕様では以下のいずれかの条件を満たさない限り成功のチャンスがない</strong>：①儀式内の残り生存者が2人になっている、②運を上げるオファリングを使用している、③「ツルツルとした肉体」または「賭け金のレイズ」を装備している。生存者が3人以上残っており、かつこれらの条件をどれも満たさない場合、もがくこと自体はできるが脱出のチャンスは0%（失敗によるペナルティも発生しない）。運を上げるオファリングは、パークがなくても単独でこの条件を満たせる点に注意。</li>
 <li>担がれている間の「もがき」はゲージを進めて自力脱出（振りほどき）を狙う行動であり、もがき自体はキラーの移動を遅くしない。もがき中に左右入力でキラーの歩行ルートを乱し、フック到達をわずかに遅らせるテクニックはあるが確実性は低い。「ボイルオーバー」等のパークを付けて初めて本格的な運搬妨害性能が生まれる。</li>
 <li>救助されたサバイバーには基本仕様として短時間の「我慢（耐久）」と加速が付与される（いわゆる内蔵版・与えられた猶予）。この間の被弾は深手に変換されるため即ダウンはしないが、効果時間は短く、発電機修理などの顕著な行動で消える。救助後は速やかにキラーから離れるのが大前提で、パークの「与えられた猶予」「オフレコ」はこの基本保護をさらに厚くするものと理解する。</li>
 </ul>
-<h3 id="p3-t-312">3-4. ロッカー</h3>
+<h3 id="p3-t-312">3-4. ロッカー<span class="bookmark-star inline-h3" data-bm-id="p3-t-312" data-bm-title="3-4. ロッカー" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>ロッカーは隠密の手段だが、多くのキラー（透明化系、探知系）には無力化される。過信は禁物。</li>
 <li>ロッカー内のアイテムは開始時にランダム配置されており、序盤の探索価値がある。</li>
 <li>一部キラー（デモゴルゴンのポータル、ドレッジのテレポート）はロッカーと直接連動するため、該当キラー戦ではロッカーの意味合いが変わる。</li>
 </ul>
-<h3 id="p3-t-313">3-5. ゲート・脱出</h3>
+<h3 id="p3-t-313">3-5. ゲート・脱出<span class="bookmark-star inline-h3" data-bm-id="p3-t-313" data-bm-title="3-5. ゲート・脱出" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>全発電機修理完了後、非常口ゲートが起動し、開放できるようになる。</li>
 <li>ゲート開放中はキラーにオーラが見える通知が入る（一部パーク）。開けたら即脱出せず、他の仲間の状況を確認する判断も時に必要。</li>
 <li>ゲート前での「アルティメットチェイス（詰め）」は試合終盤の山場。キラー側はここでの立ち回りが4kと3kを分ける。</li>
 </ul>
 <hr /></section>
-<section class="flow-section" id="p3-s-314"><h2>第4章：育成・進行システム</h2><h3 id="p3-t-315">4-1. ブラッドウェブ（Bloodweb）</h3>
+<section class="flow-section" id="p3-s-314"><h2>第4章：育成・進行システム</h2><h3 id="p3-t-315">4-1. ブラッドウェブ（Bloodweb）<span class="bookmark-star inline-h3" data-bm-id="p3-t-315" data-bm-title="4-1. ブラッドウェブ（Bloodweb）" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>キャラクターごとの経験値（BP：ブラッドポイント）を消費して、パーク・アイテム・アドオン・お守りをアンロックする成長システム。</li>
 <li>レベルが上がるほど出現するパークのレア度が上がり、汎用パーク（他キャラでも使えるもの）と固有パークのバランスを見て消費先を決めるのが効率的。</li>
 <li>プレステージ（転生）システムにより、キャラクターをリセットして固有パーク3種を全キャラ共通で使えるようにする「解放」が可能。</li>
 </ul>
-<h3 id="p3-t-316">4-2. 祭壇（アルター・オブ・デスパイア）とお守り（チャーム）</h3>
+<h3 id="p3-t-316">4-2. 祭壇（アルター・オブ・デスパイア）とお守り（チャーム）<span class="bookmark-star inline-h3" data-bm-id="p3-t-316" data-bm-title="4-2. 祭壇（アルター・オブ・デスパイア）とお守り（チャーム）" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>期間限定・恒常のミッションで得られる特殊な育成コンテンツ。直接の強さには影響しないが、コスメティックな側面が強い。</li>
 </ul>
-<h3 id="p3-t-317">4-3. アーカイブ（Tome）</h3>
+<h3 id="p3-t-317">4-3. アーカイブ（Tome）<span class="bookmark-star inline-h3" data-bm-id="p3-t-317" data-bm-title="4-3. アーカイブ（Tome）" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>ストーリー・チャレンジ形式のコンテンツ。クリアでリフト経験値やコスメティックが得られる。</li>
 <li>特定パークの使用や特定条件のチャレンジが多く、普段使わないパークを試す良い機会にもなる。</li>
 </ul>
-<h3 id="p3-t-318">4-4. ブラッドポイントの効率的な使い方</h3>
+<h3 id="p3-t-318">4-4. ブラッドポイントの効率的な使い方<span class="bookmark-star inline-h3" data-bm-id="p3-t-318" data-bm-title="4-4. ブラッドポイントの効率的な使い方" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>序盤は「汎用パーク優先」で消費し、キャラ愛用の固有パークは解放後にお気に入りのビルドへ組み込むのが効率的。</li>
 <li>カテゴリボーナス（例：救助行動でのBP上限アップカテゴリ）を意識してプレイスタイルに応じたBP稼ぎを行うと、育成速度が上がる。</li>
 </ul>
 <hr />
 <hr /></section>
-<section class="flow-section" id="p3-s-319"><h2>第5章：トーテムと呪術・恵み（ブーン）</h2><h3 id="p3-t-320">5-1. トーテムの基本</h3>
+<section class="flow-section" id="p3-s-319"><h2>第5章：トーテムと呪術・恵み（ブーン）</h2><h3 id="p3-t-320">5-1. トーテムの基本<span class="bookmark-star inline-h3" data-bm-id="p3-t-320" data-bm-title="5-1. トーテムの基本" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>各マップには5本のトーテム（骨のオブジェクト）が生成される。初期状態は「無力なトーテム（点灯していない骨）」。</li>
 <li>キラーが呪術（Hex）パークを装備していると、無力なトーテムの一部が「呪いのトーテム（炎が灯った骨）」として点灯し、そのパークの効果が有効になる。</li>
 <li>呪いのトーテムを浄化（約14秒の作業）すると、対応する呪術パークは永久に無効化される。逆に浄化されない限り効果が続くため、呪術は「ハイリスク・ハイリターン」の設計になっている。</li>
 </ul>
-<h3 id="p3-t-321">5-2. 主要な呪術パークと対処</h3>
+<h3 id="p3-t-321">5-2. 主要な呪術パークと対処<span class="bookmark-star inline-h3" data-bm-id="p3-t-321" data-bm-title="5-2. 主要な呪術パークと対処" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li><strong>呪術：破滅</strong>：発電機が自動で後退し続ける。点灯中は放置された発電機がどんどん巻き戻るため、見つけ次第の浄化価値が高い。</li>
 <li><strong>呪術：貪られる希望</strong>：フック救助のたびにトークンが貯まり、一定数でキラーがワンパン化する。「理由の分からないワンパン」を食らったらまずこれを疑い、全員でトーテムを探す。</li>
@@ -2497,46 +2607,46 @@ details.card.filtered-out{ display:none; }
 <li><strong>呪術：ペンティメント</strong>：浄化された（壊された）トーテムをキラーが再点灯し、全体デバフを蓄積する。対策として、浄化ではなく後述のブーンで上書きする、あるいは壊した骨の位置をキラーに悟らせない立ち回りが有効。</li>
 <li><strong>誰も死から逃れられない（NOED）</strong>：通電時に無力なトーテムが残っていると点灯し、キラーがワンパン化する終盤の呪術。<strong>試合中に無力なトーテムをコツコツ壊しておくことが唯一の事前対策</strong>であり、「トーテム処理は保険」という格言の由来。</li>
 </ul>
-<h3 id="p3-t-322">5-3. 恵みのトーテム（ブーン）</h3>
+<h3 id="p3-t-322">5-3. 恵みのトーテム（ブーン）<span class="bookmark-star inline-h3" data-bm-id="p3-t-322" data-bm-title="5-3. 恵みのトーテム（ブーン）" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>サバイバー側の「ブーン」パークは、トーテムに祝福を施して自軍の強化エリア（範囲内で回復速度アップ等）を作る仕組み。呪いのトーテムに上書きすることもでき、その場合は呪術を実質無効化しつつ恵みを得られる。</li>
 <li>キラーはブーントーテムを「消灯」させられるが、トーテン自体は破壊されないため、サバイバーは何度でも再点灯できる。キラーとの「点け直し合戦」で時間を使わせる消耗戦にもなり得る。</li>
 <li>代表例：<strong>恵み：癒しの輪</strong>（範囲内の治療速度アップ・自己治療可能化）。メディック型ビルドとの相性が良い。</li>
 </ul>
-<h3 id="p3-t-323">5-4. トーテム処理の優先順位（サバイバー視点）</h3>
+<h3 id="p3-t-323">5-4. トーテム処理の優先順位（サバイバー視点）<span class="bookmark-star inline-h3" data-bm-id="p3-t-323" data-bm-title="5-4. トーテム処理の優先順位（サバイバー視点）" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ol>
 <li>点灯している呪い（特に破滅・貪られる希望）は最優先で浄化。</li>
 <li>手が空いた時間の無力なトーテム処理はNOED保険として常に価値がある。</li>
 <li>「小さな獲物」やマップ（地図）系アイテムがあるとトーテム発見効率が大きく上がる。</li>
 </ol>
 <hr /></section>
-<section class="flow-section" id="p3-s-324"><h2>第6章：発電機の後退仕様と「蹴り」の上限</h2><h3 id="p3-t-325">6-1. 後退の基本</h3>
+<section class="flow-section" id="p3-s-324"><h2>第6章：発電機の後退仕様と「蹴り」の上限</h2><h3 id="p3-t-325">6-1. 後退の基本<span class="bookmark-star inline-h3" data-bm-id="p3-t-325" data-bm-title="6-1. 後退の基本" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>キラーが発電機を蹴る（破壊アクション）と、進捗が即時に一定量（基本5%）失われ、その後も自然後退が続く。サバイバーが触れている間は後退が一時停止するが、<strong>後退を完全に止めるには総ゲージの5%以上を修理する必要がある</strong>。それに満たない状態で手を離すと後退が再開してしまうため、「ちょい触りで後退を止める」小技（通称・発電機タッチ）は現行仕様では通用しない。</li>
 <li>パークによる後退（イタチが飛び出した、サージ、共鳴する苦痛など）は蹴りとは別枠で発生し、それぞれ発動条件が異なる。</li>
 </ul>
-<h3 id="p3-t-326">6-2. 後退イベントの回数上限</h3>
+<h3 id="p3-t-326">6-2. 後退イベントの回数上限<span class="bookmark-star inline-h3" data-bm-id="p3-t-326" data-bm-title="6-2. 後退イベントの回数上限" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>現行仕様では、<strong>1台の発電機に対して発生させられる「後退イベント」の回数に上限（8回）が設定</strong>されている。上限に達した発電機はそれ以上蹴り等で後退させられなくなる。</li>
 <li>これはかつて猛威を振るった「同じ3台の発電機を延々と蹴り続けて試合を膠着させる戦術（俗に言う3ジェネ籠城）」への公式対策として導入されたもの。</li>
 <li>キラー側は「蹴る価値のある発電機か（進捗が乗っているか、上限が近くないか）」を見極める必要があり、無駄蹴りは回数の浪費になる。</li>
 </ul>
-<h3 id="p3-t-327">6-3. 実戦への落とし込み</h3>
+<h3 id="p3-t-327">6-3. 実戦への落とし込み<span class="bookmark-star inline-h3" data-bm-id="p3-t-327" data-bm-title="6-3. 実戦への落とし込み" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li><strong>キラー視点</strong>：進捗の乗った発電機だけを蹴る。守りたい3ジェネの発電機は蹴り回数を温存し、パーク由来の後退（回数を消費しないものもある）と併用して管理する。</li>
 <li><strong>サバイバー視点</strong>：キラーが固執している発電機は「触って自然後退を止める→即離脱」を繰り返すだけでも蹴り回数を消費させられる。籠城相手には上限を意識した消耗戦が成立する。</li>
 </ul>
 <hr /></section>
-<section class="flow-section" id="p3-s-328"><h2>第7章：エンドゲームコラプスとゲート戦の仕様</h2><h3 id="p3-t-329">7-1. エンドゲームコラプス（EGC）の発動条件</h3>
+<section class="flow-section" id="p3-s-328"><h2>第7章：エンドゲームコラプスとゲート戦の仕様</h2><h3 id="p3-t-329">7-1. エンドゲームコラプス（EGC）の発動条件<span class="bookmark-star inline-h3" data-bm-id="p3-t-329" data-bm-title="7-1. エンドゲームコラプス（EGC）の発動条件" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>以下のいずれかで発動する：①いずれかのゲートが開放された、②キラーがハッチを閉じた。</li>
 <li>発動すると画面上部に崩壊タイマー（基本2分）が表示され、時間切れになるとマップに残っている全サバイバーはエンティティに処刑される。</li>
 </ul>
-<h3 id="p3-t-330">7-2. タイマーの進行速度</h3>
+<h3 id="p3-t-330">7-2. タイマーの進行速度<span class="bookmark-star inline-h3" data-bm-id="p3-t-330" data-bm-title="7-2. タイマーの進行速度" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>誰かが<strong>瀕死状態またはフックに吊られている間、タイマーの進行は半分の速度</strong>になる。救助・治療の猶予を確保するための仕様で、終盤の救助判断はこの減速を前提に組み立てる。</li>
 </ul>
-<h3 id="p3-t-331">7-3. ゲート戦の駆け引き</h3>
+<h3 id="p3-t-331">7-3. ゲート戦の駆け引き<span class="bookmark-star inline-h3" data-bm-id="p3-t-331" data-bm-title="7-3. ゲート戦の駆け引き" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>ゲートスイッチは開放操作中の光（ランプ）で進捗段階がキラーからも視認できる。開けかけのゲートは「もうすぐ開く」という情報そのものになるため、あえて99%で止めておく（通称99）テクニックが定番。</li>
 <li>キラーがハッチを閉じてEGCが始まった場合、残った1人はゲートへ走ることになる。2つのゲートの位置が近いとキラーの往復監視で詰みやすく、遠いと片方に賭けられる。ゲート位置は通電前から把握しておくこと。</li>
@@ -2552,23 +2662,23 @@ details.card.filtered-out{ display:none; }
 <li>この仕様により、露骨な至近距離キャンプ（フェイスキャンプ）は序中盤ではキラー側の期待値が低い行動になっている。ジェイソンのジャンプスケアがフック付近で3倍遅くなる調整（第1部・43参照）のように、キラー固有能力にも同趣旨のキャンプ対策が組み込まれる傾向がある。</li>
 </ul>
 <hr /></section>
-<section class="flow-section" id="p3-s-333"><h2>第9章：マッチメイキングとグレードの仕組み</h2><h3 id="p3-t-334">9-1. MMR（スキルレーティング）</h3>
+<section class="flow-section" id="p3-s-333"><h2>第9章：マッチメイキングとグレードの仕組み</h2><h3 id="p3-t-334">9-1. MMR（スキルレーティング）<span class="bookmark-star inline-h3" data-bm-id="p3-t-334" data-bm-title="9-1. MMR（スキルレーティング）" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>対戦の組み合わせは、キャラクターごとに管理される内部レーティング（MMR）で決まる。キラーは「そのキラーでの成績」、サバイバーは「サバイバー全体での成績」が主な基準となる。</li>
 <li>サバイバーのMMRは主に「脱出できたか否か」、キラーは「何キルできたか」で変動するとされており、チェイス時間や救助数などの貢献は直接は反映されにくい。ソロキューで「勝敗だけでは測れない良い動き」をしてもレートに直結しない点は、システムの限界として理解しておく。</li>
 </ul>
-<h3 id="p3-t-335">9-2. グレード（旧ランク）</h3>
+<h3 id="p3-t-335">9-2. グレード（旧ランク）<span class="bookmark-star inline-h3" data-bm-id="p3-t-335" data-bm-title="9-2. グレード（旧ランク）" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>毎月リセットされる「グレード」（灰〜彩の階級）は、現在は<strong>マッチングには使用されず、月間の報酬（ブラッドポイント）を決めるやり込み指標</strong>という位置づけ。グレードが高い＝強い相手と当たる、ではない。</li>
 </ul>
-<h3 id="p3-t-336">9-3. 実践的な含意</h3>
+<h3 id="p3-t-336">9-3. 実践的な含意<span class="bookmark-star inline-h3" data-bm-id="p3-t-336" data-bm-title="9-3. 実践的な含意" data-bm-part="p3" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>「昨日より強い相手と当たる気がする」という体感は、MMRの変動・時間帯・パーティ構成（SWFの平均レート参照）など複数要因で説明できる。ティア表や環境情報（第6部）を読む際も、自分のレート帯でどう機能するかという視点で補正して受け取るのが健全。</li>
 </ul>
 <p><em>第3部は2026年7月3日時点のゲームシステムに基づく。数値・仕様はアップデートで変動する可能性があるため、大きな変更があった場合は別途確認が必要。</em></p></section></div><div class="part-content" data-slug="p4" data-title="第4部：ビルド集"><div class="intro-block"><p>キラー個別のおすすめパーク・アドオンは第1部（全キラー攻略編）で扱った。本章では「役割・目的」からビルドを逆算する考え方と、代表的なパーク・アイテムの組み合わせを整理する。</p>
 <hr /></div>
 <section class="flow-section" id="p4-s-337"><h2>第1節：サバイバーの役割別ビルド</h2><p>ソロキューでは役割分担を口頭で決められないため、「自分が何をするか」をビルドで先に決めておくと立ち回りが安定する。</p>
-<h3 id="p4-t-338">1-1. チェイス特化型（時間稼ぎ役）</h3>
+<h3 id="p4-t-338">1-1. チェイス特化型（時間稼ぎ役）<span class="bookmark-star inline-h3" data-bm-id="p4-t-338" data-bm-title="1-1. チェイス特化型（時間稼ぎ役）" data-bm-part="p4" title="お気に入りに登録">☆</span></h3>
 <p><strong>狙い</strong>：長くキラーを引きつけ、他の3人に発電機を回させる。</p>
 <ul>
 <li><strong>デッド・ハード</strong>：チェイスの読み合いを制する中核パーク。板を使わずとも耐久1回分の猶予を生む。</li>
@@ -2577,7 +2687,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>予感</strong>（または血族）：キラーの接近を早期に察知し、チェイスの開始位置を有利にする。</li>
 </ul>
 <p><strong>運用のコツ</strong>：チェイス特化型は「捕まらないこと」よりも「長く生きること」が目的。無理に逃げ切ろうとせず、時間を使い切ってからダウンするくらいの意識で良い。</p>
-<h3 id="p4-t-339">1-2. 治療・支援特化型（メディック役）</h3>
+<h3 id="p4-t-339">1-2. 治療・支援特化型（メディック役）<span class="bookmark-star inline-h3" data-bm-id="p4-t-339" data-bm-title="1-2. 治療・支援特化型（メディック役）" data-bm-part="p4" title="お気に入りに登録">☆</span></h3>
 <p><strong>狙い</strong>：味方の負傷・深手を素早く処理し、チーム全体の稼働率を落とさない。</p>
 <ul>
 <li><strong>セカンドウィンド／内なる力</strong>：自己完結できる回復手段を持つと、医療キット切れでも機能し続けられる。</li>
@@ -2586,7 +2696,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>与えられた猶予</strong>：救助直後のフォローに特化した保険パーク。</li>
 </ul>
 <p><strong>アイテム</strong>：医療キット（アドオンでチャージ増量・速度アップ）を持ち込み、道中で見つけた個体は温存する。</p>
-<h3 id="p4-t-340">1-3. 発電機（ジェネレーター）特化型</h3>
+<h3 id="p4-t-340">1-3. 発電機（ジェネレーター）特化型<span class="bookmark-star inline-h3" data-bm-id="p4-t-340" data-bm-title="1-3. 発電機（ジェネレーター）特化型" data-bm-part="p4" title="お気に入りに登録">☆</span></h3>
 <p><strong>狙い</strong>：発電速度を最大化し、機動力の低いキラーやスノーボール前のキラーを「速度」で押し切る。</p>
 <ul>
 <li><strong>有能の証明</strong>：他者と同時修理する際の速度ボーナスが増加。複数人での発電に特化。</li>
@@ -2595,7 +2705,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>入電（Repressed Alliance）等のブロック系</strong>：キラーの発電機蹴りそのものを一時封じ、修理効率を守る。</li>
 </ul>
 <p><strong>運用のコツ</strong>：発電特化型は目立たない代わりに「試合を決定づける」役割。追われている味方を見捨てる判断も時には必要になる。</p>
-<h3 id="p4-t-341">1-4. ソロキュー万能型</h3>
+<h3 id="p4-t-341">1-4. ソロキュー万能型<span class="bookmark-star inline-h3" data-bm-id="p4-t-341" data-bm-title="1-4. ソロキュー万能型" data-bm-part="p4" title="お気に入りに登録">☆</span></h3>
 <p><strong>狙い</strong>：味方の練度が読めないソロプレイで、状況に応じて臨機応変に立ち回れる汎用構成。</p>
 <ul>
 <li><strong>ウィンドウズ・オブ・オポチュニティ</strong>：どんな状況でも腐らない情報パークの筆頭。</li>
@@ -2604,7 +2714,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>オフレコ</strong>：フック後の暴露・トンネル対策として汎用的に機能する。</li>
 </ul>
 <p><strong>運用のコツ</strong>：ソロキューでは「情報パーク」の価値が特に高い。味方の位置・状況が分かるだけで、無駄死にが大幅に減る。</p>
-<h3 id="p4-t-342">1-5. ステルス（隠密）特化型</h3>
+<h3 id="p4-t-342">1-5. ステルス（隠密）特化型<span class="bookmark-star inline-h3" data-bm-id="p4-t-342" data-bm-title="1-5. ステルス（隠密）特化型" data-bm-part="p4" title="お気に入りに登録">☆</span></h3>
 <p><strong>狙い</strong>：発見されずに試合を進め、発電機とアイテム収集に専念する。</p>
 <ul>
 <li><strong>都会の逃走術</strong>：しゃがみ移動の速度アップ。隠密の基本動作を強化する必須級パーク。</li>
@@ -2613,7 +2723,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>凍りつく背筋（猫）</strong>：視線が通った際の察知パーク。隠密の保険として機能する。</li>
 </ul>
 <p><strong>運用のコツ</strong>：隠密特化は「見つからない」ことが前提だが、キャンプ・キル対策としては脆い。チーム全体が隠密に寄りすぎると発電速度が落ちる点にも注意。</p>
-<h3 id="p4-t-343">1-6. 利他（アルトゥルーイズム）特化型</h3>
+<h3 id="p4-t-343">1-6. 利他（アルトゥルーイズム）特化型<span class="bookmark-star inline-h3" data-bm-id="p4-t-343" data-bm-title="1-6. 利他（アルトゥルーイズム）特化型" data-bm-part="p4" title="お気に入りに登録">☆</span></h3>
 <p><strong>狙い</strong>：救助・治療・かばうプレイに全振りし、チーム全体の生存率を底上げする。</p>
 <ul>
 <li><strong>決死の一撃</strong>：救助失敗のリスクを大きく下げる保険。</li>
@@ -2623,7 +2733,7 @@ details.card.filtered-out{ display:none; }
 </ul>
 <hr /></section>
 <section class="flow-section" id="p4-s-344"><h2>第2節：キラーのアーキタイプ別ビルド</h2><p>キラー個別のビルドは本編で扱ったが、「能力の型」でまとめ直すと、新キラーが実装された際にも応用できる。</p>
-<h3 id="p4-t-345">2-1. 情報収集型（索敵ビルド）</h3>
+<h3 id="p4-t-345">2-1. 情報収集型（索敵ビルド）<span class="bookmark-star inline-h3" data-bm-id="p4-t-345" data-bm-title="2-1. 情報収集型（索敵ビルド）" data-bm-part="p4" title="お気に入りに登録">☆</span></h3>
 <p><strong>代表キラー</strong>：ハントレス、デモゴルゴン、スカルマーチャント、レイス</p>
 <ul>
 <li><strong>バーベキュー＆チリ</strong>：フック後の遠距離索敵。索敵型ビルドの中核。</li>
@@ -2632,7 +2742,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>監視</strong>：発電機の後退状況を継続的に把握。</li>
 </ul>
 <p><strong>狙い</strong>：能力そのものにチェイス性能が乏しいキラーでも、「誰がどこにいるか」を把握し続けることで無駄な巡回を減らし、実質的なチェイス時間を確保する。</p>
-<h3 id="p4-t-346">2-2. 遅延（スローダウン）積み上げ型</h3>
+<h3 id="p4-t-346">2-2. 遅延（スローダウン）積み上げ型<span class="bookmark-star inline-h3" data-bm-id="p4-t-346" data-bm-title="2-2. 遅延（スローダウン）積み上げ型" data-bm-part="p4" title="お気に入りに登録">☆</span></h3>
 <p><strong>代表キラー</strong>：ハグ、トラッパー、プレイグ、ツインズ</p>
 <ul>
 <li><strong>堕落の介入</strong>：序盤の設置・準備時間を確保する。</li>
@@ -2641,7 +2751,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>イタチが飛び出した</strong>：フック後の蹴りで大幅後退。</li>
 </ul>
 <p><strong>狙い</strong>：チェイスで押し切るのではなく、試合全体の時間経過を遅らせることで、サバイバー側の発電ペースそのものを崩す。</p>
-<h3 id="p4-t-347">2-3. アンチループ（チェイス特化）型</h3>
+<h3 id="p4-t-347">2-3. アンチループ（チェイス特化）型<span class="bookmark-star inline-h3" data-bm-id="p4-t-347" data-bm-title="2-3. アンチループ（チェイス特化）型" data-bm-part="p4" title="お気に入りに登録">☆</span></h3>
 <p><strong>代表キラー</strong>：ナース、ブライト、鬼、ウェスカー</p>
 <ul>
 <li><strong>最後のお楽しみ</strong>：特殊攻撃の消費を抑え通常攻撃の回転率を上げる。</li>
@@ -2650,7 +2760,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>興奮</strong>：機動力を担ぎの効率化にも活かす。</li>
 </ul>
 <p><strong>狙い</strong>：能力そのものがループを崩せるため、パークは「稼いだダウンをいかに早く次に繋げるか」に寄せる。</p>
-<h3 id="p4-t-348">2-4. スノーボール（雪だるま式連続ダウン）型</h3>
+<h3 id="p4-t-348">2-4. スノーボール（雪だるま式連続ダウン）型<span class="bookmark-star inline-h3" data-bm-id="p4-t-348" data-bm-title="2-4. スノーボール（雪だるま式連続ダウン）型" data-bm-part="p4" title="お気に入りに登録">☆</span></h3>
 <p><strong>代表キラー</strong>：鬼、リージョン、ナイト、ハウンドマスター</p>
 <ul>
 <li><strong>伝播する怖気</strong>：連続ダウンの起点となる悲鳴索敵。</li>
@@ -2659,7 +2769,7 @@ details.card.filtered-out{ display:none; }
 <li><strong>バーベキュー＆チリ</strong>：連続ダウンの次のターゲットを見つける。</li>
 </ul>
 <p><strong>狙い</strong>：1人目のダウンから連鎖的に複数人を仕留め、試合を一気に決着へ持ち込む。</p>
-<h3 id="p4-t-349">2-5. スラッグ（放置ダウン）型</h3>
+<h3 id="p4-t-349">2-5. スラッグ（放置ダウン）型<span class="bookmark-star inline-h3" data-bm-id="p4-t-349" data-bm-title="2-5. スラッグ（放置ダウン）型" data-bm-part="p4" title="お気に入りに登録">☆</span></h3>
 <p><strong>代表キラー</strong>：ツインズ、シンギュラリティ、一部のマスターマインド</p>
 <ul>
 <li><strong>ノックアウト</strong>：ダウンした相手のオーラを消し、起こしを困難にする。</li>
@@ -2668,7 +2778,7 @@ details.card.filtered-out{ display:none; }
 </ul>
 <p><strong>注意点</strong>：スラッグ戦術はチーム側の「不滅」パークで大きく崩される。相手のビルド傾向を見て切り替える柔軟性も必要。</p>
 <hr /></section>
-<section class="flow-section" id="p4-s-350"><h2>第3節：パーク単体辞典（影響力の大きい主要パーク）</h2><h3 id="p4-t-351">サバイバー側</h3>
+<section class="flow-section" id="p4-s-350"><h2>第3節：パーク単体辞典（影響力の大きい主要パーク）</h2><h3 id="p4-t-351">サバイバー側<span class="bookmark-star inline-h3" data-bm-id="p4-t-351" data-bm-title="サバイバー側" data-bm-part="p4" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -2720,7 +2830,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p4-t-352">キラー側</h3>
+<h3 id="p4-t-352">キラー側<span class="bookmark-star inline-h3" data-bm-id="p4-t-352" data-bm-title="キラー側" data-bm-part="p4" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -2819,28 +2929,28 @@ details.card.filtered-out{ display:none; }
 <hr />
 <p><em>第4部は2026年7月3日時点のパーク仕様に基づく。パークの数値・発動条件は調整で変動するため、効果の「方向性」を軸に読み替えて活用してほしい。</em></p></section></div><div class="part-content" data-slug="p5" data-title="第5部：状況別判断チャート編"><div class="intro-block"><p>キラー知識・マップ知識・ビルド知識があっても、「今この瞬間に何をすべきか」の判断が遅れると勝率は上がらない。本部では試合のフェーズごと・特殊状況ごとの判断基準に加えて、開幕スポーンの法則、3ジェネ管理、救助テクニック、オファリング戦略まで「判断」に関わる知識を整理する。</p>
 <hr /></div>
-<section class="flow-section" id="p5-s-355"><h2>第1章：試合フェーズ別の方針</h2><h3 id="p5-t-356">1-1. 開幕〜30秒（索敵フェーズ）</h3>
+<section class="flow-section" id="p5-s-355"><h2>第1章：試合フェーズ別の方針</h2><h3 id="p5-t-356">1-1. 開幕〜30秒（索敵フェーズ）<span class="bookmark-star inline-h3" data-bm-id="p5-t-356" data-bm-title="1-1. 開幕〜30秒（索敵フェーズ）" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <p><strong>サバイバー側</strong>
 - 開始地点から最も近い発電機ではなく、「他の3人と分散する方向」の発電機へ向かう。全員が同じ方向に固まると、キラーの初動索敵で複数人を同時に見つけられてしまう。
 - 道中でロッカー・アイテムを軽くチェックしつつ、キラーの心音に常に耳を澄ませる。</p>
 <p><strong>キラー側</strong>
 - 巡回ルートは「発電機が3〜4台固まっているエリア」を優先。可能ならマップ中央から索敵を始める。
 - 索敵系パーク（死を呼ぶ追跡者等）があれば、開幕直後の索敵効率が大きく変わる。</p>
-<h3 id="p5-t-357">1-2. 中盤（発電機3〜4台残り）</h3>
+<h3 id="p5-t-357">1-2. 中盤（発電機3〜4台残り）<span class="bookmark-star inline-h3" data-bm-id="p5-t-357" data-bm-title="1-2. 中盤（発電機3〜4台残り）" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <p><strong>サバイバー側</strong>
 - 誰か1人がチェイスに入ったら、残りは分散して発電機を進める。固まって同じ発電機を修理するのは緊急時のみ。
 - チェイス中の仲間を横目で見つつ、無理な割り込み救助は避ける。</p>
 <p><strong>キラー側</strong>
 - この段階でのダウン・フックの効率が試合を決める。深追いより「損切り」を意識し、次々にターゲットを変えて負傷者を増やす。
 - 発電機の進み具合を把握し（監視、隠れ場なし等）、進みすぎているエリアへ圧をかける。</p>
-<h3 id="p5-t-358">1-3. 残り1〜2台（終盤フェーズ）</h3>
+<h3 id="p5-t-358">1-3. 残り1〜2台（終盤フェーズ）<span class="bookmark-star inline-h3" data-bm-id="p5-t-358" data-bm-title="1-3. 残り1〜2台（終盤フェーズ）" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <p><strong>サバイバー側</strong>
 - キラーの圧力が集中しやすい局面。デジャヴ等で発電機の位置を把握し、キラーの巡回から外れた発電機を優先する。
 - 誰か1人が犠牲になってでも発電を通す判断が必要になる場合がある（チーム全体の生存優先）。</p>
 <p><strong>キラー側</strong>
 - 残り発電機周辺に籠城する「エリア制圧」が有効になる場面。ドクターやスカルマーチャントのような籠城型キラーはここが本領。
 - キャンプ・トンネルの判断もこのフェーズで強まる。1キルを確定させるか、全員への圧を続けるかの選択。</p>
-<h3 id="p5-t-359">1-4. 通電後・ゲート戦（詰めフェーズ）</h3>
+<h3 id="p5-t-359">1-4. 通電後・ゲート戦（詰めフェーズ）<span class="bookmark-star inline-h3" data-bm-id="p5-t-359" data-bm-title="1-4. 通電後・ゲート戦（詰めフェーズ）" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <p><strong>サバイバー側</strong>
 - ゲートを開けたら即脱出が基本だが、フックにかかっている仲間がいる場合は救助の可否をリスクと相談して判断する。
 - ゲート付近でのキラーの待ち伏せ（キャンプ）に注意。開ける前に周囲を確認する。</p>
@@ -2848,7 +2958,7 @@ details.card.filtered-out{ display:none; }
 - ゲート前の「アルティメットチェイス」は最後の得点機会。無理に追わず、フック済みのサバイバーを見張る選択も有効。
 - 残りサバイバーの人数と時間を天秤にかけ、1人でも多く道連れにする動きを優先する。</p>
 <hr /></section>
-<section class="flow-section" id="p5-s-360"><h2>第2章：キャンプ・トンネル・スラッグへの対応フロー</h2><h3 id="p5-t-361">2-1. キャンプ（フック監視）への対応</h3>
+<section class="flow-section" id="p5-s-360"><h2>第2章：キャンプ・トンネル・スラッグへの対応フロー</h2><h3 id="p5-t-361">2-1. キャンプ（フック監視）への対応<span class="bookmark-star inline-h3" data-bm-id="p5-t-361" data-bm-title="2-1. キャンプ（フック監視）への対応" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <p><strong>判定</strong>：キラーがフックの近くから動かない・巡回範囲が極端に狭い。</p>
 <ul>
 <li><strong>フロー</strong>：
@@ -2856,7 +2966,7 @@ details.card.filtered-out{ display:none; }
   2. 決死の一撃・与えられた猶予を持つ味方がいれば、タイミングを合わせて1回だけ救助を試みる。
   3. 無理な単独救助は控える。フック監視は基本的にキラー側の期待値が低い戦術なので、慌てず発電で押し切る。</li>
 </ul>
-<h3 id="p5-t-362">2-2. トンネル（同一ターゲットへの執着）への対応</h3>
+<h3 id="p5-t-362">2-2. トンネル（同一ターゲットへの執着）への対応<span class="bookmark-star inline-h3" data-bm-id="p5-t-362" data-bm-title="2-2. トンネル（同一ターゲットへの執着）への対応" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <p><strong>判定</strong>：救助されたサバイバーを、キラーが他を無視して再び追い始める。</p>
 <ul>
 <li><strong>フロー</strong>：
@@ -2864,7 +2974,7 @@ details.card.filtered-out{ display:none; }
   2. オフレコ・決死の一撃を持っていれば真価を発揮する局面。
   3. トンネルされている間、他の3人は発電機を全力で進める「見捨ての合意」を暗黙で行う。</li>
 </ul>
-<h3 id="p5-t-363">2-3. スラッグ（ダウン放置）への対応</h3>
+<h3 id="p5-t-363">2-3. スラッグ（ダウン放置）への対応<span class="bookmark-star inline-h3" data-bm-id="p5-t-363" data-bm-title="2-3. スラッグ（ダウン放置）への対応" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <p><strong>判定</strong>：ダウンさせた相手を担がず放置し、別のサバイバーを探しに行く。</p>
 <ul>
 <li><strong>フロー</strong>：
@@ -2883,99 +2993,99 @@ details.card.filtered-out{ display:none; }
 </ul>
 <p>これらは公式のコミュニケーション機能ではなく、プレイヤーコミュニティで自然発生した「動きの言語」。過信せず、あくまで補助的な判断材料として使う。</p>
 <hr /></section>
-<section class="flow-section" id="p5-s-365"><h2>第4章：人数不利時の立ち回り（2人残り・ハッチ勝負）</h2><h3 id="p5-t-366">4-1. 3人残り（1人脱落後）</h3>
+<section class="flow-section" id="p5-s-365"><h2>第4章：人数不利時の立ち回り（2人残り・ハッチ勝負）</h2><h3 id="p5-t-366">4-1. 3人残り（1人脱落後）<span class="bookmark-star inline-h3" data-bm-id="p5-t-366" data-bm-title="4-1. 3人残り（1人脱落後）" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>キャンプ・トンネルの被害が出た後の局面。残り3人は発電機の分散を継続しつつ、次に狙われそうな人が誰かを意識する。</li>
 <li>ハッチの位置を把握しておくと、万一の場合の保険になる。</li>
 </ul>
-<h3 id="p5-t-367">4-2. 2人残り</h3>
+<h3 id="p5-t-367">4-2. 2人残り<span class="bookmark-star inline-h3" data-bm-id="p5-t-367" data-bm-title="4-2. 2人残り" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>ここからは「発電機を回し切ってゲートを開ける」か「ハッチを探す」かの二択が濃厚になる。</li>
 <li>2人同時に固まって行動すると同時ダウンのリスクがあるため、基本は分散しつつ発電を進める。</li>
 <li>キラーがハッチを塞いだ場合、ゲート起動に切り替える判断が必要。</li>
 </ul>
-<h3 id="p5-t-368">4-3. 1対1（ハッチ勝負）</h3>
+<h3 id="p5-t-368">4-3. 1対1（ハッチ勝負）<span class="bookmark-star inline-h3" data-bm-id="p5-t-368" data-bm-title="4-3. 1対1（ハッチ勝負）" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>残り1人になった場合、キラーとの位置関係でハッチの取り合いになることが多い。</li>
 <li>ハッチが近ければ全力で走る。遠ければ、キラーの隙（アニメーション中など）を突いて距離を稼ぐ。</li>
 <li>鍵を持っていれば、ハッチをキラーに塞がれても即座に脱出できる保険になる。</li>
 </ul>
 <hr /></section>
-<section class="flow-section" id="p5-s-369"><h2>第5章：キラー側の判断チャート（1キルか4kか）</h2><h3 id="p5-t-370">5-1. 序盤で複数ダウンが取れた場合</h3>
+<section class="flow-section" id="p5-s-369"><h2>第5章：キラー側の判断チャート（1キルか4kか）</h2><h3 id="p5-t-370">5-1. 序盤で複数ダウンが取れた場合<span class="bookmark-star inline-h3" data-bm-id="p5-t-370" data-bm-title="5-1. 序盤で複数ダウンが取れた場合" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>無理にキャンプせず、フックにかけたら次のターゲットへ向かう「回転重視」の立ち回りが期待値が高い。</li>
 <li>スノーボール型ビルド（伝播する怖気等）があれば、連続ダウンを積極的に狙う。</li>
 </ul>
-<h3 id="p5-t-371">5-2. 発電機が早いペースで進んでいる場合</h3>
+<h3 id="p5-t-371">5-2. 発電機が早いペースで進んでいる場合<span class="bookmark-star inline-h3" data-bm-id="p5-t-371" data-bm-title="5-2. 発電機が早いペースで進んでいる場合" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>索敵・遅延パークが薄いビルドだと感じたら、無理に追わず発電機の多いエリアへ圧をかける方針に切り替える。</li>
 <li>籠城戦術（ドクター、スカルマーチャント等）が使えるキラーは、残り発電機周辺の制圧に切り替える。</li>
 </ul>
-<h3 id="p5-t-372">5-3. 終盤で1キルも取れていない場合</h3>
+<h3 id="p5-t-372">5-3. 終盤で1キルも取れていない場合<span class="bookmark-star inline-h3" data-bm-id="p5-t-372" data-bm-title="5-3. 終盤で1キルも取れていない場合" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>最後のフックになりそうなサバイバーには、キャンプ・トンネルも含めて「確実に1キルを取る」判断が合理的になる場面がある。</li>
 <li>ただし早すぎるキャンプ判断は残り3人の発電を加速させるだけなので、「本当に終盤か」の見極めが重要。</li>
 </ul>
 <hr />
 <hr /></section>
-<section class="flow-section" id="p5-s-373"><h2>第6章：開幕スポーンの法則と初動最適化</h2><h3 id="p5-t-374">6-1. スポーンの基本法則</h3>
+<section class="flow-section" id="p5-s-373"><h2>第6章：開幕スポーンの法則と初動最適化</h2><h3 id="p5-t-374">6-1. スポーンの基本法則<span class="bookmark-star inline-h3" data-bm-id="p5-t-374" data-bm-title="6-1. スポーンの基本法則" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>サバイバーはキラーから離れた位置に湧く傾向があり、多くの場合2人1組または全員近接でまとまって湧く。開幕に周囲を見回して味方が視界内にいれば、無言でも「別方向に散る」合意を作れる。</li>
 <li>キラーは自分のスポーン位置から「対角線の奥」にサバイバーが固まっている可能性が高い、という経験則で初動の索敵方向を決められる。開幕索敵パーク（死を呼ぶ追跡者等）はこの読みを確定情報に変える。</li>
 </ul>
-<h3 id="p5-t-375">6-2. サバイバーの初動テンプレート</h3>
+<h3 id="p5-t-375">6-2. サバイバーの初動テンプレート<span class="bookmark-star inline-h3" data-bm-id="p5-t-375" data-bm-title="6-2. サバイバーの初動テンプレート" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <ol>
 <li>湧き位置の最寄り発電機ではなく、「マップ端・キラーから遠い側」の発電機から着手する（端から中央へ攻める進行が3ジェネ回避に繋がる。詳細は次章）。</li>
 <li>開幕30秒は心音・カラスの飛び立ちに最大限注意。1人目のチェイスが始まったのを（悲鳴・板音・血の渇望などで）確認したら、残り3人は作業に全振りする。</li>
 <li>アイテムなしで開始した場合、動線上のチェストだけ開ける。チェスト探索を目的化して時間を溶かさない。</li>
 </ol>
-<h3 id="p5-t-376">6-3. キラーの初動テンプレート</h3>
+<h3 id="p5-t-376">6-3. キラーの初動テンプレート<span class="bookmark-star inline-h3" data-bm-id="p5-t-376" data-bm-title="6-3. キラーの初動テンプレート" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <ol>
 <li>スポーン対角へ最短で向かいつつ、途中の発電機群の配置を記憶する（この記憶が中盤以降の「守る3台」の選定材料になる）。</li>
 <li>最初のチェイス相手は選ぶ。上手そうな相手（即座に強ポジへ向かう動き）なら20秒で損切りし、位置の悪い相手を探し直す方が総合効率で勝る。</li>
 <li>最初のフックの位置は「守りたい発電機群の内側」が理想。マップ端への吊りは救助・監視の動線が伸びて損。</li>
 </ol>
 <hr /></section>
-<section class="flow-section" id="p5-s-377"><h2>第7章：3ジェネ管理（両視点の生命線）</h2><h3 id="p5-t-378">7-1. 3ジェネとは</h3>
+<section class="flow-section" id="p5-s-377"><h2>第7章：3ジェネ管理（両視点の生命線）</h2><h3 id="p5-t-378">7-1. 3ジェネとは<span class="bookmark-star inline-h3" data-bm-id="p5-t-378" data-bm-title="7-1. 3ジェネとは" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>残り発電機が「互いに近い3台」になってしまう状態。キラーは狭い三角形を巡回するだけで全てを監視でき、サバイバー側は着手すら困難になる。試合終盤の敗因として最も多いパターンの一つ。</li>
 </ul>
-<h3 id="p5-t-379">7-2. サバイバー側：3ジェネの予防</h3>
+<h3 id="p5-t-379">7-2. サバイバー側：3ジェネの予防<span class="bookmark-star inline-h3" data-bm-id="p5-t-379" data-bm-title="7-2. サバイバー側：3ジェネの予防" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li><strong>開幕の時点で「最後に残す3台」を意識する</strong>のが本質。中央に固まった発電機を序盤のうちに1〜2台終わらせておき、終盤はマップに散った遠い発電機だけが残る形を作る。</li>
 <li>デジャヴ（残り3台の最近接発電機が見える）は、この管理を可視化してくれる専用級パーク。</li>
 <li>すでに3ジェネが完成してしまったら：①キラーの巡回の「折り返し地点」を観察し、最も監視の薄い1台に複数人で一斉に触る、②蹴りの回数上限（第3部・第6章）を利用し、後退中の発電機のゲージ5%以上を確実に修理して後退を完全に止め、キラーに「もう一度蹴らせる」ことを繰り返して蹴り回数を消耗させる、の2本柱で崩す。</li>
 </ul>
-<h3 id="p5-t-380">7-3. キラー側：3ジェネの構築</h3>
+<h3 id="p5-t-380">7-3. キラー側：3ジェネの構築<span class="bookmark-star inline-h3" data-bm-id="p5-t-380" data-bm-title="7-3. キラー側：3ジェネの構築" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>開幕の巡回で「守りやすい3〜4台」を決め、その外側の発電機は捨てる。守る発電機の選定基準は「相互の距離が近い」「間に強ポジが少ない」「フックが近くにある」の3点。</li>
 <li>チェイスは守備圏内でのみ全力で行い、圏外へ逃げるサバイバーは深追いしない。この規律だけで、チェイスが並のキラーでも試合を作れる。</li>
 <li>ただし蹴り回数の上限がある現行仕様では、純粋な籠城の粘りには限界がある。籠城は「時間を稼いで負傷とフックを積む」ための手段であり、それ自体が勝ち筋ではないと理解しておく。</li>
 </ul>
 <hr /></section>
-<section class="flow-section" id="p5-s-381"><h2>第8章：救助テクニック集</h2><h3 id="p5-t-382">8-1. フラッシュライトセーブ（ライト救助）</h3>
+<section class="flow-section" id="p5-s-381"><h2>第8章：救助テクニック集</h2><h3 id="p5-t-382">8-1. フラッシュライトセーブ（ライト救助）<span class="bookmark-star inline-h3" data-bm-id="p5-t-382" data-bm-title="8-1. フラッシュライトセーブ（ライト救助）" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>キラーがダウンしたサバイバーを担ぎ上げる瞬間の無防備な時間に、顔へライトを照射してブラインド（目眩まし）させると、担いだサバイバーを落とさせられる。</li>
 <li>成立条件は「拾う瞬間に正面から顔へ光を当て続ける」こと。キラー側は壁を背にして拾う・拾うフェイントで炙り出す等で対策してくるため、読み合いになる。</li>
 <li>ライトが無くても、同様の救出は「フラッシュバン（パーク製の閃光玉）」や「ブラインド系の投擲物」でも可能。</li>
 </ul>
-<h3 id="p5-t-383">8-2. パレットセーブ（板救助）</h3>
+<h3 id="p5-t-383">8-2. パレットセーブ（板救助）<span class="bookmark-star inline-h3" data-bm-id="p5-t-383" data-bm-title="8-2. パレットセーブ（板救助）" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>担いだキラーが板の真横を通る瞬間に板を倒すと、スタンと同時に担がれた味方が解放される。ライト救助よりも成立範囲が分かりやすく、失敗リスクも低め。</li>
 <li>キラー側は板の残っている経路を避けて運ぶ・板の前で立ち止まって先に倒させる等で対策する。担ぎルートに残った板の位置を把握する癖が双方に求められる。</li>
 </ul>
-<h3 id="p5-t-384">8-3. ボディブロック（肉壁）</h3>
+<h3 id="p5-t-384">8-3. ボディブロック（肉壁）<span class="bookmark-star inline-h3" data-bm-id="p5-t-384" data-bm-title="8-3. ボディブロック（肉壁）" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>キラーの進路に健康なサバイバーが立ち塞がり、移動を物理的に妨害するテクニック。担がれた味方のフック到達を遅らせて振りほどきを狙う、負傷した味方への攻撃を代わりに受ける、などの用途がある。</li>
 <li>基本内蔵の我慢（救助直後の耐久）や「与えられた猶予」で強化された味方が、あえて攻撃を受けてトンネルを妨害する連携は、対トンネルの実戦的な回答の一つ。</li>
 </ul>
-<h3 id="p5-t-385">8-4. サボタージュ（フック破壊）</h3>
+<h3 id="p5-t-385">8-4. サボタージュ（フック破壊）<span class="bookmark-star inline-h3" data-bm-id="p5-t-385" data-bm-title="8-4. サボタージュ（フック破壊）" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>工具箱またはパーク「サボタージュ」でフックを一時的に破壊できる。キラーが担いでいる最中に目的地のフックを壊すと、別のフックまでの運搬を強制でき、振りほどき成立の可能性が生まれる。</li>
 <li>フックは一定時間で自動修復されるため、壊すタイミングが全て。「担がれてから最寄りフックを壊す」が基本で、事前に壊しても修復されて無駄になりやすい。</li>
 <li>キラー側の対策は、フック密度の高いエリアでダウンを取る・サボタージュを察知したら床置き（スラッグ）に切り替える、など。</li>
 </ul>
-<h3 id="p5-t-386">8-5. 救助テクニック共通の心得</h3>
+<h3 id="p5-t-386">8-5. 救助テクニック共通の心得<span class="bookmark-star inline-h3" data-bm-id="p5-t-386" data-bm-title="8-5. 救助テクニック共通の心得" data-bm-part="p5" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>これらは全て「失敗すると救助者もダウンして雪だるま式に崩壊する」諸刃の剣。成功率が五分を切る局面では、素直に発電を進める方がチーム期待値は高い。テクニックは「使える場面を待つ」ものであり、「使うために場面を作る」ものではない。</li>
 </ul>
@@ -2991,13 +3101,13 @@ details.card.filtered-out{ display:none; }
 <p><em>第5部は2026年7月3日時点の一般的なセオリーに基づく。個々の判断は相手のスキル・パーク構成・マップによって変動するため、あくまで基本の指針として活用してほしい。</em></p></section></div><div class="part-content" data-slug="p6" data-title="第6部：メタ・環境情報編"><div class="intro-block"><p>第6部は他の5部と異なり、<strong>鮮度が命の情報</strong>を扱う。パッチが来るたびに内容が古くなるため、「現時点のスナップショット」として扱い、定期的な更新が前提となる。</p>
 <hr /></div>
 <section class="flow-section" id="p6-s-388"><h2>第1章：現環境のキラーティア表（2026年7月時点・傾向）</h2><p>海外の主要攻略サイト（PCGamesN、GamesRadar、GamsGo等）の分析を横断的に見ると、2026年7月時点でおおむね以下の傾向で意見が一致している。</p>
-<h3 id="p6-t-389">S帯（環境トップ）</h3>
+<h3 id="p6-t-389">S帯（環境トップ）<span class="bookmark-star inline-h3" data-bm-id="p6-t-389" data-bm-title="S帯（環境トップ）" data-bm-part="p6" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li><strong>ナース</strong>：壁を無視するブリンクにより、あらゆるループ構造を無効化できる最上位キラー。習熟に時間がかかるが、習熟後の天井が最も高い。</li>
 <li><strong>ブライト</strong>：連続バウンドダッシュによる圧倒的なチェイス速度。マップの構造を覚えるほど強くなる。</li>
 <li><strong>スピリット</strong>：姿の見えないフェイズウォークによる読み合い性能の高さで、依然として最上位の一角。</li>
 </ul>
-<h3 id="p6-t-390">A帯（環境上位）</h3>
+<h3 id="p6-t-390">A帯（環境上位）<span class="bookmark-star inline-h3" data-bm-id="p6-t-390" data-bm-title="A帯（環境上位）" data-bm-part="p6" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li><strong>マスターマインド（ウェスカー）</strong>：バウンド突進による壁越え・掴みコンボが強力で、フック転換速度がトップクラス。</li>
 <li><strong>ハントレス</strong>：遠距離狙撃の完成度が高く、開けたマップでは非常に強い。</li>
@@ -3008,11 +3118,11 @@ details.card.filtered-out{ display:none; }
 <li><strong>アニマトロニック（スプリングトラップ）</strong>：ワープ機動によるマップ制圧力が高く評価される一方、素の移動速度の遅さと斧の射程減衰が弱点として指摘される。</li>
 <li><strong>シンギュラリティ</strong>：バイオポッド網が完成すれば最上位クラスの制圧力を持つが、マップ知識への依存度が高い。</li>
 </ul>
-<h3 id="p6-t-391">B〜C帯（環境中位、マップ・練度依存）</h3>
+<h3 id="p6-t-391">B〜C帯（環境中位、マップ・練度依存）<span class="bookmark-star inline-h3" data-bm-id="p6-t-391" data-bm-title="B〜C帯（環境中位、マップ・練度依存）" data-bm-part="p6" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>多くの近接特化キラー（トラッパー、レイス、カニバル等）はこの帯に位置づけられることが多い。ただし「使用者の練度」「対面のMMR」による変動が非常に大きく、カジュアル帯では体感の強さが上振れしやすいと指摘されている。</li>
 </ul>
-<h3 id="p6-t-392">留意点</h3>
+<h3 id="p6-t-392">留意点<span class="bookmark-star inline-h3" data-bm-id="p6-t-392" data-bm-title="留意点" data-bm-part="p6" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>ティア評価は「S帯＝勝率が絶対的に高い」という意味ではなく、<strong>「習熟すれば天井が高い」「対策されにくい」という観点が強く反映されている</strong>。</li>
 <li>カジュアル〜中堅MMR帯では、A〜B帯のキラーでも基本を押さえていれば十分に勝率を出せる。ティア表は「次に何を練習するか」の参考程度に留めるのが健全。</li>
@@ -3055,12 +3165,12 @@ details.card.filtered-out{ display:none; }
 <p>新キラー「ジャッジメント」は光の柱を操る能力を持つとされ、実装後は第1部（全キラー攻略編）に追補が可能。</p>
 <hr /></section>
 <section class="flow-section" id="p6-s-395"><h2>第4章：ランク帯（MMR）別の環境の違い</h2><p>DbDは明示的な「ランク表示」よりも内部レーティング（MMR）でマッチングされる仕組みが主体になっているが、体感の環境は帯によって大きく異なる。</p>
-<h3 id="p6-t-396">カジュアル〜中堅帯</h3>
+<h3 id="p6-t-396">カジュアル〜中堅帯<span class="bookmark-star inline-h3" data-bm-id="p6-t-396" data-bm-title="カジュアル〜中堅帯" data-bm-part="p6" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>板・窓の使い方、心音管理などチェイスの基礎が未成熟なプレイヤーが多く、キラー側は近接キラーでも十分に勝率を出せる。</li>
 <li>サバイバー側はソロキューでの意思疎通不足が敗因になりやすく、絆・ウィンドウズ・オブ・オポチュニティなど情報パークの価値が特に高い。</li>
 </ul>
-<h3 id="p6-t-397">上位・高MMR帯</h3>
+<h3 id="p6-t-397">上位・高MMR帯<span class="bookmark-star inline-h3" data-bm-id="p6-t-397" data-bm-title="上位・高MMR帯" data-bm-part="p6" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>チェイス理論・マップ知識が前提化しており、キラー側はS〜A帯のキラー（ナース、ブライト、スピリット等）の使用率が顕著に高くなる。</li>
 <li>サバイバー側はSWF（フレンド同士のパーティ）でのビルド特化・役割分担が主流になり、ソロキュー向けの汎用ビルドとは構成思想が変わってくる。</li>
@@ -3604,7 +3714,7 @@ details.card.filtered-out{ display:none; }
 <p><strong>数値の扱い</strong>：秒数・%は調整で頻繁に変わるため、原則として省略するか概数に留める。「何をするパークか」の骨子を優先する。</p>
 <p><strong>タグ体系</strong>：<code>加速</code>（ダッシュ・移動）／<code>情報</code>（オーラ・索敵）／<code>回復</code>／<code>救助・保護</code>／<code>隠密</code>／<code>作業</code>（発電・浄化等の効率）／<code>妨害</code>（キラーへの干渉）／<code>遅延</code>（キラー用：発電抑制）／<code>索敵</code>（キラー用）／<code>チェイス補助</code>（キラー用）／<code>終盤</code>／<code>オブセ</code>（オブセッション関連）／<code>呪術</code>／<code>悶絶</code>（悶絶のフック）／<code>ブーン</code>（恵み）</p>
 <hr /></div></details>
-<details class="card" id="p8-s-406"><summary><span class="card-title">第1章：サバイバーパーク全インデックス（キャラ別）</span></summary><div class="card-body"><h3 id="p8-t-407">共通パーク（誰でも最初から使用可能）</h3>
+<details class="card" id="p8-s-406"><summary><span class="card-title">第1章：サバイバーパーク全インデックス（キャラ別）</span></summary><div class="card-body"><h3 id="p8-t-407">共通パーク（誰でも最初から使用可能）<span class="bookmark-star inline-h3" data-bm-id="p8-t-407" data-bm-title="共通パーク（誰でも最初から使用可能）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -3686,7 +3796,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-408">ドワイト・フェアフィールド</h3>
+<h3 id="p8-t-408">ドワイト・フェアフィールド<span class="bookmark-star inline-h3" data-bm-id="p8-t-408" data-bm-title="ドワイト・フェアフィールド" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -3713,7 +3823,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-409">メグ・トーマス</h3>
+<h3 id="p8-t-409">メグ・トーマス<span class="bookmark-star inline-h3" data-bm-id="p8-t-409" data-bm-title="メグ・トーマス" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -3740,7 +3850,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-410">クローデット・モレル</h3>
+<h3 id="p8-t-410">クローデット・モレル<span class="bookmark-star inline-h3" data-bm-id="p8-t-410" data-bm-title="クローデット・モレル" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -3767,7 +3877,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-411">ジェイク・パーク</h3>
+<h3 id="p8-t-411">ジェイク・パーク<span class="bookmark-star inline-h3" data-bm-id="p8-t-411" data-bm-title="ジェイク・パーク" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -3794,7 +3904,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-412">ネア・カールソン</h3>
+<h3 id="p8-t-412">ネア・カールソン<span class="bookmark-star inline-h3" data-bm-id="p8-t-412" data-bm-title="ネア・カールソン" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -3821,7 +3931,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-413">ローリー・ストロード</h3>
+<h3 id="p8-t-413">ローリー・ストロード<span class="bookmark-star inline-h3" data-bm-id="p8-t-413" data-bm-title="ローリー・ストロード" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -3848,7 +3958,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-414">エース・ヴィスコンティ</h3>
+<h3 id="p8-t-414">エース・ヴィスコンティ<span class="bookmark-star inline-h3" data-bm-id="p8-t-414" data-bm-title="エース・ヴィスコンティ" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -3875,7 +3985,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-415">ウィリアム・"ビル"・オーバーベック</h3>
+<h3 id="p8-t-415">ウィリアム・"ビル"・オーバーベック<span class="bookmark-star inline-h3" data-bm-id="p8-t-415" data-bm-title="ウィリアム・&quot;ビル&quot;・オーバーベック" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -3902,7 +4012,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-416">フェン・ミン</h3>
+<h3 id="p8-t-416">フェン・ミン<span class="bookmark-star inline-h3" data-bm-id="p8-t-416" data-bm-title="フェン・ミン" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -3929,7 +4039,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-417">デイビッド・キング</h3>
+<h3 id="p8-t-417">デイビッド・キング<span class="bookmark-star inline-h3" data-bm-id="p8-t-417" data-bm-title="デイビッド・キング" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -3956,7 +4066,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-418">クエンティン・スミス</h3>
+<h3 id="p8-t-418">クエンティン・スミス<span class="bookmark-star inline-h3" data-bm-id="p8-t-418" data-bm-title="クエンティン・スミス" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -3983,7 +4093,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-419">タップ刑事（デイビッド・タップ）</h3>
+<h3 id="p8-t-419">タップ刑事（デイビッド・タップ）<span class="bookmark-star inline-h3" data-bm-id="p8-t-419" data-bm-title="タップ刑事（デイビッド・タップ）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4010,7 +4120,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-420">ケイト・デンソン</h3>
+<h3 id="p8-t-420">ケイト・デンソン<span class="bookmark-star inline-h3" data-bm-id="p8-t-420" data-bm-title="ケイト・デンソン" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4037,7 +4147,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-421">アダム・フランシス</h3>
+<h3 id="p8-t-421">アダム・フランシス<span class="bookmark-star inline-h3" data-bm-id="p8-t-421" data-bm-title="アダム・フランシス" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4064,7 +4174,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-422">ジェフ・ヨハンセン</h3>
+<h3 id="p8-t-422">ジェフ・ヨハンセン<span class="bookmark-star inline-h3" data-bm-id="p8-t-422" data-bm-title="ジェフ・ヨハンセン" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4091,7 +4201,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-423">ジェーン・ロメロ</h3>
+<h3 id="p8-t-423">ジェーン・ロメロ<span class="bookmark-star inline-h3" data-bm-id="p8-t-423" data-bm-title="ジェーン・ロメロ" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4118,7 +4228,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-424">アシュレイ・J・ウィリアムズ（アッシュ）</h3>
+<h3 id="p8-t-424">アシュレイ・J・ウィリアムズ（アッシュ）<span class="bookmark-star inline-h3" data-bm-id="p8-t-424" data-bm-title="アシュレイ・J・ウィリアムズ（アッシュ）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4145,7 +4255,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-425">ナンシー・ウィーラー</h3>
+<h3 id="p8-t-425">ナンシー・ウィーラー<span class="bookmark-star inline-h3" data-bm-id="p8-t-425" data-bm-title="ナンシー・ウィーラー" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4172,7 +4282,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-426">スティーブ・ハリントン</h3>
+<h3 id="p8-t-426">スティーブ・ハリントン<span class="bookmark-star inline-h3" data-bm-id="p8-t-426" data-bm-title="スティーブ・ハリントン" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4199,7 +4309,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-427">木村結衣</h3>
+<h3 id="p8-t-427">木村結衣<span class="bookmark-star inline-h3" data-bm-id="p8-t-427" data-bm-title="木村結衣" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4226,7 +4336,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-428">ザリーナ・カッシル</h3>
+<h3 id="p8-t-428">ザリーナ・カッシル<span class="bookmark-star inline-h3" data-bm-id="p8-t-428" data-bm-title="ザリーナ・カッシル" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4253,7 +4363,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-429">シェリル・メイソン</h3>
+<h3 id="p8-t-429">シェリル・メイソン<span class="bookmark-star inline-h3" data-bm-id="p8-t-429" data-bm-title="シェリル・メイソン" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4280,7 +4390,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-430">フェリックス・リクター</h3>
+<h3 id="p8-t-430">フェリックス・リクター<span class="bookmark-star inline-h3" data-bm-id="p8-t-430" data-bm-title="フェリックス・リクター" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4307,7 +4417,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-431">エロディー・ラコト</h3>
+<h3 id="p8-t-431">エロディー・ラコト<span class="bookmark-star inline-h3" data-bm-id="p8-t-431" data-bm-title="エロディー・ラコト" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4334,7 +4444,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-432">リー・ユンジン</h3>
+<h3 id="p8-t-432">リー・ユンジン<span class="bookmark-star inline-h3" data-bm-id="p8-t-432" data-bm-title="リー・ユンジン" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4361,7 +4471,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-433">レオン・S・ケネディ</h3>
+<h3 id="p8-t-433">レオン・S・ケネディ<span class="bookmark-star inline-h3" data-bm-id="p8-t-433" data-bm-title="レオン・S・ケネディ" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4388,7 +4498,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-434">ジル・バレンタイン</h3>
+<h3 id="p8-t-434">ジル・バレンタイン<span class="bookmark-star inline-h3" data-bm-id="p8-t-434" data-bm-title="ジル・バレンタイン" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4415,7 +4525,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-435">ミカエラ・リード</h3>
+<h3 id="p8-t-435">ミカエラ・リード<span class="bookmark-star inline-h3" data-bm-id="p8-t-435" data-bm-title="ミカエラ・リード" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4442,7 +4552,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-436">ジョナ・バスケス</h3>
+<h3 id="p8-t-436">ジョナ・バスケス<span class="bookmark-star inline-h3" data-bm-id="p8-t-436" data-bm-title="ジョナ・バスケス" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4469,7 +4579,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-437">浅川洋一</h3>
+<h3 id="p8-t-437">浅川洋一<span class="bookmark-star inline-h3" data-bm-id="p8-t-437" data-bm-title="浅川洋一" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4496,7 +4606,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-438">ハディ・カウル</h3>
+<h3 id="p8-t-438">ハディ・カウル<span class="bookmark-star inline-h3" data-bm-id="p8-t-438" data-bm-title="ハディ・カウル" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4523,7 +4633,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-439">エイダ・ウォン</h3>
+<h3 id="p8-t-439">エイダ・ウォン<span class="bookmark-star inline-h3" data-bm-id="p8-t-439" data-bm-title="エイダ・ウォン" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4550,7 +4660,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-440">レベッカ・チェンバース</h3>
+<h3 id="p8-t-440">レベッカ・チェンバース<span class="bookmark-star inline-h3" data-bm-id="p8-t-440" data-bm-title="レベッカ・チェンバース" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4577,7 +4687,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-441">ヴィットリオ・トスカーノ</h3>
+<h3 id="p8-t-441">ヴィットリオ・トスカーノ<span class="bookmark-star inline-h3" data-bm-id="p8-t-441" data-bm-title="ヴィットリオ・トスカーノ" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4604,7 +4714,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-442">タリタ・ライラ</h3>
+<h3 id="p8-t-442">タリタ・ライラ<span class="bookmark-star inline-h3" data-bm-id="p8-t-442" data-bm-title="タリタ・ライラ" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4631,7 +4741,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-443">レナート・ライラ</h3>
+<h3 id="p8-t-443">レナート・ライラ<span class="bookmark-star inline-h3" data-bm-id="p8-t-443" data-bm-title="レナート・ライラ" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4658,7 +4768,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-444">ガブリエル・ソーマ</h3>
+<h3 id="p8-t-444">ガブリエル・ソーマ<span class="bookmark-star inline-h3" data-bm-id="p8-t-444" data-bm-title="ガブリエル・ソーマ" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4685,7 +4795,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-445">ニコラス・ケイジ</h3>
+<h3 id="p8-t-445">ニコラス・ケイジ<span class="bookmark-star inline-h3" data-bm-id="p8-t-445" data-bm-title="ニコラス・ケイジ" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4712,7 +4822,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-446">エレン・リプリー</h3>
+<h3 id="p8-t-446">エレン・リプリー<span class="bookmark-star inline-h3" data-bm-id="p8-t-446" data-bm-title="エレン・リプリー" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4739,7 +4849,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-447">アラン・ウェイク</h3>
+<h3 id="p8-t-447">アラン・ウェイク<span class="bookmark-star inline-h3" data-bm-id="p8-t-447" data-bm-title="アラン・ウェイク" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4766,7 +4876,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-448">セイブル・ウォード</h3>
+<h3 id="p8-t-448">セイブル・ウォード<span class="bookmark-star inline-h3" data-bm-id="p8-t-448" data-bm-title="セイブル・ウォード" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4793,7 +4903,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-449">エストゥリー・ヤザール／ベアマール・ウラズ（D&amp;D）</h3>
+<h3 id="p8-t-449">エストゥリー・ヤザール／ベアマール・ウラズ（D&amp;D）<span class="bookmark-star inline-h3" data-bm-id="p8-t-449" data-bm-title="エストゥリー・ヤザール／ベアマール・ウラズ（D&amp;amp;D）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4820,7 +4930,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-450">ララ・クロフト</h3>
+<h3 id="p8-t-450">ララ・クロフト<span class="bookmark-star inline-h3" data-bm-id="p8-t-450" data-bm-title="ララ・クロフト" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4847,7 +4957,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-451">トレバー・ベルモンド</h3>
+<h3 id="p8-t-451">トレバー・ベルモンド<span class="bookmark-star inline-h3" data-bm-id="p8-t-451" data-bm-title="トレバー・ベルモンド" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4874,7 +4984,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-452">トーリー・ケイン</h3>
+<h3 id="p8-t-452">トーリー・ケイン<span class="bookmark-star inline-h3" data-bm-id="p8-t-452" data-bm-title="トーリー・ケイン" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4901,7 +5011,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-453">オレラ・ローズ（Steady Pulse章／2025年5月）</h3>
+<h3 id="p8-t-453">オレラ・ローズ（Steady Pulse章／2025年5月）<span class="bookmark-star inline-h3" data-bm-id="p8-t-453" data-bm-title="オレラ・ローズ（Steady Pulse章／2025年5月）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4928,7 +5038,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-454">リック・グライムズ（ウォーキング・デッド章／2025年7月）</h3>
+<h3 id="p8-t-454">リック・グライムズ（ウォーキング・デッド章／2025年7月）<span class="bookmark-star inline-h3" data-bm-id="p8-t-454" data-bm-title="リック・グライムズ（ウォーキング・デッド章／2025年7月）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4955,7 +5065,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-455">ミショーン（ウォーキング・デッド章／2025年7月）</h3>
+<h3 id="p8-t-455">ミショーン（ウォーキング・デッド章／2025年7月）<span class="bookmark-star inline-h3" data-bm-id="p8-t-455" data-bm-title="ミショーン（ウォーキング・デッド章／2025年7月）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -4982,7 +5092,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-456">ヴィー・ブーニャサク（ガスー章／2025年9月）</h3>
+<h3 id="p8-t-456">ヴィー・ブーニャサク（ガスー章／2025年9月）<span class="bookmark-star inline-h3" data-bm-id="p8-t-456" data-bm-title="ヴィー・ブーニャサク（ガスー章／2025年9月）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5009,7 +5119,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-457">イレブン（ジェーン・ホッパー／ST2章・2026年1月）</h3>
+<h3 id="p8-t-457">イレブン（ジェーン・ホッパー／ST2章・2026年1月）<span class="bookmark-star inline-h3" data-bm-id="p8-t-457" data-bm-title="イレブン（ジェーン・ホッパー／ST2章・2026年1月）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5036,7 +5146,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-458">ダスティン・ヘンダーソン（ST2章・2026年1月）</h3>
+<h3 id="p8-t-458">ダスティン・ヘンダーソン（ST2章・2026年1月）<span class="bookmark-star inline-h3" data-bm-id="p8-t-458" data-bm-title="ダスティン・ヘンダーソン（ST2章・2026年1月）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5063,7 +5173,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-459">クォン・テヨン（All-Kill: Comeback章／2026年3月）</h3>
+<h3 id="p8-t-459">クォン・テヨン（All-Kill: Comeback章／2026年3月）<span class="bookmark-star inline-h3" data-bm-id="p8-t-459" data-bm-title="クォン・テヨン（All-Kill: Comeback章／2026年3月）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5091,7 +5201,7 @@ details.card.filtered-out{ display:none; }
 </tbody>
 </table>
 <p><span class="verify v-note" title="補足情報">※</span>DLCとしての販売はなく、ゲーム内ストア専売のサバイバー。</p>
-<h3 id="p8-t-460">シェーン・ウィグワース（The Life Road章／2026年6月25日）</h3>
+<h3 id="p8-t-460">シェーン・ウィグワース（The Life Road章／2026年6月25日）<span class="bookmark-star inline-h3" data-bm-id="p8-t-460" data-bm-title="シェーン・ウィグワース（The Life Road章／2026年6月25日）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5119,12 +5229,12 @@ details.card.filtered-out{ display:none; }
 </tbody>
 </table>
 <p><span class="verify v-note" title="補足情報">※</span>DbD初の先住民族（アニシナベ族）キャラクター。10周年期のチャプター40.5で実装。</p>
-<h3 id="p8-t-461">収録状況の補足</h3>
+<h3 id="p8-t-461">収録状況の補足<span class="bookmark-star inline-h3" data-bm-id="p8-t-461" data-bm-title="収録状況の補足" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>グール章（2025年4月）・FNAF章（2025年6月）・ジェイソン章（2026年6月）はキラーのみの実装で、サバイバーの追加はない（確認済み）。</li>
 </ul>
 <hr /></div></details>
-<details class="card" id="p8-s-462"><summary><span class="card-title">第2章：キラーパーク全インデックス（キャラ別）</span></summary><div class="card-body"><h3 id="p8-t-463">共通パーク（誰でも最初から使用可能）</h3>
+<details class="card" id="p8-s-462"><summary><span class="card-title">第2章：キラーパーク全インデックス（キャラ別）</span></summary><div class="card-body"><h3 id="p8-t-463">共通パーク（誰でも最初から使用可能）<span class="bookmark-star inline-h3" data-bm-id="p8-t-463" data-bm-title="共通パーク（誰でも最初から使用可能）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5191,7 +5301,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-464">1. トラッパー</h3>
+<h3 id="p8-t-464">1. トラッパー<span class="bookmark-star inline-h3" data-bm-id="p8-t-464" data-bm-title="1. トラッパー" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5218,7 +5328,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-465">2. レイス</h3>
+<h3 id="p8-t-465">2. レイス<span class="bookmark-star inline-h3" data-bm-id="p8-t-465" data-bm-title="2. レイス" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5245,7 +5355,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-466">3. ヒルビリー</h3>
+<h3 id="p8-t-466">3. ヒルビリー<span class="bookmark-star inline-h3" data-bm-id="p8-t-466" data-bm-title="3. ヒルビリー" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5272,7 +5382,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-467">4. ナース</h3>
+<h3 id="p8-t-467">4. ナース<span class="bookmark-star inline-h3" data-bm-id="p8-t-467" data-bm-title="4. ナース" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5299,7 +5409,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-468">5. シェイプ（マイケル・マイヤーズ）</h3>
+<h3 id="p8-t-468">5. シェイプ（マイケル・マイヤーズ）<span class="bookmark-star inline-h3" data-bm-id="p8-t-468" data-bm-title="5. シェイプ（マイケル・マイヤーズ）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5326,7 +5436,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-469">6. ハグ</h3>
+<h3 id="p8-t-469">6. ハグ<span class="bookmark-star inline-h3" data-bm-id="p8-t-469" data-bm-title="6. ハグ" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5353,7 +5463,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-470">7. ドクター</h3>
+<h3 id="p8-t-470">7. ドクター<span class="bookmark-star inline-h3" data-bm-id="p8-t-470" data-bm-title="7. ドクター" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5380,7 +5490,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-471">8. ハントレス</h3>
+<h3 id="p8-t-471">8. ハントレス<span class="bookmark-star inline-h3" data-bm-id="p8-t-471" data-bm-title="8. ハントレス" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5407,7 +5517,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-472">9. カニバル（レザーフェイス）</h3>
+<h3 id="p8-t-472">9. カニバル（レザーフェイス）<span class="bookmark-star inline-h3" data-bm-id="p8-t-472" data-bm-title="9. カニバル（レザーフェイス）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5434,7 +5544,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-473">10. ナイトメア（フレディ）</h3>
+<h3 id="p8-t-473">10. ナイトメア（フレディ）<span class="bookmark-star inline-h3" data-bm-id="p8-t-473" data-bm-title="10. ナイトメア（フレディ）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5461,7 +5571,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-474">11. ピッグ</h3>
+<h3 id="p8-t-474">11. ピッグ<span class="bookmark-star inline-h3" data-bm-id="p8-t-474" data-bm-title="11. ピッグ" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5488,7 +5598,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-475">12. クラウン</h3>
+<h3 id="p8-t-475">12. クラウン<span class="bookmark-star inline-h3" data-bm-id="p8-t-475" data-bm-title="12. クラウン" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5515,7 +5625,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-476">13. スピリット</h3>
+<h3 id="p8-t-476">13. スピリット<span class="bookmark-star inline-h3" data-bm-id="p8-t-476" data-bm-title="13. スピリット" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5542,7 +5652,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-477">14. リージョン</h3>
+<h3 id="p8-t-477">14. リージョン<span class="bookmark-star inline-h3" data-bm-id="p8-t-477" data-bm-title="14. リージョン" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5569,7 +5679,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-478">15. プレイグ</h3>
+<h3 id="p8-t-478">15. プレイグ<span class="bookmark-star inline-h3" data-bm-id="p8-t-478" data-bm-title="15. プレイグ" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5596,7 +5706,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-479">16. ゴーストフェイス</h3>
+<h3 id="p8-t-479">16. ゴーストフェイス<span class="bookmark-star inline-h3" data-bm-id="p8-t-479" data-bm-title="16. ゴーストフェイス" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5623,7 +5733,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-480">17. デモゴルゴン</h3>
+<h3 id="p8-t-480">17. デモゴルゴン<span class="bookmark-star inline-h3" data-bm-id="p8-t-480" data-bm-title="17. デモゴルゴン" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5650,7 +5760,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-481">18. 鬼</h3>
+<h3 id="p8-t-481">18. 鬼<span class="bookmark-star inline-h3" data-bm-id="p8-t-481" data-bm-title="18. 鬼" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5677,7 +5787,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-482">19. デススリンガー</h3>
+<h3 id="p8-t-482">19. デススリンガー<span class="bookmark-star inline-h3" data-bm-id="p8-t-482" data-bm-title="19. デススリンガー" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5704,7 +5814,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-483">20. エクセキューショナー</h3>
+<h3 id="p8-t-483">20. エクセキューショナー<span class="bookmark-star inline-h3" data-bm-id="p8-t-483" data-bm-title="20. エクセキューショナー" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5731,7 +5841,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-484">21. ブライト</h3>
+<h3 id="p8-t-484">21. ブライト<span class="bookmark-star inline-h3" data-bm-id="p8-t-484" data-bm-title="21. ブライト" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5758,7 +5868,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-485">22. ツインズ</h3>
+<h3 id="p8-t-485">22. ツインズ<span class="bookmark-star inline-h3" data-bm-id="p8-t-485" data-bm-title="22. ツインズ" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5785,7 +5895,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-486">23. トリックスター</h3>
+<h3 id="p8-t-486">23. トリックスター<span class="bookmark-star inline-h3" data-bm-id="p8-t-486" data-bm-title="23. トリックスター" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5812,7 +5922,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-487">24. ネメシス</h3>
+<h3 id="p8-t-487">24. ネメシス<span class="bookmark-star inline-h3" data-bm-id="p8-t-487" data-bm-title="24. ネメシス" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5839,7 +5949,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-488">25. セノバイト（ピンヘッド）</h3>
+<h3 id="p8-t-488">25. セノバイト（ピンヘッド）<span class="bookmark-star inline-h3" data-bm-id="p8-t-488" data-bm-title="25. セノバイト（ピンヘッド）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5866,7 +5976,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-489">26. アーティスト</h3>
+<h3 id="p8-t-489">26. アーティスト<span class="bookmark-star inline-h3" data-bm-id="p8-t-489" data-bm-title="26. アーティスト" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5893,7 +6003,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-490">27. 貞子（オンリョウ）</h3>
+<h3 id="p8-t-490">27. 貞子（オンリョウ）<span class="bookmark-star inline-h3" data-bm-id="p8-t-490" data-bm-title="27. 貞子（オンリョウ）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5920,7 +6030,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-491">28. ドレッジ</h3>
+<h3 id="p8-t-491">28. ドレッジ<span class="bookmark-star inline-h3" data-bm-id="p8-t-491" data-bm-title="28. ドレッジ" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5947,7 +6057,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-492">29. マスターマインド（ウェスカー）</h3>
+<h3 id="p8-t-492">29. マスターマインド（ウェスカー）<span class="bookmark-star inline-h3" data-bm-id="p8-t-492" data-bm-title="29. マスターマインド（ウェスカー）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -5974,7 +6084,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-493">30. ナイト</h3>
+<h3 id="p8-t-493">30. ナイト<span class="bookmark-star inline-h3" data-bm-id="p8-t-493" data-bm-title="30. ナイト" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -6001,7 +6111,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-494">31. スカルマーチャント</h3>
+<h3 id="p8-t-494">31. スカルマーチャント<span class="bookmark-star inline-h3" data-bm-id="p8-t-494" data-bm-title="31. スカルマーチャント" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -6028,7 +6138,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-495">32. シンギュラリティ</h3>
+<h3 id="p8-t-495">32. シンギュラリティ<span class="bookmark-star inline-h3" data-bm-id="p8-t-495" data-bm-title="32. シンギュラリティ" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -6055,7 +6165,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-496">33. ゼノモーフ</h3>
+<h3 id="p8-t-496">33. ゼノモーフ<span class="bookmark-star inline-h3" data-bm-id="p8-t-496" data-bm-title="33. ゼノモーフ" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -6082,7 +6192,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-497">34. グッドガイ（チャッキー）</h3>
+<h3 id="p8-t-497">34. グッドガイ（チャッキー）<span class="bookmark-star inline-h3" data-bm-id="p8-t-497" data-bm-title="34. グッドガイ（チャッキー）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -6109,7 +6219,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-498">35. アンノウン</h3>
+<h3 id="p8-t-498">35. アンノウン<span class="bookmark-star inline-h3" data-bm-id="p8-t-498" data-bm-title="35. アンノウン" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -6136,7 +6246,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-499">36. リッチ（ヴェクナ）</h3>
+<h3 id="p8-t-499">36. リッチ（ヴェクナ）<span class="bookmark-star inline-h3" data-bm-id="p8-t-499" data-bm-title="36. リッチ（ヴェクナ）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -6163,7 +6273,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-500">37. ダークロード（ドラキュラ）</h3>
+<h3 id="p8-t-500">37. ダークロード（ドラキュラ）<span class="bookmark-star inline-h3" data-bm-id="p8-t-500" data-bm-title="37. ダークロード（ドラキュラ）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -6190,7 +6300,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-501">38. ハウンドマスター</h3>
+<h3 id="p8-t-501">38. ハウンドマスター<span class="bookmark-star inline-h3" data-bm-id="p8-t-501" data-bm-title="38. ハウンドマスター" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -6217,7 +6327,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-502">39. グール（金木研）</h3>
+<h3 id="p8-t-502">39. グール（金木研）<span class="bookmark-star inline-h3" data-bm-id="p8-t-502" data-bm-title="39. グール（金木研）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -6244,7 +6354,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-503">40. アニマトロニック</h3>
+<h3 id="p8-t-503">40. アニマトロニック<span class="bookmark-star inline-h3" data-bm-id="p8-t-503" data-bm-title="40. アニマトロニック" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -6271,7 +6381,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-504">41. ガスー</h3>
+<h3 id="p8-t-504">41. ガスー<span class="bookmark-star inline-h3" data-bm-id="p8-t-504" data-bm-title="41. ガスー" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -6298,7 +6408,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-505">42. ファースト</h3>
+<h3 id="p8-t-505">42. ファースト<span class="bookmark-star inline-h3" data-bm-id="p8-t-505" data-bm-title="42. ファースト" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -6325,7 +6435,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-506">43. スラッシャー（ジェイソン）</h3>
+<h3 id="p8-t-506">43. スラッシャー（ジェイソン）<span class="bookmark-star inline-h3" data-bm-id="p8-t-506" data-bm-title="43. スラッシャー（ジェイソン）" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -6337,24 +6447,24 @@ details.card.filtered-out{ display:none; }
 <tbody>
 <tr>
 <td>呪術：死ぬほど怖い</td>
-<td class="tag-cell"><span class="tag tag-hex" data-scope="perk">呪術</span><span class="tag tag-scout" data-scope="perk">索敵</span></td>
-<td>点灯中、サバイバーが叫んで位置を晒す系の呪術 <span class="verify v-caution" title="細部（数値・発動条件）は最新パッチで要確認">▲</span>（細部要検証）</td>
+<td class="tag-cell"><span class="tag tag-hex" data-scope="perk">呪術</span></td>
+<td>異なるサバイバーをフックに吊るすたびトークンを獲得し、無力なトーテムに火を灯す（呪術化）。チェイス中に板を破壊すると、近くのサバイバーが叫び声を上げ、短時間移動速度が低下する</td>
 </tr>
 <tr>
 <td>物言わぬ影</td>
 <td>隠密系</td>
-<td>フックに吊るすたびに探知不可を11/12/13秒間得る（PTBの「開始時発動」から吊るたび発動へ変更。終盤に強化される仕様あり<span class="verify v-caution" title="細部（数値・発動条件）は最新パッチで要確認">▲</span>）</td>
+<td>サバイバーをフックに吊るすたびに11/12/13秒間探知不可になる。加えて、全ての発電機が修理完了した際にも探知不可を得る</td>
 </tr>
 <tr>
 <td>大暴れ</td>
 <td class="tag-cell"><span class="tag tag-chase" data-scope="perk">チェイス補助</span></td>
-<td>板・破壊可能壁の破壊でトークンを蓄積。目眩ましや板スタンで怯んだ際、13秒間トークン数に応じた迅速を得る（「13日の金曜日」にちなんだ数値設計）</td>
+<td>破壊可能な壁やパレットを破壊するとトークンを獲得（最大13個）。目眩まし状態にされるか、パレットで怯まされた際、短時間トークン1個につき一定の迅速を得る（「13日の金曜日」にちなんだ数値設計）</td>
 </tr>
 </tbody>
 </table>
 <hr /></div></details>
 <details class="card" id="p8-s-507"><summary><span class="card-title">第3章：機能別逆引きインデックス</span></summary><div class="card-body"><p>「やりたいこと」から候補パークを引くための逆引き。詳細は第1・2章の該当行を参照。</p>
-<h3 id="p8-t-508">サバイバー側</h3>
+<h3 id="p8-t-508">サバイバー側<span class="bookmark-star inline-h3" data-bm-id="p8-t-508" data-bm-title="サバイバー側" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -6409,7 +6519,7 @@ details.card.filtered-out{ display:none; }
 </tr>
 </tbody>
 </table>
-<h3 id="p8-t-509">キラー側</h3>
+<h3 id="p8-t-509">キラー側<span class="bookmark-star inline-h3" data-bm-id="p8-t-509" data-bm-title="キラー側" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <table>
 <thead>
 <tr>
@@ -6462,7 +6572,7 @@ details.card.filtered-out{ display:none; }
 </table>
 <hr /></div></details>
 <details class="card" id="p8-s-510"><summary><span class="card-title">第4章：詳細カード（メタ級パーク24選）</span></summary><div class="card-body"><p>インデックスの中でも「環境を定義している」レベルのパークを、シナジーと対策込みで掘り下げる。</p>
-<h3 id="p8-t-511">サバイバー側12選</h3>
+<h3 id="p8-t-511">サバイバー側12選<span class="bookmark-star inline-h3" data-bm-id="p8-t-511" data-bm-title="サバイバー側12選" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <p><strong>ウィンドウズ・オブ・オポチュニティ</strong>（ケイト）
 情報系の最高峰。周囲の板・窓・破壊可能壁が常時視える。チェイス勝率はプレイヤースキルより「次のポジションを知っているか」で決まる場面が多く、その判断を常時支援する。初心者の上達速度を最も上げる1枚であり、上級者もマップ生成の当たり外れを即座に判断できる。実質的な弱点なし。</p>
 <p><strong>全力疾走</strong>（メグ）
@@ -6487,7 +6597,7 @@ details.card.filtered-out{ display:none; }
 共同修理の速度補正。SWFの発電特化構成の核で、機動力の低いキラーを「発電速度」で轢き殺すプランを成立させる。</p>
 <p><strong>逆境魂</strong>（共通）
 負傷中の全アクション加速。「治療しない」判断とセットで真価を発揮し、プレイグ・リージョンなど負傷を強いる相手では実質常時発動になる。</p>
-<h3 id="p8-t-512">キラー側12選</h3>
+<h3 id="p8-t-512">キラー側12選<span class="bookmark-star inline-h3" data-bm-id="p8-t-512" data-bm-title="キラー側12選" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <p><strong>バーベキュー＆チリ</strong>（カニバル）
 フック後の遠距離索敵。「吊ったら次はどこへ行くか」というキラーの根源的な問いに毎回答えてくれる。機動力が高いキラーほど情報を行動に変換でき、価値が上がる。対策はフックの瞬間にロッカー・発電機裏・16m圏内に入ること。</p>
 <p><strong>悶絶のフック：共鳴する苦痛</strong>（アーティスト）
@@ -6513,13 +6623,13 @@ details.card.filtered-out{ display:none; }
 <p><strong>NOED（誰も死から逃れられない）</strong>（共通）
 通電時ワンパン化。試合を通して弱い代わりに終盤の逆転力が突出する。サバイバー側の唯一の事前対策が「無力なトーテムの事前処理」であるため、存在自体がトーテム処理という時間コストを全サバイバーに強いている、というメタ的な影響力を持つ。</p>
 <hr /></div></details>
-<details class="card" id="p8-s-513"><summary><span class="card-title">第5章：更新運用と要検証リスト</span></summary><div class="card-body"><h3 id="p8-t-514">更新の優先順位</h3>
+<details class="card" id="p8-s-513"><summary><span class="card-title">第5章：更新運用と要検証リスト</span></summary><div class="card-body"><h3 id="p8-t-514">更新の優先順位<span class="bookmark-star inline-h3" data-bm-id="p8-t-514" data-bm-title="更新の優先順位" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <ol>
 <li><strong><span class="verify v-caution" title="細部（数値・発動条件）は最新パッチで要確認">▲</span>印の細部検証</strong>：<span class="verify v-caution" title="細部（数値・発動条件）は最新パッチで要確認">▲</span>は「効果の骨子は正しいが数値・発動条件が最新パッチで変わりうる」印。調整歴の多いパーク（デッド・ハード、オフレコ、ディストーション等）を中心に、大型パッチ後に現行仕様をチェックする。名称・存在が未確定の<span class="verify v-note" title="補足情報">※</span>印は全て解消済み。</li>
 <li><strong><span class="verify v-caution" title="細部（数値・発動条件）は最新パッチで要確認">▲</span>印（細部要確認）の検証</strong>：調整歴の多いパーク（デッド・ハード、オフレコ、ディストーション等）の現行仕様確認。</li>
 <li><strong>大型パッチ後の見直し</strong>：パッチノートで名前が挙がったパークの該当行を更新し、詳細カードの評価を再検討する。</li>
 </ol>
-<h3 id="p8-t-515">運用のコツ</h3>
+<h3 id="p8-t-515">運用のコツ<span class="bookmark-star inline-h3" data-bm-id="p8-t-515" data-bm-title="運用のコツ" data-bm-part="p8" title="お気に入りに登録">☆</span></h3>
 <ul>
 <li>インデックスは「何をするパークか」を思い出すための地図として使い、採用直前にゲーム内の説明文で数値を確認する二段構えが最も確実。</li>
 <li>新チャプター実装時は「新キラー・新サバイバーの固有パーク6種を追記→逆引きインデックスの該当行に組み込み→環境影響が大きければ詳細カード化」の順で反映する。</li>
@@ -6786,8 +6896,11 @@ details.card.filtered-out{ display:none; }
     }
   }, true);
 
-  // ---- タグクリックで絞り込み（第1部＝キラー特性／第8部＝パーク機能） ----
-  var tagFilterState = { killer: null, perk: null };
+  // ---- タグクリックで絞り込み（第1部＝キラー特性／第8部＝パーク機能、複数選択＋AND/OR対応） ----
+  var tagFilterState = {
+    killer: { tags: [], mode: "OR" },
+    perk:   { tags: [], mode: "OR" }
+  };
 
   function ensureFilterStatusBar(slug){
     var part = document.querySelector('.part-content[data-slug="'+slug+'"]');
@@ -6796,36 +6909,69 @@ details.card.filtered-out{ display:none; }
     if(!bar){
       bar = document.createElement("div");
       bar.className = "filter-status";
-      bar.innerHTML = '<span>絞り込み中：<strong class="fs-label"></strong></span><span class="fs-clear">✕ 解除</span>';
+      bar.innerHTML =
+        '<span>絞り込み中：<strong class="fs-label"></strong></span>' +
+        '<span class="fs-mode" data-slug="'+slug+'"><span class="fs-mode-btn" data-mode="OR">OR（いずれか）</span><span class="fs-mode-btn" data-mode="AND">AND（すべて）</span></span>' +
+        '<span class="fs-clear">✕ すべて解除</span>';
       part.insertBefore(bar, part.firstChild);
       bar.querySelector(".fs-clear").addEventListener("click", function(){
-        if(slug === "p1"){ applyKillerTagFilter(null); } else { applyPerkTagFilter(null); }
+        if(slug === "p1"){ setKillerFilter([], "OR"); } else { setPerkFilter([], "OR"); }
+      });
+      bar.querySelectorAll(".fs-mode-btn").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var st = (slug === "p1") ? tagFilterState.killer : tagFilterState.perk;
+          if(slug === "p1"){ setKillerFilter(st.tags, btn.dataset.mode); }
+          else { setPerkFilter(st.tags, btn.dataset.mode); }
+        });
       });
     }
     return bar;
   }
 
-  function syncTagButtonStates(scope, activeText){
+  function updateFilterStatusBar(slug, tags, mode){
+    var bar = ensureFilterStatusBar(slug);
+    if(!bar) return;
+    if(tags.length === 0){
+      bar.classList.remove("show");
+      return;
+    }
+    bar.classList.add("show");
+    bar.querySelector(".fs-label").textContent = tags.join(mode === "AND" ? " ＋ " : " ／ ");
+    bar.querySelectorAll(".fs-mode-btn").forEach(function(btn){
+      btn.classList.toggle("active", btn.dataset.mode === mode);
+    });
+    var modeWrap = bar.querySelector(".fs-mode");
+    if(modeWrap) modeWrap.style.display = tags.length > 1 ? "inline-flex" : "none";
+  }
+
+  function syncTagButtonStates(scope, activeTags){
     document.querySelectorAll('.tag[data-scope="'+scope+'"]').forEach(function(t){
-      t.classList.toggle("tag-active-filter", !!activeText && t.textContent.trim() === activeText);
+      t.classList.toggle("tag-active-filter", activeTags.indexOf(t.textContent.trim()) !== -1);
     });
   }
 
+  function matchesTags(itemTags, activeTags, mode){
+    if(activeTags.length === 0) return true;
+    if(mode === "AND"){
+      return activeTags.every(function(t){ return itemTags.indexOf(t) !== -1; });
+    }
+    return activeTags.some(function(t){ return itemTags.indexOf(t) !== -1; });
+  }
+
   // ---- 第8部：パーク機能タグでの絞り込み（行単位） ----
-  function applyPerkTagFilter(tagText){
+  function setPerkFilter(tags, mode){
     var p8 = document.querySelector('.part-content[data-slug="p8"]');
     if(!p8) return;
-    tagFilterState.perk = tagText;
-    var bar = ensureFilterStatusBar("p8");
-    syncTagButtonStates("perk", tagText);
+    tagFilterState.perk = { tags: tags, mode: mode };
+    syncTagButtonStates("perk", tags);
+    updateFilterStatusBar("p8", tags, mode);
 
-    if(!tagText){
-      if(bar) bar.classList.remove("show");
+    if(tags.length === 0){
       p8.querySelectorAll(".row-hidden").forEach(function(el){ el.classList.remove("row-hidden"); });
       p8.querySelectorAll("details.card.filtered-out").forEach(function(d){ d.classList.remove("filtered-out"); });
+      setTimeout(updateScrollSpy, 30);
       return;
     }
-    if(bar){ bar.classList.add("show"); bar.querySelector(".fs-label").textContent = tagText; }
 
     p8.querySelectorAll("details.card").forEach(function(card){
       var tables = card.querySelectorAll("table");
@@ -6837,9 +6983,8 @@ details.card.filtered-out{ display:none; }
         var tableHasMatch = false;
         table.querySelectorAll("tbody tr").forEach(function(tr){
           var td = tr.querySelector("td.tag-cell");
-          var match = td && Array.prototype.some.call(td.querySelectorAll(".tag"), function(sp){
-            return sp.textContent.trim() === tagText;
-          });
+          var rowTags = td ? Array.prototype.map.call(td.querySelectorAll(".tag"), function(sp){ return sp.textContent.trim(); }) : [];
+          var match = matchesTags(rowTags, tags, mode);
           tr.classList.toggle("row-hidden", !match);
           if(match){ tableHasMatch = true; cardHasMatch = true; }
         });
@@ -6858,24 +7003,22 @@ details.card.filtered-out{ display:none; }
   }
 
   // ---- 第1部：キラー特性タグでの絞り込み（カード単位） ----
-  function applyKillerTagFilter(tagText){
+  function setKillerFilter(tags, mode){
     var p1 = document.querySelector('.part-content[data-slug="p1"]');
     if(!p1) return;
-    tagFilterState.killer = tagText;
-    var bar = ensureFilterStatusBar("p1");
-    syncTagButtonStates("killer", tagText);
+    tagFilterState.killer = { tags: tags, mode: mode };
+    syncTagButtonStates("killer", tags);
+    updateFilterStatusBar("p1", tags, mode);
 
     var cards = p1.querySelectorAll("details.card[data-tags]");
-    if(!tagText){
-      if(bar) bar.classList.remove("show");
+    if(tags.length === 0){
       cards.forEach(function(c){ c.classList.remove("filtered-out"); });
+      setTimeout(updateScrollSpy, 30);
       return;
     }
-    if(bar){ bar.classList.add("show"); bar.querySelector(".fs-label").textContent = tagText; }
-
     cards.forEach(function(card){
-      var tags = (card.dataset.tags || "").split(",").map(function(s){ return s.trim(); });
-      var match = tags.indexOf(tagText) !== -1;
+      var cardTags = (card.dataset.tags || "").split(",").map(function(s){ return s.trim(); });
+      var match = matchesTags(cardTags, tags, mode);
       card.classList.toggle("filtered-out", !match);
       if(match) card.open = true;
     });
@@ -6896,11 +7039,141 @@ details.card.filtered-out{ display:none; }
       activatePart(targetSlug);
     }
 
-    if(scope === "killer"){
-      applyKillerTagFilter(tagFilterState.killer === text ? null : text);
-    } else {
-      applyPerkTagFilter(tagFilterState.perk === text ? null : text);
+    var state = (scope === "killer") ? tagFilterState.killer : tagFilterState.perk;
+    var newTags = state.tags.slice();
+    var idx = newTags.indexOf(text);
+    if(idx === -1){ newTags.push(text); } else { newTags.splice(idx, 1); }
+
+    if(scope === "killer"){ setKillerFilter(newTags, state.mode); }
+    else { setPerkFilter(newTags, state.mode); }
+  });
+
+  // ---- 永続化ユーティリティ（localStorage失敗時はメモリ内で代用） ----
+  var memoryStore = {};
+  function storageGet(key, fallback){
+    try{
+      var v = localStorage.getItem(key);
+      return v === null ? fallback : JSON.parse(v);
+    }catch(e){
+      return (key in memoryStore) ? memoryStore[key] : fallback;
     }
+  }
+  function storageSet(key, value){
+    try{
+      localStorage.setItem(key, JSON.stringify(value));
+    }catch(e){
+      memoryStore[key] = value;
+    }
+  }
+
+  // ---- お気に入り（ブックマーク） ----
+  var BM_KEY = "dbd_manual_bookmarks_v1";
+  var bookmarks = storageGet(BM_KEY, []); // [{id, title, part}]
+
+  function isBookmarked(id){
+    return bookmarks.some(function(b){ return b.id === id; });
+  }
+  function saveBookmarks(){
+    storageSet(BM_KEY, bookmarks);
+    renderBookmarkPanel();
+    syncBookmarkStars();
+  }
+  function toggleBookmark(id, title, part){
+    var idx = bookmarks.findIndex(function(b){ return b.id === id; });
+    if(idx === -1){ bookmarks.push({id:id, title:title, part:part}); }
+    else { bookmarks.splice(idx, 1); }
+    saveBookmarks();
+  }
+  function syncBookmarkStars(){
+    document.querySelectorAll(".bookmark-star").forEach(function(star){
+      var on = isBookmarked(star.dataset.bmId);
+      star.classList.toggle("active", on);
+      star.textContent = on ? "★" : "☆";
+    });
+    var countEl = document.querySelector("#bookmark-panel-btn .bm-count");
+    if(countEl) countEl.textContent = bookmarks.length;
+  }
+
+  document.addEventListener("click", function(e){
+    var star = e.target.closest(".bookmark-star");
+    if(!star) return;
+    e.preventDefault();
+    e.stopPropagation();
+    toggleBookmark(star.dataset.bmId, star.dataset.bmTitle, star.dataset.bmPart);
+  });
+
+  function renderBookmarkPanel(){
+    var panel = document.querySelector(".bookmark-panel");
+    if(!panel) return;
+    if(bookmarks.length === 0){
+      panel.innerHTML = '<div class="bm-empty">まだ何も登録されていません。☆をクリックして追加できます。</div>';
+      return;
+    }
+    panel.innerHTML = "";
+    bookmarks.forEach(function(b){
+      var item = document.createElement("div");
+      item.className = "bm-item";
+      var partLabel = TAB_LABELS_JS[b.part] || b.part;
+      item.innerHTML =
+        '<span><span class="bm-part">' + escHtml(partLabel) + '</span>' + escHtml(b.title) + '</span>' +
+        '<span class="bm-remove" title="削除">✕</span>';
+      item.querySelector("span:first-child").addEventListener("click", function(){
+        jumpTo(b.id);
+        closeBookmarkPanel();
+      });
+      item.querySelector(".bm-remove").addEventListener("click", function(ev){
+        ev.stopPropagation();
+        toggleBookmark(b.id, b.title, b.part);
+      });
+      panel.appendChild(item);
+    });
+  }
+
+  function escHtml(s){
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
+  var TAB_LABELS_JS = {
+    cover:"総論", p1:"第1部 キラー", p2:"第2部 マップ", p3:"第3部 システム",
+    p4:"第4部 ビルド", p5:"第5部 判断チャート", p6:"第6部 メタ環境", p7:"第7部 用語集", p8:"第8部 パーク大全"
+  };
+
+  var bmPanelBtn = document.getElementById("bookmark-panel-btn");
+  var bmPanel = document.querySelector(".bookmark-panel");
+  function closeBookmarkPanel(){ if(bmPanel) bmPanel.classList.remove("show"); }
+  if(bmPanelBtn){
+    bmPanelBtn.addEventListener("click", function(e){
+      e.stopPropagation();
+      bmPanel.classList.toggle("show");
+    });
+  }
+  document.addEventListener("click", function(e){
+    if(bmPanel && bmPanel.classList.contains("show") && !e.target.closest(".bookmark-panel") && e.target !== bmPanelBtn && !e.target.closest("#bookmark-panel-btn")){
+      closeBookmarkPanel();
+    }
+  });
+
+  renderBookmarkPanel();
+  syncBookmarkStars();
+
+  // ---- 文字サイズ調整 ----
+  var FONT_KEY = "dbd_manual_font_scale_v1";
+  var fontScale = storageGet(FONT_KEY, 100);
+  function applyFontScale(){
+    document.documentElement.style.fontSize = fontScale + "%";
+  }
+  applyFontScale();
+  var fontDec = document.getElementById("font-dec");
+  var fontInc = document.getElementById("font-inc");
+  if(fontDec) fontDec.addEventListener("click", function(){
+    fontScale = Math.max(80, fontScale - 10);
+    storageSet(FONT_KEY, fontScale);
+    applyFontScale();
+  });
+  if(fontInc) fontInc.addEventListener("click", function(){
+    fontScale = Math.min(150, fontScale + 10);
+    storageSet(FONT_KEY, fontScale);
+    applyFontScale();
   });
 
   // ---- 初期表示 ----
