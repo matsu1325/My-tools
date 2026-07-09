@@ -15965,6 +15965,7 @@
   --safe-b: env(safe-area-inset-bottom, 0px);
 }
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+[hidden] { display: none !important; } /* 各要素のdisplay指定よりhidden属性を常に優先させる */
 html { -webkit-text-size-adjust: 100%; }
 body {
   background: var(--sumi);
@@ -16085,6 +16086,7 @@ main { position: relative; z-index: 1; padding: 14px 14px 0; max-width: 640px; m
   background: var(--surface2); border: 1px solid var(--line); color: var(--kinu);
 }
 .chip .x { color: var(--faint); font-size: 14px; line-height: 1; padding: 0 1px; }
+.chip .chip-label { cursor: pointer; }
 .chip.sel { border-color: var(--kin); background: rgba(201,168,106,.12); color: var(--kin); }
 .chip .w { color: var(--tsubaki); font-size: 11px; }
 
@@ -16391,8 +16393,10 @@ input[type="range"]::-webkit-slider-thumb {
       <button class="btn gold grow" id="btnTagDictAll">📖 タグ辞典</button>
       <button class="btn gold grow" id="btnQualityTag">✨ 画風・品質</button>
     </div>
-    <button class="btn gold wide" id="btnBulkTags" style="margin-top:8px">📋 まとめて貼り付け</button>
+    <button class="btn gold wide" id="btnBulkTags" style="margin-top:8px">📋 まとめて辞書登録</button>
+    <div id="myTagsBox" style="margin-top:10px"></div>
     <div class="chips" id="tagChips"></div>
+    <button class="btn small danger" id="btnClearTags" style="margin-top:8px" hidden>🗑 タグを全て削除</button>
     <div class="weight-box" id="weightBox" hidden>
       <div class="row" style="justify-content:space-between">
         <span style="font-size:13px">重み調整: <b id="wTagName"></b></span>
@@ -16462,17 +16466,17 @@ input[type="range"]::-webkit-slider-thumb {
 </div>
 
 <!-- ============ タグまとめて貼り付け (Tag公式) ============ -->
-<div class="sheet" id="sheetBulkTags" role="dialog" aria-label="タグまとめて貼り付け">
-  <div class="sheet-head"><h3 class="serif">タグをまとめて貼り付け</h3><button class="icon-btn" data-close aria-label="閉じる">✕</button></div>
+<div class="sheet" id="sheetBulkTags" role="dialog" aria-label="タグまとめて辞書登録">
+  <div class="sheet-head"><h3 class="serif">タグをまとめて辞書登録</h3><button class="icon-btn" data-close aria-label="閉じる">✕</button></div>
   <div class="sheet-body">
-    <p class="hint">改行・カンマ・セミコロンのどの区切りでもOK。<b>(tag:1.3)</b> のような重み付き表記もそのまま解釈します。他サイトで組んだプロンプトやタグ集をそのまま貼り付けられます。<br>💡 行の<b>先頭列にジャンル名</b>を書くと（<b>ジャンル | tagA, tagB</b> または <b>ジャンル: tagA, tagB</b>）、そのタグ群が<b>辞書に登録</b>され、タグ辞典の【登録】欄に反映されます。<b>日本語名=english</b> で表示名も指定できます。</p>
-    <textarea id="bulkTagsArea" rows="8" placeholder="masterpiece, best quality, (dynamic angle:1.2)&#10;衣装 | frilly dress, thigh-high socks&#10;表情: gentle smile, 照れ顔=blushing" spellcheck="false"></textarea>
+    <p class="hint">現在のタグ一覧には追加されず、<b>辞書への登録のみ</b>行います。1行ごとに<b>先頭列にジャンル名</b>を書いてください（<b>ジャンル | tagA, tagB</b> または <b>ジャンル: tagA, tagB</b>）。ジャンルのない行はスキップされます。改行・カンマ・セミコロンのどの区切りでもOK。<b>(tag:1.3)</b> の重み表記や<b>日本語名=english</b>の表示名指定も使えます。</p>
+    <textarea id="bulkTagsArea" rows="8" placeholder="衣装 | frilly dress, thigh-high socks&#10;表情: gentle smile, 照れ顔=blushing" spellcheck="false"></textarea>
     <div class="row" style="justify-content:space-between; margin-top:6px">
       <span style="font-size:11.5px; color:var(--sub)">認識したタグ: <b id="bulkTagsCount" style="color:var(--kin)">0</b>件</span>
       <button class="btn small" id="bulkTagsClear">クリア</button>
     </div>
     <div class="chips" id="bulkTagsPreview" style="margin-top:8px"></div>
-    <button class="btn primary wide" id="bulkTagsConfirm" style="margin-top:12px">この内容をタグ一覧に追加</button>
+    <button class="btn primary wide" id="bulkTagsConfirm" style="margin-top:12px">辞書に登録する</button>
   </div>
 </div>
 
@@ -17055,6 +17059,7 @@ function switchMode(mode) {
   state.manualEdit = false;
   $$(".mode-tab").forEach(t => t.classList.toggle("on", t.dataset.mode === mode));
   $$(".pane").forEach(p => p.classList.toggle("on", p.id === "pane-" + mode));
+  if (mode === "tag") renderMyTagsBox();
   render();
 }
 $$(".mode-tab").forEach(t => t.addEventListener("click", () => switchMode(t.dataset.mode)));
@@ -17209,6 +17214,29 @@ function registerUserTags(genre, tagObjs) {
   return added;
 }
 
+/* ---------- マイタグ（登録辞書のクイックアクセス） ----------
+   Tagモード画面に直接チップ表示し、辞典シートを開かなくても
+   タップ一つで追加できるようにする。 */
+function renderMyTagsBox() {
+  const box = $("#myTagsBox");
+  if (!box) return;
+  const groups = userDictGroups();
+  if (!groups.length) { box.innerHTML = ""; return; }
+  box.innerHTML = `<p class="hint" style="margin-bottom:4px">📚 マイタグ（登録済み・タップで追加/削除）</p>` +
+    groups.map(g => `
+      <div style="margin-bottom:6px">
+        <div style="font-size:11px;color:var(--kin);margin-bottom:3px">${esc(g.label)}</div>
+        <div class="chips" style="margin-top:0">${g.items.map(it => {
+          const active = state.tag.tags.some(x => x.t.toLowerCase() === it.en.toLowerCase());
+          return `<button class="chip ${active ? "sel" : ""}" data-en="${esc(it.en)}">${esc(it.ja === it.en ? it.en : it.ja)}</button>`;
+        }).join("")}</div>
+      </div>`).join("");
+  $$("#myTagsBox .chip").forEach(c => c.addEventListener("click", () => {
+    toggleTagArrayToken(c.dataset.en);
+    renderMyTagsBox();
+  }));
+}
+
 function getTagGroups(dictKey) {
   if (dictKey === "all") {
     return [
@@ -17221,7 +17249,9 @@ function getTagGroups(dictKey) {
     ];
   }
   const map = { subject: DICT.subject_tags, appearance: DICT.appearance_tags, action: DICT.action_tags, scene: DICT.scene_tags, quality: DICT.quality_tags };
-  return map[dictKey] || [];
+  // 個別カテゴリのピッカーでも、あなたが「まとめて貼り付け」で登録したジャンルを
+  // 【登録】として先頭に表示する（Tag辞典を開かなくても各所で使えるように）。
+  return [...userDictGroups(), ...(map[dictKey] || [])];
 }
 
 function isTokenActive(token) {
@@ -17334,12 +17364,36 @@ function addTags() {
   renderTagChips(); render();
 }
 $("#tagAdd").addEventListener("click", addTags);
+$("#btnClearTags").addEventListener("click", () => {
+  if (!confirmPending) { confirmPending = true; toast(`⚠ もう一度タップでタグ${state.tag.tags.length}件を全削除`); return; }
+  state.tag.tags = [];
+  state.editingTag = -1; $("#weightBox").hidden = true;
+  state.manualEdit = false; confirmPending = false;
+  renderTagChips(); render();
+  toast("タグを全て削除しました");
+});
 $("#tagInput").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); addTags(); } });
 
 function renderTagChips() {
-  $("#tagChips").innerHTML = state.tag.tags.map((x, i) =>
-    `<button class="chip ${i === state.editingTag ? "sel" : ""}" data-i="${i}">${esc(x.t)}${Math.abs(x.w - 1) > 0.001 ? `<span class="w">:${x.w.toFixed(2).replace(/0$/,"")}</span>` : ""}</button>`).join("");
-  $$("#tagChips .chip").forEach(c => c.addEventListener("click", () => openWeight(+c.dataset.i)));
+  $("#tagChips").innerHTML = state.tag.tags.map((x, i) => {
+    const wLabel = Math.abs(x.w - 1) > 0.001 ? `<span class="w">:${x.w.toFixed(2).replace(/0$/, "")}</span>` : "";
+    return `<span class="chip ${i === state.editingTag ? "sel" : ""}">
+      <span class="chip-label" data-i="${i}">${esc(x.t)}${wLabel}</span>
+      <button class="x" data-i="${i}" aria-label="このタグを削除">✕</button>
+    </span>`;
+  }).join("");
+  $$("#tagChips .chip-label").forEach(c => c.addEventListener("click", () => openWeight(+c.dataset.i)));
+  $$("#tagChips .x").forEach(x => x.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const i = +x.dataset.i;
+    state.tag.tags.splice(i, 1);
+    if (state.editingTag === i) { state.editingTag = -1; $("#weightBox").hidden = true; }
+    else if (state.editingTag > i) { state.editingTag--; }
+    state.manualEdit = false;
+    renderTagChips(); render();
+  }));
+  $("#btnClearTags").hidden = state.tag.tags.length === 0;
+  renderMyTagsBox(); // マイタグの選択中(sel)表示をタグ一覧の変化に同期
 }
 function openWeight(i) {
   state.editingTag = i;
@@ -17399,18 +17453,22 @@ function parseBulkTagLines(text) {
 }
 function renderBulkTagsPreview() {
   const lines = parseBulkTagLines($("#bulkTagsArea").value);
-  const total = lines.reduce((n, l) => n + l.tags.length, 0);
+  const total = lines.reduce((n, l) => n + (l.genre ? l.tags.length : 0), 0);
   $("#bulkTagsCount").textContent = total;
   $("#bulkTagsPreview").innerHTML = lines.map(l => {
+    if (!l.genre) {
+      const plain = l.tags.map(x => `<span class="chip">${esc(x.t)}</span>`).join("");
+      return `<div style="font-size:11px;color:var(--tsubaki);margin:6px 0 3px">⚠ ジャンル未指定のためスキップされます</div><div class="chips" style="margin-top:0">${plain}</div>`;
+    }
+    const existing = (getUserDict()[l.genre] || []);
     const chips = l.tags.map(x => {
       const eq = x.t.split(/[=＝]/);
       const realTag = eq.length === 2 ? eq[1].trim() : x.t;
       const disp = eq.length === 2 ? `${eq[0].trim()} → ${eq[1].trim()}` : x.t;
-      const dup = state.tag.tags.some(e => e.t.toLowerCase() === realTag.toLowerCase());
-      return `<span class="chip ${dup ? "" : "sel"}">${esc(disp)}${Math.abs(x.w - 1) > 0.001 ? `<span class="w">:${x.w}</span>` : ""}${dup ? ' <span style="color:var(--faint)">(既存)</span>' : ""}</span>`;
+      const dup = existing.some(e => e.en.toLowerCase() === realTag.toLowerCase());
+      return `<span class="chip ${dup ? "" : "sel"}">${esc(disp)}${dup ? ' <span style="color:var(--faint)">(既存)</span>' : ""}</span>`;
     }).join("");
-    const gLabel = l.genre ? `<div style="font-size:11px;color:var(--kin);margin:6px 0 3px">📚 登録ジャンル: ${esc(l.genre)}</div>` : "";
-    return gLabel + `<div class="chips" style="margin-top:0">${chips}</div>`;
+    return `<div style="font-size:11px;color:var(--kin);margin:6px 0 3px">📚 登録ジャンル: ${esc(l.genre)}</div><div class="chips" style="margin-top:0">${chips}</div>`;
   }).join("");
 }
 $("#bulkTagsArea").addEventListener("input", renderBulkTagsPreview);
@@ -17418,24 +17476,17 @@ $("#bulkTagsClear").addEventListener("click", () => { $("#bulkTagsArea").value =
 $("#btnBulkTags").addEventListener("click", () => { $("#bulkTagsArea").value = ""; renderBulkTagsPreview(); openSheet("sheetBulkTags"); });
 $("#bulkTagsConfirm").addEventListener("click", () => {
   const lines = parseBulkTagLines($("#bulkTagsArea").value);
-  if (!lines.length) { toast("追加できるタグがありません"); return; }
-  let added = 0, skipped = 0, registered = 0, genreCount = 0;
+  if (!lines.length) { toast("登録できるタグがありません"); return; }
+  let registered = 0, genreCount = 0, skippedNoGenre = 0;
   lines.forEach(l => {
-    // タグ一覧へ追加（"ja=en" 形式は en 側を実タグとして使う）
-    l.tags.forEach(x => {
-      const realTag = x.t.split(/[=＝]/).pop().trim();
-      if (state.tag.tags.some(e => e.t.toLowerCase() === realTag.toLowerCase())) { skipped++; return; }
-      state.tag.tags.push({ t: realTag, w: x.w }); added++;
-    });
-    // 先頭列ジャンルがあれば辞書登録
-    if (l.genre) { const n = registerUserTags(l.genre, l.tags); registered += n; if (n) genreCount++; }
+    if (!l.genre) { skippedNoGenre += l.tags.length; return; }
+    const n = registerUserTags(l.genre, l.tags);
+    registered += n; if (n) genreCount++;
   });
-  state.manualEdit = false;
-  renderTagChips(); render();
+  renderMyTagsBox();
   closeSheet("sheetBulkTags");
-  let msg = `${added}件追加`;
-  if (skipped) msg += `（重複${skipped}件スキップ）`;
-  if (registered) msg += ` ／ 辞書に${registered}件登録`;
+  let msg = registered ? `辞書に${registered}件登録（${genreCount}ジャンル）` : "登録できるタグがありませんでした";
+  if (skippedNoGenre) msg += ` ／ ジャンル未指定${skippedNoGenre}件はスキップ`;
   toast(msg);
 });
 
@@ -17547,7 +17598,7 @@ function renderUserDictManage() {
   $$("#userDictManage [data-act='delgenre']").forEach(b => b.addEventListener("click", () => {
     const g = b.closest("[data-genre]").dataset.genre;
     const ud2 = getUserDict(); delete ud2[g]; store.set(K.userDict, ud2);
-    renderUserDictManage(); toast(`ジャンル「${g}」を削除しました`);
+    renderUserDictManage(); renderMyTagsBox(); toast(`ジャンル「${g}」を削除しました`);
   }));
 }
 $("#setAi").addEventListener("change", e => {
@@ -17590,6 +17641,7 @@ $("#btnImportRun").addEventListener("click", () => {
     if (Array.isArray(data.charaLibrary)) store.set(K.charaLib, data.charaLibrary);
     if (data.userDict && typeof data.userDict === "object" && !Array.isArray(data.userDict)) store.set(K.userDict, data.userDict);
     renderUserDictManage();
+    renderMyTagsBox();
     toast("インポートしました 🌺");
     $("#importArea").value = "";
   } catch (e) { toast("読み込み失敗: " + e.message); }
@@ -17599,6 +17651,7 @@ $("#btnClearAll").addEventListener("click", () => {
   [K.hist, K.styles, K.ai, K.charaLib, K.userDict].forEach(k => store.del(k));
   confirmPending = false;
   renderUserDictManage();
+  renderMyTagsBox();
   toast("保存データを消去しました");
 });
 
@@ -17642,6 +17695,7 @@ renderTplForm();
 renderAesChips();
 renderStyleChips();
 renderQualityChipsAdv();
+renderMyTagsBox();
 updateAccStates();
 render();
 </script>
