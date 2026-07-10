@@ -16469,14 +16469,22 @@ input[type="range"]::-webkit-slider-thumb {
 <div class="sheet" id="sheetBulkTags" role="dialog" aria-label="タグまとめて辞書登録">
   <div class="sheet-head"><h3 class="serif">タグをまとめて辞書登録</h3><button class="icon-btn" data-close aria-label="閉じる">✕</button></div>
   <div class="sheet-body">
-    <p class="hint">現在のタグ一覧には追加されず、<b>辞書への登録のみ</b>行います。1行ごとに<b>先頭列にジャンル名</b>を書いてください（<b>ジャンル | tagA, tagB</b> または <b>ジャンル: tagA, tagB</b>）。ジャンルのない行はスキップされます。改行・カンマ・セミコロンのどの区切りでもOK。<b>(tag:1.3)</b> の重み表記や<b>日本語名=english</b>の表示名指定も使えます。</p>
-    <textarea id="bulkTagsArea" rows="8" placeholder="衣装 | frilly dress, thigh-high socks&#10;表情: gentle smile, 照れ顔=blushing" spellcheck="false"></textarea>
+    <p class="hint">現在のタグ一覧には追加されず、<b>辞書への登録のみ</b>行います。改行・カンマ・セミコロンのどの区切りでもOK。<b>日本語名=english</b>で表示名も指定できます。</p>
+    <label class="lbl" for="bulkTagsArea">追加するタグ</label>
+    <textarea id="bulkTagsArea" rows="7" placeholder="frilly dress, thigh-high socks, 照れ顔=blushing" spellcheck="false"></textarea>
     <div class="row" style="justify-content:space-between; margin-top:6px">
       <span style="font-size:11.5px; color:var(--sub)">認識したタグ: <b id="bulkTagsCount" style="color:var(--kin)">0</b>件</span>
       <button class="btn small" id="bulkTagsClear">クリア</button>
     </div>
     <div class="chips" id="bulkTagsPreview" style="margin-top:8px"></div>
-    <button class="btn primary wide" id="bulkTagsConfirm" style="margin-top:12px">辞書に登録する</button>
+
+    <label class="lbl" for="bulkTagsGenre" style="margin-top:14px">このタグ群を登録するジャンル</label>
+    <input id="bulkTagsGenre" list="bulkGenreList" placeholder="例: 衣装、表情、背景…（新規ジャンル名もOK）" autocapitalize="off">
+    <datalist id="bulkGenreList"></datalist>
+    <div class="hint" style="margin:4px 0 0">既存ジャンルをタップして選択、または新しいジャンル名を自由入力：</div>
+    <div class="chips" id="bulkGenreQuick" style="margin-top:6px"></div>
+
+    <button class="btn primary wide" id="bulkTagsConfirm" style="margin-top:14px">このジャンルに登録する</button>
   </div>
 </div>
 
@@ -17420,74 +17428,56 @@ $("#wDelete").addEventListener("click", () => {
 });
 $("#wDone").addEventListener("click", () => { state.editingTag = -1; $("#weightBox").hidden = true; renderTagChips(); });
 
-/* ---------- タグまとめて貼り付け（一括追加＋ジャンル辞書登録） ----------
-   区切り: 改行・カンマ・セミコロン・全角句読点。(tag:1.3) の重みは保持。
-   行の先頭列にジャンル名を書くと（"ジャンル | tagA, tagB" または "ジャンル: tagA, tagB"）、
-   そのタグ群を辞書に登録し、タグ辞典の【登録】グループに反映する。 */
-function parseBulkTagText(text) {
-  return text.split(/[,;、，；]+/)
+/* ---------- タグまとめて辞書登録 ----------
+   タグを自由に貼り付け → 貼り付けた「このタグ群」をどのジャンルに登録するかを
+   後から1つ指定する方式。既存のタグ一覧・最終プロンプトには影響しない。 */
+function parseGenreTagText(text) {
+  return text.split(/[\n,;、，；]+/)
     .map(s => s.trim())
     .filter(Boolean)
-    .map(tok => {
-      const m = tok.match(/^\((.+):([\d.]+)\)$/);
-      if (m) return { t: m[1].trim(), w: parseFloat(m[2]) || 1.0 };
-      return { t: tok, w: 1.0 };
-    })
-    .filter(x => x.t);
+    .map(t => ({ t }));
 }
-/* 行ごとに {genre, tags[]} を返す。先頭列ジャンルは | ｜ 区切り、
-   もしくは「comma/括弧を含まない短い語 + コロン」で判定する。 */
-function parseBulkTagLines(text) {
-  return text.split(/\n/).map(l => l.trim()).filter(Boolean).map(line => {
-    let genre = "", rest = line;
-    const barIdx = line.search(/[|｜]/);
-    if (barIdx >= 0) {
-      genre = line.slice(0, barIdx).trim();
-      rest = line.slice(barIdx + 1).trim();
-    } else {
-      const m = line.match(/^([^,，()（）:：=＝]{1,24})[:：]\s*(.+)$/);
-      if (m) { genre = m[1].trim(); rest = m[2].trim(); }
-    }
-    return { genre, tags: parseBulkTagText(rest) };
-  }).filter(l => l.tags.length);
+function renderBulkGenreOptions() {
+  const genres = Object.keys(getUserDict());
+  $("#bulkGenreList").innerHTML = genres.map(g => `<option value="${esc(g)}">`).join("");
+  $("#bulkGenreQuick").innerHTML = genres.length
+    ? genres.map(g => `<button class="chip" data-g="${esc(g)}">${esc(g)}</button>`).join("")
+    : '<span style="font-size:11px;color:var(--faint)">まだ登録ジャンルはありません。下に新しい名前を入力してください</span>';
+  $$("#bulkGenreQuick .chip").forEach(c => c.addEventListener("click", () => {
+    $("#bulkTagsGenre").value = c.dataset.g;
+    renderBulkTagsPreview();
+  }));
 }
 function renderBulkTagsPreview() {
-  const lines = parseBulkTagLines($("#bulkTagsArea").value);
-  const total = lines.reduce((n, l) => n + (l.genre ? l.tags.length : 0), 0);
-  $("#bulkTagsCount").textContent = total;
-  $("#bulkTagsPreview").innerHTML = lines.map(l => {
-    if (!l.genre) {
-      const plain = l.tags.map(x => `<span class="chip">${esc(x.t)}</span>`).join("");
-      return `<div style="font-size:11px;color:var(--tsubaki);margin:6px 0 3px">⚠ ジャンル未指定のためスキップされます</div><div class="chips" style="margin-top:0">${plain}</div>`;
-    }
-    const existing = (getUserDict()[l.genre] || []);
-    const chips = l.tags.map(x => {
-      const eq = x.t.split(/[=＝]/);
-      const realTag = eq.length === 2 ? eq[1].trim() : x.t;
-      const disp = eq.length === 2 ? `${eq[0].trim()} → ${eq[1].trim()}` : x.t;
-      const dup = existing.some(e => e.en.toLowerCase() === realTag.toLowerCase());
-      return `<span class="chip ${dup ? "" : "sel"}">${esc(disp)}${dup ? ' <span style="color:var(--faint)">(既存)</span>' : ""}</span>`;
-    }).join("");
-    return `<div style="font-size:11px;color:var(--kin);margin:6px 0 3px">📚 登録ジャンル: ${esc(l.genre)}</div><div class="chips" style="margin-top:0">${chips}</div>`;
+  const genre = $("#bulkTagsGenre").value.trim();
+  const tags = parseGenreTagText($("#bulkTagsArea").value);
+  $("#bulkTagsCount").textContent = tags.length;
+  const existing = genre ? (getUserDict()[genre] || []) : [];
+  $("#bulkTagsPreview").innerHTML = tags.map(x => {
+    const eq = x.t.split(/[=＝]/);
+    const realTag = eq.length === 2 ? eq[1].trim() : x.t;
+    const disp = eq.length === 2 ? `${eq[0].trim()} → ${eq[1].trim()}` : x.t;
+    const dup = existing.some(e => e.en.toLowerCase() === realTag.toLowerCase());
+    return `<span class="chip ${dup ? "" : "sel"}">${esc(disp)}${dup ? ' <span style="color:var(--faint)">(既存)</span>' : ""}</span>`;
   }).join("");
 }
 $("#bulkTagsArea").addEventListener("input", renderBulkTagsPreview);
+$("#bulkTagsGenre").addEventListener("input", renderBulkTagsPreview);
 $("#bulkTagsClear").addEventListener("click", () => { $("#bulkTagsArea").value = ""; renderBulkTagsPreview(); });
-$("#btnBulkTags").addEventListener("click", () => { $("#bulkTagsArea").value = ""; renderBulkTagsPreview(); openSheet("sheetBulkTags"); });
+$("#btnBulkTags").addEventListener("click", () => {
+  $("#bulkTagsArea").value = ""; $("#bulkTagsGenre").value = "";
+  renderBulkGenreOptions(); renderBulkTagsPreview();
+  openSheet("sheetBulkTags");
+});
 $("#bulkTagsConfirm").addEventListener("click", () => {
-  const lines = parseBulkTagLines($("#bulkTagsArea").value);
-  if (!lines.length) { toast("登録できるタグがありません"); return; }
-  let registered = 0, genreCount = 0, skippedNoGenre = 0;
-  lines.forEach(l => {
-    if (!l.genre) { skippedNoGenre += l.tags.length; return; }
-    const n = registerUserTags(l.genre, l.tags);
-    registered += n; if (n) genreCount++;
-  });
+  const genre = $("#bulkTagsGenre").value.trim();
+  const tags = parseGenreTagText($("#bulkTagsArea").value);
+  if (!tags.length) { toast("登録できるタグがありません"); return; }
+  if (!genre) { toast("登録先ジャンルを入力してください"); return; }
+  const n = registerUserTags(genre, tags);
   renderMyTagsBox();
   closeSheet("sheetBulkTags");
-  let msg = registered ? `辞書に${registered}件登録（${genreCount}ジャンル）` : "登録できるタグがありませんでした";
-  if (skippedNoGenre) msg += ` ／ ジャンル未指定${skippedNoGenre}件はスキップ`;
-  toast(msg);
+  toast(n ? `「${genre}」に${n}件登録しました` : "すべて既存のタグでした（追加なし）");
 });
 
 /* ---------- テンプレート (F-08) ---------- */
