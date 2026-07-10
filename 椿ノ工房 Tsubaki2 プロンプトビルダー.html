@@ -16394,7 +16394,6 @@ input[type="range"]::-webkit-slider-thumb {
       <button class="btn gold grow" id="btnQualityTag">✨ 画風・品質</button>
     </div>
     <button class="btn gold wide" id="btnBulkTags" style="margin-top:8px">📋 まとめて辞書登録</button>
-    <div id="myTagsBox" style="margin-top:10px"></div>
     <div class="chips" id="tagChips"></div>
     <button class="btn small danger" id="btnClearTags" style="margin-top:8px" hidden>🗑 タグを全て削除</button>
     <div class="weight-box" id="weightBox" hidden>
@@ -17067,7 +17066,6 @@ function switchMode(mode) {
   state.manualEdit = false;
   $$(".mode-tab").forEach(t => t.classList.toggle("on", t.dataset.mode === mode));
   $$(".pane").forEach(p => p.classList.toggle("on", p.id === "pane-" + mode));
-  if (mode === "tag") renderMyTagsBox();
   render();
 }
 $$(".mode-tab").forEach(t => t.addEventListener("click", () => switchMode(t.dataset.mode)));
@@ -17205,44 +17203,41 @@ function userDictGroups() {
     .filter(([, items]) => Array.isArray(items) && items.length)
     .map(([genre, items]) => ({ label: "【登録】" + genre, items, _user: true, _genre: genre }));
 }
+/* 「日本語=english」または「日本語 english」（日本語の並び＋半角/全角スペース＋英字を含む続き）を
+   日英ペアとして解釈する。どちらの記法にも一致しない場合は入力全体をそのままタグとして扱う。 */
+function splitJaEn(raw) {
+  const t = (raw || "").trim();
+  const eq = t.split(/[=＝]/);
+  if (eq.length === 2 && eq[0].trim() && eq[1].trim()) {
+    return { ja: eq[0].trim(), en: eq[1].trim() };
+  }
+  const m = t.match(/^([\u3040-\u30FF\u4E00-\u9FFF\uFF01-\uFF60]+)[ \u3000]+(.+)$/);
+  if (m && /[A-Za-z]/.test(m[2])) {
+    return { ja: m[1].trim(), en: m[2].trim() };
+  }
+  return { ja: t, en: t };
+}
+/* ジャンル名は表記ゆれ（大文字・小文字、前後の空白）を吸収し、
+   既存ジャンルがあれば必ずその配列に追記する（新規の重複ジャンルを作らない）。 */
+function resolveGenreKey(ud, genre) {
+  const norm = genre.trim().toLowerCase();
+  const existing = Object.keys(ud).find(k => k.trim().toLowerCase() === norm);
+  return existing || genre.trim();
+}
 function registerUserTags(genre, tagObjs) {
   genre = (genre || "").trim();
   if (!genre || !tagObjs.length) return 0;
   const ud = getUserDict();
-  if (!Array.isArray(ud[genre])) ud[genre] = [];
+  const key = resolveGenreKey(ud, genre);
+  if (!Array.isArray(ud[key])) ud[key] = [];
   let added = 0;
   tagObjs.forEach(({ t }) => {
-    // "日本語=english" 形式なら日本語表示名として扱う
-    let ja = t, en = t;
-    const eq = t.split(/[=＝]/);
-    if (eq.length === 2 && eq[0].trim() && eq[1].trim()) { ja = eq[0].trim(); en = eq[1].trim(); }
-    if (!ud[genre].some(x => x.en.toLowerCase() === en.toLowerCase())) { ud[genre].push({ ja, en }); added++; }
+    const { ja, en } = splitJaEn(t);
+    if (!en) return;
+    if (!ud[key].some(x => x.en.toLowerCase() === en.toLowerCase())) { ud[key].push({ ja, en }); added++; }
   });
   store.set(K.userDict, ud);
   return added;
-}
-
-/* ---------- マイタグ（登録辞書のクイックアクセス） ----------
-   Tagモード画面に直接チップ表示し、辞典シートを開かなくても
-   タップ一つで追加できるようにする。 */
-function renderMyTagsBox() {
-  const box = $("#myTagsBox");
-  if (!box) return;
-  const groups = userDictGroups();
-  if (!groups.length) { box.innerHTML = ""; return; }
-  box.innerHTML = `<p class="hint" style="margin-bottom:4px">📚 マイタグ（登録済み・タップで追加/削除）</p>` +
-    groups.map(g => `
-      <div style="margin-bottom:6px">
-        <div style="font-size:11px;color:var(--kin);margin-bottom:3px">${esc(g.label)}</div>
-        <div class="chips" style="margin-top:0">${g.items.map(it => {
-          const active = state.tag.tags.some(x => x.t.toLowerCase() === it.en.toLowerCase());
-          return `<button class="chip ${active ? "sel" : ""}" data-en="${esc(it.en)}">${esc(it.ja === it.en ? it.en : it.ja)}</button>`;
-        }).join("")}</div>
-      </div>`).join("");
-  $$("#myTagsBox .chip").forEach(c => c.addEventListener("click", () => {
-    toggleTagArrayToken(c.dataset.en);
-    renderMyTagsBox();
-  }));
 }
 
 function getTagGroups(dictKey) {
@@ -17401,7 +17396,6 @@ function renderTagChips() {
     renderTagChips(); render();
   }));
   $("#btnClearTags").hidden = state.tag.tags.length === 0;
-  renderMyTagsBox(); // マイタグの選択中(sel)表示をタグ一覧の変化に同期
 }
 function openWeight(i) {
   state.editingTag = i;
@@ -17449,15 +17443,16 @@ function renderBulkGenreOptions() {
   }));
 }
 function renderBulkTagsPreview() {
-  const genre = $("#bulkTagsGenre").value.trim();
+  const genreInput = $("#bulkTagsGenre").value.trim();
   const tags = parseGenreTagText($("#bulkTagsArea").value);
   $("#bulkTagsCount").textContent = tags.length;
-  const existing = genre ? (getUserDict()[genre] || []) : [];
+  const ud = getUserDict();
+  const genreKey = genreInput ? resolveGenreKey(ud, genreInput) : "";
+  const existing = genreKey ? (ud[genreKey] || []) : [];
   $("#bulkTagsPreview").innerHTML = tags.map(x => {
-    const eq = x.t.split(/[=＝]/);
-    const realTag = eq.length === 2 ? eq[1].trim() : x.t;
-    const disp = eq.length === 2 ? `${eq[0].trim()} → ${eq[1].trim()}` : x.t;
-    const dup = existing.some(e => e.en.toLowerCase() === realTag.toLowerCase());
+    const { ja, en } = splitJaEn(x.t);
+    const disp = ja !== en ? `${ja} → ${en}` : en;
+    const dup = existing.some(e => e.en.toLowerCase() === en.toLowerCase());
     return `<span class="chip ${dup ? "" : "sel"}">${esc(disp)}${dup ? ' <span style="color:var(--faint)">(既存)</span>' : ""}</span>`;
   }).join("");
 }
@@ -17475,7 +17470,6 @@ $("#bulkTagsConfirm").addEventListener("click", () => {
   if (!tags.length) { toast("登録できるタグがありません"); return; }
   if (!genre) { toast("登録先ジャンルを入力してください"); return; }
   const n = registerUserTags(genre, tags);
-  renderMyTagsBox();
   closeSheet("sheetBulkTags");
   toast(n ? `「${genre}」に${n}件登録しました` : "すべて既存のタグでした（追加なし）");
 });
@@ -17588,7 +17582,7 @@ function renderUserDictManage() {
   $$("#userDictManage [data-act='delgenre']").forEach(b => b.addEventListener("click", () => {
     const g = b.closest("[data-genre]").dataset.genre;
     const ud2 = getUserDict(); delete ud2[g]; store.set(K.userDict, ud2);
-    renderUserDictManage(); renderMyTagsBox(); toast(`ジャンル「${g}」を削除しました`);
+    renderUserDictManage(); toast(`ジャンル「${g}」を削除しました`);
   }));
 }
 $("#setAi").addEventListener("change", e => {
@@ -17631,7 +17625,6 @@ $("#btnImportRun").addEventListener("click", () => {
     if (Array.isArray(data.charaLibrary)) store.set(K.charaLib, data.charaLibrary);
     if (data.userDict && typeof data.userDict === "object" && !Array.isArray(data.userDict)) store.set(K.userDict, data.userDict);
     renderUserDictManage();
-    renderMyTagsBox();
     toast("インポートしました 🌺");
     $("#importArea").value = "";
   } catch (e) { toast("読み込み失敗: " + e.message); }
@@ -17641,7 +17634,6 @@ $("#btnClearAll").addEventListener("click", () => {
   [K.hist, K.styles, K.ai, K.charaLib, K.userDict].forEach(k => store.del(k));
   confirmPending = false;
   renderUserDictManage();
-  renderMyTagsBox();
   toast("保存データを消去しました");
 });
 
@@ -17685,7 +17677,6 @@ renderTplForm();
 renderAesChips();
 renderStyleChips();
 renderQualityChipsAdv();
-renderMyTagsBox();
 updateAccStates();
 render();
 </script>
