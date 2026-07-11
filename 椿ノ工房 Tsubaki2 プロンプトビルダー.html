@@ -15933,7 +15933,238 @@
       "fields": []
     }
   ],
-  "variant_note": "同一キャラでも衣装・スタイル違いのバリアントタグが存在する場合があります。例: mio_(pixai) は標準衣装、mio(jiraikei)_(pixai) は地雷系衣装バリアント。呼び出したい姿に応じてタグを使い分けてください。"
+  "variant_note": "同一キャラでも衣装・スタイル違いのバリアントタグが存在する場合があります。例: mio_(pixai) は標準衣装、mio(jiraikei)_(pixai) は地雷系衣装バリアント。呼び出したい姿に応じてタグを使い分けてください。",
+  "negative_presets": [
+    {
+      "label": "品質・技術的な破綻",
+      "items": [
+        {
+          "ja": "低品質",
+          "en": "low quality"
+        },
+        {
+          "ja": "最低品質",
+          "en": "worst quality"
+        },
+        {
+          "ja": "粗い",
+          "en": "jpeg artifacts"
+        },
+        {
+          "ja": "ぼやけ",
+          "en": "blurry"
+        },
+        {
+          "ja": "ノイズ",
+          "en": "noisy"
+        },
+        {
+          "ja": "解像度が低い",
+          "en": "low resolution"
+        },
+        {
+          "ja": "ピクセル化",
+          "en": "pixelated"
+        },
+        {
+          "ja": "圧縮ノイズ",
+          "en": "compression artifacts"
+        },
+        {
+          "ja": "荒いスケッチ",
+          "en": "sketch, unfinished"
+        },
+        {
+          "ja": "下手な絵",
+          "en": "poorly drawn"
+        },
+        {
+          "ja": "シンプルすぎる背景",
+          "en": "plain background"
+        }
+      ]
+    },
+    {
+      "label": "解剖学的な破綻",
+      "items": [
+        {
+          "ja": "手の破綻",
+          "en": "bad hands"
+        },
+        {
+          "ja": "指の破綻",
+          "en": "bad fingers"
+        },
+        {
+          "ja": "指が多い",
+          "en": "extra fingers"
+        },
+        {
+          "ja": "指が少ない",
+          "en": "missing fingers"
+        },
+        {
+          "ja": "手が変形",
+          "en": "malformed hands"
+        },
+        {
+          "ja": "足の破綻",
+          "en": "bad feet"
+        },
+        {
+          "ja": "腕の破綻",
+          "en": "bad arms"
+        },
+        {
+          "ja": "体型の破綻",
+          "en": "bad anatomy"
+        },
+        {
+          "ja": "顔の破綻",
+          "en": "bad face"
+        },
+        {
+          "ja": "目の破綻",
+          "en": "bad eyes"
+        },
+        {
+          "ja": "非対称な顔",
+          "en": "asymmetrical face"
+        },
+        {
+          "ja": "余分な手足",
+          "en": "extra limbs"
+        },
+        {
+          "ja": "手足の欠損",
+          "en": "missing limbs"
+        },
+        {
+          "ja": "融合した指",
+          "en": "fused fingers"
+        },
+        {
+          "ja": "長すぎる首",
+          "en": "long neck"
+        },
+        {
+          "ja": "歪んだ体",
+          "en": "deformed body"
+        }
+      ]
+    },
+    {
+      "label": "不要な要素",
+      "items": [
+        {
+          "ja": "透かし",
+          "en": "watermark"
+        },
+        {
+          "ja": "署名",
+          "en": "signature"
+        },
+        {
+          "ja": "作者名",
+          "en": "artist name"
+        },
+        {
+          "ja": "テキスト",
+          "en": "text"
+        },
+        {
+          "ja": "枠線",
+          "en": "border"
+        },
+        {
+          "ja": "ロゴ",
+          "en": "logo"
+        },
+        {
+          "ja": "QRコード",
+          "en": "qr code"
+        },
+        {
+          "ja": "切り取られた構図",
+          "en": "cropped"
+        },
+        {
+          "ja": "画面外にはみ出す",
+          "en": "out of frame"
+        },
+        {
+          "ja": "二重輪郭",
+          "en": "duplicate"
+        }
+      ]
+    },
+    {
+      "label": "望まない画風",
+      "items": [
+        {
+          "ja": "白黒",
+          "en": "monochrome"
+        },
+        {
+          "ja": "グレースケール",
+          "en": "grayscale"
+        },
+        {
+          "ja": "色褪せた",
+          "en": "faded colors"
+        },
+        {
+          "ja": "過剰な彩度",
+          "en": "oversaturated"
+        },
+        {
+          "ja": "写実的すぎる（アニメ塗り希望時）",
+          "en": "photorealistic"
+        },
+        {
+          "ja": "3Dレンダー風（2D希望時）",
+          "en": "3d render"
+        },
+        {
+          "ja": "レトロすぎる",
+          "en": "retro style"
+        },
+        {
+          "ja": "線が汚い",
+          "en": "messy lines"
+        }
+      ]
+    },
+    {
+      "label": "構図の問題",
+      "items": [
+        {
+          "ja": "中央に寄りすぎ",
+          "en": "overly centered"
+        },
+        {
+          "ja": "余白がない",
+          "en": "no negative space"
+        },
+        {
+          "ja": "視点が不自然",
+          "en": "awkward perspective"
+        },
+        {
+          "ja": "遠近感の破綻",
+          "en": "broken perspective"
+        },
+        {
+          "ja": "複数人物の混同",
+          "en": "混同 fused characters"
+        },
+        {
+          "ja": "背景が単調",
+          "en": "boring background"
+        }
+      ]
+    }
+  ]
 }
 </script>
 
@@ -15963,6 +16194,11 @@
   --c-style: #d0885a;
   --radius: 14px;
   --safe-b: env(safe-area-inset-bottom, 0px);
+}
+body[data-theme="light"] {
+  --sumi: #f7f3ec; --surface: #ffffff; --surface2: #f1ece1; --surface3: #e8e0d0;
+  --line: #ddd2ba; --kinu: #2a2420; --sub: #6b5d52; --faint: #a89a86;
+  --tsubaki: #c53d54; --tsubaki-deep: #a12f47; --kin: #96772f; --kin-dim: #c9a86a;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 [hidden] { display: none !important; } /* 各要素のdisplay指定よりhidden属性を常に優先させる */
@@ -16128,7 +16364,7 @@ main { position: relative; z-index: 1; padding: 14px 14px 0; max-width: 640px; m
 .dict-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .dict-card {
   text-align: left; padding: 10px 11px; border-radius: 11px;
-  background: var(--surface2); border: 1px solid var(--line);
+  background: var(--surface2); border: 1px solid var(--line); cursor: pointer;
 }
 .dict-card .dj { font-size: 13.5px; font-weight: 600; }
 .dict-card .de { font-size: 11px; color: var(--kin); margin-top: 1px; word-break: break-word; }
@@ -16229,10 +16465,77 @@ input[type="range"]::-webkit-slider-thumb {
   background: var(--kin); color: #241d10; font-size: 13px; font-weight: 600;
   padding: 9px 18px; border-radius: 999px; z-index: 80; opacity: 0; pointer-events: none;
   transition: .25s; letter-spacing: .05em; box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  display: flex; align-items: center; gap: 10px;
 }
-.toast.on { opacity: 1; transform: translateX(-50%); }
+.toast.on { opacity: 1; transform: translateX(-50%); pointer-events: auto; }
+.toast .undo-btn {
+  background: rgba(0,0,0,.18); color: inherit; border: none; border-radius: 999px;
+  padding: 3px 10px; font-size: 12px; font-weight: 700; letter-spacing: .03em;
+}
 .empty { text-align: center; color: var(--faint); font-size: 13px; padding: 30px 0; line-height: 1.9; }
 @media (min-width: 480px) { .dict-grid { grid-template-columns: 1fr 1fr 1fr; } }
+
+/* ---------- 改善: 各種追加UI ---------- */
+/* ミニプレビュー2行表示オプション */
+.pv-text.two-line { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
+
+/* 英語優先表示 */
+.eng-first .dj { font-size: 11px; color: var(--sub); order: 2; }
+.eng-first .de { font-size: 13.5px; color: var(--kinu); font-weight: 600; order: 1; }
+.eng-first .dict-card { display: flex; flex-direction: column; }
+
+/* お気に入りタグの★ */
+.dict-card { position: relative; }
+.fav-star {
+  position: absolute; top: 4px; right: 6px; font-size: 13px; color: var(--faint);
+  background: none; border: none; padding: 2px; line-height: 1; z-index: 2;
+}
+.fav-star.on { color: var(--kin); }
+
+/* ジャンプハイライト（逆分解タップ→編集欄へ） */
+.jump-highlight { animation: jumpFlash 1.1s ease; }
+@keyframes jumpFlash {
+  0% { box-shadow: 0 0 0 3px rgba(201,168,106,.9); }
+  100% { box-shadow: 0 0 0 3px rgba(201,168,106,0); }
+}
+.bk-seg { cursor: pointer; }
+
+/* 選択中のみ表示トグル行 */
+.filter-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.filter-row .f-lbl { font-size: 12px; color: var(--sub); }
+
+/* カテゴリ折りたたみ(統合辞典の遅延描画) */
+.dcat-head {
+  width: 100%; display: flex; align-items: center; gap: 8px; padding: 10px 4px;
+  font-size: 13px; color: var(--kin); letter-spacing: .05em; border: none; background: none;
+}
+.dcat-head::after { content: "▸"; margin-left: auto; color: var(--faint); transition: transform .15s; }
+.dcat-head.open::after { transform: rotate(90deg); }
+.dcat-head .cnt { font-size: 10.5px; color: var(--faint); font-weight: 400; }
+
+/* 並べ替えモード */
+.chip.reorder { padding-right: 4px; }
+.chip .move-btn { color: var(--kin); font-size: 12px; padding: 0 3px; }
+.chip .move-btn:disabled { color: var(--faint); opacity: .4; }
+
+/* ネガティブプロンプト */
+.neg-area { background: rgba(216,74,95,.05); border-color: rgba(216,74,95,.35) !important; }
+
+/* オンボーディング */
+.onb-veil { position: fixed; inset: 0; background: rgba(10,8,12,.82); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.onb-card { background: var(--surface); border: 1px solid var(--kin-dim); border-radius: 18px; padding: 24px 20px; max-width: 340px; text-align: center; }
+.onb-card .onb-emoji { font-size: 40px; margin-bottom: 12px; }
+.onb-card h3 { font-size: 17px; margin-bottom: 10px; }
+.onb-card p { font-size: 13px; color: var(--sub); line-height: 1.7; margin-bottom: 18px; }
+.onb-dots { display: flex; justify-content: center; gap: 6px; margin-bottom: 16px; }
+.onb-dots span { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+.onb-dots span.on { background: var(--kin); }
+
+/* スワイプで閉じるつまみの視覚強調 */
+.sheet-head { touch-action: none; }
+
+/* リセットボタン共通 */
+.mode-reset { margin: 4px 0 10px; }
 </style>
 </head>
 <body>
@@ -16273,6 +16576,9 @@ input[type="range"]::-webkit-slider-thumb {
 
 <!-- ============ 基本公式 (F-02) ============ -->
 <section class="pane on" id="pane-basic">
+  <div class="row mode-reset" style="justify-content:flex-end">
+    <button class="btn small danger" id="btnResetBasic">🔄 基本モードをリセット</button>
+  </div>
   <div class="banner info"><span class="b-ico">🌺</span><span><b>プロンプト = 主体 + 動作 + 場面</b>。3欄を埋めるだけで完成します。最終出力は英語が必須です（自動変換オフ前提）。日本語で書いた欄はプレビューで警告が出ます。</span></div>
 
   <div class="card">
@@ -16300,6 +16606,10 @@ input[type="range"]::-webkit-slider-thumb {
 
 <!-- ============ 高度公式 (F-03) ============ -->
 <section class="pane" id="pane-adv">
+  <div class="row mode-reset" style="justify-content:flex-end; gap:8px">
+    <button class="btn small gold" id="btnGachaAdv">🎲 ランダム構成</button>
+    <button class="btn small danger" id="btnResetAdv">🔄 リセット</button>
+  </div>
   <div class="banner info"><span class="b-ico">🌺</span><span><b>高度公式:</b> キャラ呼び出し + 主体外観 + 場面 + 姿勢・動作 + 撮影美学 + スタイルプリセット。<b>各ブロックは省略可</b>。入力済みのブロックだけが結合されます。</span></div>
 
   <!-- 1. キャラクター呼び出し (F-05) -->
@@ -16374,12 +16684,19 @@ input[type="range"]::-webkit-slider-thumb {
       <label class="lbl" style="margin-top:12px">画風・クオリティ・画質タグ（任意）</label>
       <button class="btn gold wide" id="btnQualityAdv">✨ 画風・クオリティタグから選ぶ</button>
       <div class="chips" id="qualityChipsAdv"></div>
+      <div class="row" style="margin-top:14px; gap:8px">
+        <button class="btn small grow" id="btnPresetApply">📂 マイ構成を適用</button>
+        <button class="btn small gold grow" id="btnPresetSaveOpen">💾 この組み合わせを保存</button>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ============ Tag公式 (F-04) ============ -->
 <section class="pane" id="pane-tag">
+  <div class="row mode-reset" style="justify-content:flex-end; gap:8px">
+    <button class="btn small gold" id="btnGachaTag">🎲 ランダム構成</button>
+  </div>
   <div class="banner warn" id="tagWarn"><span class="b-ico">⚠️</span><span><b>Tag使用時はプロンプト自動変換オンを推奨。</b>Tagはオブジェクト間の相互作用の記述が苦手なため、自動変換オフの場合は生成結果にランダム性・不安定性が生じる可能性があります。</span></div>
 
   <div class="card">
@@ -16394,8 +16711,11 @@ input[type="range"]::-webkit-slider-thumb {
       <button class="btn gold grow" id="btnQualityTag">✨ 画風・品質</button>
     </div>
     <button class="btn gold wide" id="btnBulkTags" style="margin-top:8px">📋 まとめて辞書登録</button>
+    <div class="row" style="margin-top:8px; gap:8px">
+      <button class="btn small grow" id="btnReorderToggle">↕ 並べ替えモード</button>
+      <button class="btn small danger grow" id="btnClearTags" hidden>🗑 タグを全て削除</button>
+    </div>
     <div class="chips" id="tagChips"></div>
-    <button class="btn small danger" id="btnClearTags" style="margin-top:8px" hidden>🗑 タグを全て削除</button>
     <div class="weight-box" id="weightBox" hidden>
       <div class="row" style="justify-content:space-between">
         <span style="font-size:13px">重み調整: <b id="wTagName"></b></span>
@@ -16453,16 +16773,41 @@ input[type="range"]::-webkit-slider-thumb {
       <span style="font-size:11.5px; color:var(--sub)"><span id="pvCount2">0</span> 文字</span>
       <button class="btn small" id="btnRebuild" hidden>↺ フォームから再生成</button>
     </div>
+    <div class="row" style="justify-content:space-between; margin-top:8px">
+      <span class="f-lbl" style="font-size:12px;color:var(--sub)">コピー時の改行</span>
+      <label class="tgl"><input type="checkbox" id="setSingleLine"><span class="tk"></span></label>
+      <span style="font-size:11px;color:var(--sub)" id="singleLineLbl">1行にまとめる</span>
+    </div>
     <div class="pv-warns" id="pvWarns"></div>
     <div class="pv-tools">
       <button class="btn primary grow" id="btnCopy2">📋 コピー</button>
       <button class="btn gold" id="btnFav">★ 保存</button>
       <button class="btn" id="btnAi" hidden>✦ AIで英訳・整形</button>
     </div>
+    <p class="hint" style="margin-top:10px">👇 色分け部分をタップすると、元の入力欄にジャンプします</p>
     <div class="breakdown" id="bkView"></div>
     <div class="bk-legend" id="bkLegend"></div>
+
+    <div class="card" style="margin-top:14px">
+      <h3 style="font-size:14px">🚫 ネガティブプロンプト（任意・出力とは別管理）</h3>
+      <textarea id="negArea" class="neg-area" rows="3" placeholder="例: bad hands, worst quality, blurry"></textarea>
+      <div class="row" style="margin-top:8px; gap:8px">
+        <button class="btn small gold grow" id="btnNegPicker">📖 プリセットから選ぶ</button>
+        <button class="btn small" id="btnCopyNeg">📋 コピー</button>
+      </div>
+    </div>
   </div>
 </div>
+
+<!-- ============ ネガティブプロンプトピッカー ============ -->
+<div class="sheet" id="sheetNegative" role="dialog" aria-label="ネガティブプロンプト辞典">
+  <div class="sheet-head"><h3 class="serif">ネガティブプロンプト辞典</h3><button class="btn small primary" data-close>決定</button></div>
+  <div class="sheet-body">
+    <input id="negSearch" placeholder="🔍 検索" style="margin-bottom:10px">
+    <div id="negBody"></div>
+  </div>
+</div>
+
 
 <!-- ============ タグまとめて貼り付け (Tag公式) ============ -->
 <div class="sheet" id="sheetBulkTags" role="dialog" aria-label="タグまとめて辞書登録">
@@ -16518,6 +16863,8 @@ input[type="range"]::-webkit-slider-thumb {
       <input id="cl-tag" placeholder="例: mio_(pixai)" autocapitalize="off" autocorrect="off">
       <label class="lbl" for="cl-note">メモ（衣装バリアント・確認日など任意）</label>
       <input id="cl-note" placeholder="例: 地雷系バリアントは mio(jiraikei)_(pixai)">
+      <label class="lbl" for="cl-appearance">外見メモ（任意・高度公式の主体外観欄に挿入できます）</label>
+      <textarea id="cl-appearance" rows="2" placeholder="例: long silver hair, blue eyes, wearing a maid dress"></textarea>
       <button class="btn primary wide" id="clSave" style="margin-top:10px">登録する</button>
     </div>
   </div>
@@ -16527,7 +16874,11 @@ input[type="range"]::-webkit-slider-thumb {
 <div class="sheet" id="sheetTagDict" role="dialog" aria-label="タグ辞典">
   <div class="sheet-head"><h3 class="serif" id="tagDictTitle">タグ辞典</h3><button class="btn small primary" data-close>決定</button></div>
   <div class="sheet-body">
-    <input id="tagDictSearch" placeholder="🔍 タグを検索（日本語/英語）" style="margin-bottom:10px">
+    <input id="tagDictSearch" placeholder="🔍 タグを検索（日本語/英語・かなもOK）" style="margin-bottom:8px">
+    <div class="filter-row">
+      <span class="f-lbl">選択中のみ表示</span>
+      <label class="tgl"><input type="checkbox" id="tagDictSelOnly"><span class="tk"></span></label>
+    </div>
     <div id="tagDictBody"></div>
   </div>
 </div>
@@ -16567,11 +16918,46 @@ input[type="range"]::-webkit-slider-thumb {
     <div class="card">
       <div class="set-row">
         <div class="grow">
+          <div class="s-lbl">ライトテーマ</div>
+          <div class="s-sub">屋外など明るい場所向けの淡色テーマに切り替えます</div>
+        </div>
+        <label class="tgl"><input type="checkbox" id="setTheme"><span class="tk"></span></label>
+      </div>
+      <div class="set-row">
+        <div class="grow">
+          <div class="s-lbl">タグ表示を英語優先に</div>
+          <div class="s-sub">辞書カードの英語タグを大きく、日本語名を補助表示にします</div>
+        </div>
+        <label class="tgl"><input type="checkbox" id="setEngFirst"><span class="tk"></span></label>
+      </div>
+      <div class="set-row">
+        <div class="grow">
+          <div class="s-lbl">ミニプレビューを2行表示</div>
+          <div class="s-sub">下部固定バーのプレビューを1行→2行に</div>
+        </div>
+        <label class="tgl"><input type="checkbox" id="setTwoLine"><span class="tk"></span></label>
+      </div>
+      <div class="set-row">
+        <div class="grow">
+          <div class="s-lbl">使い方ガイドを見る</div>
+          <div class="s-sub">初回に表示される3枚のカードをもう一度表示します</div>
+        </div>
+        <button class="btn small gold" id="btnReplayOnboarding">表示する</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="set-row">
+        <div class="grow">
           <div class="s-lbl">AIアシスト（オプション F-12）</div>
           <div class="s-sub">日本語の雑な指示を高度公式準拠の英語プロンプトへ自動展開。Claude内アーティファクトとして開いている場合に動作します。オフでも本体機能はすべて使えます。</div>
         </div>
         <label class="tgl"><input type="checkbox" id="setAi"><span class="tk"></span></label>
       </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:14px">マイ構成（撮影美学＋スタイル＋品質の保存セット）</h3>
+      <p class="hint">高度公式で選んだ撮影美学・スタイルプリセット・クオリティタグの組み合わせを名前を付けて保存し、後でワンタップ適用できます。</p>
+      <div id="myPresetsList"></div>
     </div>
     <div class="card">
       <h3 style="font-size:14px">スタイルプリセット名の更新</h3>
@@ -16581,7 +16967,7 @@ input[type="range"]::-webkit-slider-thumb {
     </div>
     <div class="card">
       <h3 style="font-size:14px">登録辞書の管理</h3>
-      <p class="hint">「まとめて貼り付け」で先頭列ジャンル付き登録したタグの一覧です。ジャンルごとに削除できます。</p>
+      <p class="hint">「まとめて貼り付け」で登録したタグの一覧です。ジャンルごと、またはタグ単位で削除できます。</p>
       <div id="userDictManage"></div>
     </div>
     <div class="card">
@@ -16601,6 +16987,37 @@ input[type="range"]::-webkit-slider-thumb {
       <button class="btn danger wide" id="btnClearAll">保存データを全消去</button>
     </div>
     <p class="hint" style="text-align:center">椿ノ工房 v1.0 ・ Tsubaki.2 プロンプトガイダンス準拠<br>辞書は本ファイル内 &lt;script id="tsubaki-dict"&gt; を編集して更新できます</p>
+  </div>
+</div>
+
+<!-- ============ マイ構成 保存ダイアログ ============ -->
+<div class="sheet" id="sheetPresetSave" role="dialog" aria-label="マイ構成を保存">
+  <div class="sheet-head"><h3 class="serif">マイ構成を保存</h3><button class="icon-btn" data-close aria-label="閉じる">✕</button></div>
+  <div class="sheet-body">
+    <p class="hint">現在選択中の撮影美学・スタイルプリセット・クオリティタグをまとめて保存します。</p>
+    <label class="lbl" for="presetNameInput">構成名</label>
+    <input id="presetNameInput" placeholder="例: 夜桜シネマティック">
+    <button class="btn primary wide" id="presetSaveConfirm" style="margin-top:12px">保存する</button>
+  </div>
+</div>
+
+<!-- ============ マイ構成 適用ダイアログ ============ -->
+<div class="sheet" id="sheetPresetApply" role="dialog" aria-label="マイ構成を適用">
+  <div class="sheet-head"><h3 class="serif">マイ構成を適用</h3><button class="icon-btn" data-close aria-label="閉じる">✕</button></div>
+  <div class="sheet-body">
+    <div id="presetApplyList"></div>
+  </div>
+</div>
+
+<!-- ============ オンボーディング ============ -->
+<div class="onb-veil" id="onbVeil" hidden>
+  <div class="onb-card">
+    <div class="onb-dots" id="onbDots"></div>
+    <div id="onbContent"></div>
+    <div class="row" style="gap:8px; margin-top:4px">
+      <button class="btn grow" id="onbSkip">スキップ</button>
+      <button class="btn primary grow" id="onbNext">次へ</button>
+    </div>
   </div>
 </div>
 
@@ -16644,7 +17061,13 @@ const store = (() => {
     keys() { return ok ? Object.keys(localStorage) : Object.keys(mem); }
   };
 })();
-const K = { hist: "tsubaki.history", styles: "tsubaki.styleNames", ai: "tsubaki.aiAssist", charaLib: "tsubaki.charaLibrary", userDict: "tsubaki.userDict" };
+const K = {
+  hist: "tsubaki.history", styles: "tsubaki.styleNames", ai: "tsubaki.aiAssist",
+  charaLib: "tsubaki.charaLibrary", userDict: "tsubaki.userDict",
+  recentTags: "tsubaki.recentTags", favTags: "tsubaki.favTags", myPresets: "tsubaki.myPresets",
+  theme: "tsubaki.theme", engFirst: "tsubaki.engFirst", twoLine: "tsubaki.twoLinePreview",
+  singleLine: "tsubaki.singleLineCopy", onboarded: "tsubaki.onboarded", draft: "tsubaki.draft"
+};
 
 /* ---------- 状態 ---------- */
 const state = {
@@ -16661,7 +17084,9 @@ const state = {
   tag: { tags: [], charas: [] },      // tags: [{t, w}]
   tpl: { id: null, fields: {}, manga: { common: "", theme: "", panels: ["","","","","","","","",""] } },
   manualEdit: false,
-  editingTag: -1
+  editingTag: -1,
+  negative: "",
+  reorderMode: false
 };
 
 /* ---------- ユーティリティ ---------- */
@@ -16672,12 +17097,62 @@ const hasJa = s => /[\u3000-\u303F\u3040-\u30FF\u4E00-\u9FFF\uFF01-\uFF60]/.test
 let toastTimer;
 function toast(msg) {
   const t = $("#toast");
-  t.textContent = msg; t.classList.add("on");
+  t.innerHTML = "";
+  t.appendChild(document.createTextNode(msg));
+  t.classList.add("on");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove("on"), 1800);
 }
+/* Undoボタン付きトースト。restoreFnを渡すと「元に戻す」を5秒間表示する。 */
+function toastUndo(msg, restoreFn) {
+  const t = $("#toast");
+  t.innerHTML = "";
+  t.appendChild(document.createTextNode(msg));
+  const btn = document.createElement("button");
+  btn.className = "undo-btn";
+  btn.textContent = "元に戻す";
+  btn.addEventListener("click", () => { restoreFn(); t.classList.remove("on"); clearTimeout(toastTimer); });
+  t.appendChild(btn);
+  t.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("on"), 5000);
+}
 
-/* ---------- キャラクター呼び出し整形 (F-05, F-11) ---------- */
+/* ---------- かな正規化（ひらがな↔カタカナを揃えて検索精度を上げる） ----------
+   例: 「ついんてーる」で検索しても辞書のカタカナ表記「ツインテール」にヒットする。 */
+function toKatakana(s) {
+  return (s || "").replace(/[\u3041-\u3096]/g, c => String.fromCharCode(c.charCodeAt(0) + 0x60));
+}
+function kanaNorm(s) { return toKatakana((s || "").toLowerCase()); }
+
+/* ---------- 最近使ったタグ ---------- */
+function pushRecentTag(token) {
+  if (!token) return;
+  let recent = store.get(K.recentTags, []);
+  recent = recent.filter(t => t.toLowerCase() !== token.toLowerCase());
+  recent.unshift(token);
+  store.set(K.recentTags, recent.slice(0, 24));
+}
+function getRecentTags() { return store.get(K.recentTags, []); }
+
+/* ---------- お気に入りタグ ---------- */
+function getFavTags() { return store.get(K.favTags, []); }
+function isFavTag(en) { return getFavTags().some(x => x.en.toLowerCase() === en.toLowerCase()); }
+function toggleFavTag(ja, en) {
+  let favs = getFavTags();
+  const pos = favs.findIndex(x => x.en.toLowerCase() === en.toLowerCase());
+  if (pos >= 0) favs.splice(pos, 1); else favs.unshift({ ja, en });
+  store.set(K.favTags, favs.slice(0, 100));
+}
+
+/* ---------- テーマ・表示設定の適用 ---------- */
+function applyDisplayPrefs() {
+  document.body.dataset.theme = store.get(K.theme, "dark");
+  document.body.classList.toggle("eng-first", !!store.get(K.engFirst, false));
+  $("#pvMini")?.classList.toggle("two-line", !!store.get(K.twoLine, false));
+}
+
+/* ---------- キャラ呼び出し整形 (F-05, F-11) ---------- */
 function formatCharaTag(raw) {
   let s = raw.trim();
   if (!s) return null;
@@ -16720,8 +17195,10 @@ function renderCharaLibList() {
       </div>
       <div class="h-body">${esc(c.tag)}</div>
       ${c.note ? `<div class="h-body" style="color:var(--faint); margin-top:3px">${esc(c.note)}</div>` : ""}
+      ${c.appearance ? `<div class="h-body" style="color:var(--c-look); margin-top:3px">🧬 ${esc(c.appearance)}</div>` : ""}
       <div class="h-acts">
         <button class="btn small primary grow" data-act="use">この欄に追加</button>
+        ${c.appearance ? `<button class="btn small gold" data-act="useapp">外見欄に追加</button>` : ""}
         <button class="btn small danger" data-act="del">削除</button>
       </div>
     </div>`).join("")
@@ -16735,7 +17212,11 @@ $("#charaLibList").addEventListener("click", e => {
   const item = lib.find(c => c.id === id); if (!item) return;
   const act = btn.dataset.act;
   if (act === "fav") { item.fav = !item.fav; store.set(K.charaLib, lib); renderCharaLibList(); }
-  if (act === "del") { store.set(K.charaLib, lib.filter(c => c.id !== id)); renderCharaLibList(); toast("削除しました"); }
+  if (act === "del") {
+    const idx = lib.findIndex(c => c.id === id);
+    store.set(K.charaLib, lib.filter(c => c.id !== id)); renderCharaLibList();
+    toastUndo("削除しました", () => { const lib2 = getCharaLib(); lib2.splice(idx, 0, item); store.set(K.charaLib, lib2); renderCharaLibList(); });
+  }
   if (act === "use") {
     const { listRef, chipsId } = charaLibCtx;
     if (!listRef) return;
@@ -16744,6 +17225,15 @@ $("#charaLibList").addEventListener("click", e => {
     state.manualEdit = false;
     renderCharaChips(listRef, chipsId); render(); updateAccStates();
     toast("追加しました: " + item.tag);
+  }
+  if (act === "useapp") {
+    if (!item.appearance) return;
+    const cur = state.adv.lookMain.trim();
+    state.adv.lookMain = cur ? cur + ", " + item.appearance : item.appearance;
+    $("#a-lookMain").value = state.adv.lookMain;
+    state.manualEdit = false;
+    render(); updateAccStates();
+    toast(state.mode === "adv" ? "主体外観欄に追加しました" : "主体外観欄に追加しました（高度公式で確認できます）");
   }
 });
 $("#clSave").addEventListener("click", () => {
@@ -16756,10 +17246,11 @@ $("#clSave").addEventListener("click", () => {
     name: $("#cl-name").value.trim(),
     tag: formatted,
     note: $("#cl-note").value.trim(),
+    appearance: $("#cl-appearance").value.trim(),
     fav: false, ts: Date.now()
   });
   store.set(K.charaLib, lib);
-  $("#cl-name").value = ""; $("#cl-tag").value = ""; $("#cl-note").value = "";
+  $("#cl-name").value = ""; $("#cl-tag").value = ""; $("#cl-note").value = ""; $("#cl-appearance").value = "";
   renderCharaLibList();
   toast("キャラを登録しました 📇");
 });
@@ -16905,6 +17396,7 @@ function joinSegments(seg) {
 }
 
 /* ---------- バリデーション (F-11) ---------- */
+const LONG_PROMPT_WARN_LEN = 380; // Tsubaki.2は長すぎるプロンプトだと後半が効きにくくなる傾向があるための目安値
 function validate(text) {
   const warns = [];
   if (hasJa(text)) warns.push({ type: "warn", msg: "日本語が含まれています。自動変換オフでは英語プロンプトが必須です。英語に置き換えるか、AIアシスト（設定）をご利用ください。" });
@@ -16918,6 +17410,7 @@ function validate(text) {
     if (!hasSubject) warns.push({ type: "warn", msg: "主体（キャラ呼び出し or 外観記述）が未入力です。" });
     if (!state.adv.scene.trim()) warns.push({ type: "warn", msg: "「場面記述」が未入力です。" });
   }
+  if (text.length > LONG_PROMPT_WARN_LEN) warns.push({ type: "info", msg: `文字数が多め（${text.length}文字）です。プロンプトが長すぎると後半の要素が効きにくくなる場合があります。` });
   return warns;
 }
 
@@ -16944,6 +17437,13 @@ function render() {
   $("#editBadge").hidden = !state.manualEdit;
   $("#btnRebuild").hidden = !state.manualEdit;
   confirmPending = false;
+  scheduleDraftSave();
+}
+/* ---------- 下書きの自動保存 ---------- */
+let draftSaveTimer;
+function scheduleDraftSave() {
+  clearTimeout(draftSaveTimer);
+  draftSaveTimer = setTimeout(() => { store.set(K.draft, captureSnapshot()); }, 600);
 }
 
 function renderBreakdown(seg) {
@@ -16952,25 +17452,57 @@ function renderBreakdown(seg) {
     $("#bkLegend").innerHTML = "";
     return;
   }
-  $("#bkView").innerHTML = seg.map(s => {
+  $("#bkView").innerHTML = seg.map((s, i) => {
     const b = BLOCKS[s.block];
-    return `<span class="bk-seg" style="background:color-mix(in srgb, ${b.color} 22%, transparent); border:1px solid ${b.color}">${esc(s.text)}</span>`;
+    return `<span class="bk-seg" data-i="${i}" style="background:color-mix(in srgb, ${b.color} 22%, transparent); border:1px solid ${b.color}">${esc(s.text)}</span>`;
   }).join(state.mode === "tpl" && state.tpl.id === "manga9" ? "<br><br>" : '<span style="color:var(--faint)">, </span>');
   const used = [...new Set(seg.map(s => s.block))];
   $("#bkLegend").innerHTML = used.map(b => `<span style="color:${BLOCKS[b].color}">${BLOCKS[b].label}</span>`).join("");
+  $$("#bkView .bk-seg").forEach(el => el.addEventListener("click", () => jumpToBlock(state.mode, seg[+el.dataset.i].block)));
+}
+
+/* ---------- 逆分解タップ→編集欄へジャンプ ---------- */
+const JUMP_FIELD_MAP = {
+  basic: { subject: "b-subject", action: "b-action", scene: "b-scene" },
+  adv:   { chara: "a-charaTag", look: "a-lookMain", scene: "a-scene", pose: "a-pose" },
+  tag:   { tag: "tagInput", chara: "tagCharaInput" }
+};
+const JUMP_ACC_MAP = { chara: "acc1", look: "acc2", scene: "acc3", pose: "acc4", aes: "acc5", style: "acc6", quality: "acc6" };
+function jumpToBlock(mode, block) {
+  if (mode !== "basic" && mode !== "adv" && mode !== "tag") return;
+  closeSheet("sheetPreview");
+  if (state.mode !== mode) switchMode(mode);
+  setTimeout(() => {
+    if (mode === "adv") {
+      const accId = JUMP_ACC_MAP[block];
+      if (accId) $("#" + accId).classList.add("open");
+    }
+    const fieldId = JUMP_FIELD_MAP[mode] && JUMP_FIELD_MAP[mode][block];
+    let el = fieldId ? $("#" + fieldId) : (mode === "adv" ? $("#" + JUMP_ACC_MAP[block]) : null);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.classList.add("jump-highlight");
+    setTimeout(() => el.classList.remove("jump-highlight"), 1150);
+    if (el.tagName === "TEXTAREA" || el.tagName === "INPUT") el.focus({ preventScroll: true });
+  }, 320);
 }
 
 /* ---------- コピー (F-10/F-11) ---------- */
+function getCopyText() {
+  const raw = $("#pvArea").value.trim();
+  return store.get(K.singleLine, false) ? raw.replace(/\n+/g, ", ").replace(/,\s*,/g, ",") : raw;
+}
 async function copyPrompt() {
-  const text = $("#pvArea").value.trim();
-  if (!text) { toast("プロンプトが空です"); return; }
-  const warns = validate(text).filter(w => w.type === "warn");
+  const raw = $("#pvArea").value.trim();
+  if (!raw) { toast("プロンプトが空です"); return; }
+  const warns = validate(raw).filter(w => w.type === "warn");
   if (warns.length && !confirmPending) {
     confirmPending = true;
     toast("⚠ 警告あり。もう一度タップでコピー");
     openSheet("sheetPreview");
     return;
   }
+  const text = getCopyText();
   let done = false;
   try { await navigator.clipboard.writeText(text); done = true; } catch (e) {}
   if (!done) {
@@ -16979,16 +17511,51 @@ async function copyPrompt() {
     ta.setSelectionRange(0, 0); ta.blur();
   }
   toast(done ? "コピーしました 🌺" : "コピーできませんでした");
-  if (done) saveHistory(text, false);
+  if (done) saveHistory(raw, false, captureSnapshot());
   confirmPending = false;
 }
+$("#setSingleLine").addEventListener("change", e => store.set(K.singleLine, e.target.checked));
 
 /* ---------- 履歴・お気に入り (F-10) ---------- */
-function saveHistory(text, fav) {
+/* ---------- フォーム状態のスナップショット（履歴の複製編集・下書き自動保存で共用） ---------- */
+function captureSnapshot() {
+  return JSON.parse(JSON.stringify({
+    mode: state.mode, basic: state.basic, adv: state.adv, tag: state.tag, tpl: state.tpl, negative: state.negative
+  }));
+}
+function forceSwitchModeUI(mode) {
+  state.mode = mode;
+  $$(".mode-tab").forEach(t => t.classList.toggle("on", t.dataset.mode === mode));
+  $$(".pane").forEach(p => p.classList.toggle("on", p.id === "pane-" + mode));
+}
+function applySnapshot(snap) {
+  if (!snap) return;
+  state.basic = snap.basic || { subject: "", action: "", scene: "" };
+  state.adv = snap.adv || { charas: [], lookMain: "", lookDetail: "", scene: "", pose: "",
+    aes: { lighting_source: [], light_env: [], shot_type: [], composition: [], camera_angle: [] }, style: null, quality: [] };
+  state.tag = snap.tag || { tags: [], charas: [] };
+  state.tpl = snap.tpl || { id: null, fields: {}, manga: { common: "", theme: "", panels: ["","","","","","","","",""] } };
+  state.negative = snap.negative || "";
+  $("#b-subject").value = state.basic.subject; $("#b-action").value = state.basic.action; $("#b-scene").value = state.basic.scene;
+  $("#a-lookMain").value = state.adv.lookMain; $("#a-lookDetail").value = state.adv.lookDetail;
+  $("#a-scene").value = state.adv.scene; $("#a-pose").value = state.adv.pose;
+  $("#negArea").value = state.negative;
+  renderCharaChips(state.adv.charas, "a-charaChips");
+  renderCharaChips(state.tag.charas, "tagCharaChips");
+  renderAesChips(); renderStyleChips(); renderQualityChipsAdv();
+  renderTagChips();
+  renderTplGrid(); renderTplForm();
+  state.manualEdit = false;
+  forceSwitchModeUI(snap.mode || state.mode);
+  updateAccStates();
+  render();
+}
+
+function saveHistory(text, fav, snapshot) {
   let list = store.get(K.hist, []);
   const exist = list.find(h => h.text === text);
-  if (exist) { exist.ts = Date.now(); if (fav) exist.fav = true; }
-  else list.unshift({ id: Date.now() + "" + Math.floor(Math.random() * 999), text, mode: state.mode, ts: Date.now(), fav: !!fav });
+  if (exist) { exist.ts = Date.now(); if (fav) exist.fav = true; if (snapshot) exist.state = snapshot; }
+  else list.unshift({ id: Date.now() + "" + Math.floor(Math.random() * 999), text, mode: state.mode, ts: Date.now(), fav: !!fav, state: snapshot || null });
   list = list.slice(0, 100);
   store.set(K.hist, list);
 }
@@ -17007,6 +17574,7 @@ function renderHistory() {
       <div class="h-body">${esc(h.text)}</div>
       <div class="h-acts">
         <button class="btn small gold" data-act="load">読み込む</button>
+        ${h.state ? `<button class="btn small gold" data-act="dup">編集を複製</button>` : ""}
         <button class="btn small" data-act="copy">コピー</button>
         <button class="btn small danger" data-act="del">削除</button>
       </div>
@@ -17022,8 +17590,17 @@ $("#histList").addEventListener("click", e => {
   const item = list.find(h => h.id === id); if (!item) return;
   const act = btn.dataset.act;
   if (act === "fav") { item.fav = !item.fav; store.set(K.hist, list); renderHistory(); }
-  if (act === "del") { store.set(K.hist, list.filter(h => h.id !== id)); renderHistory(); }
+  if (act === "del") {
+    const idx = list.findIndex(h => h.id === id);
+    store.set(K.hist, list.filter(h => h.id !== id)); renderHistory();
+    toastUndo("履歴を削除しました", () => { const l2 = store.get(K.hist, []); l2.splice(idx, 0, item); store.set(K.hist, l2); renderHistory(); });
+  }
   if (act === "copy") { navigator.clipboard?.writeText(item.text).then(() => toast("コピーしました 🌺")).catch(() => toast("コピーできませんでした")); }
+  if (act === "dup") {
+    applySnapshot(item.state);
+    closeSheet("sheetHist");
+    toast("フォーム状態を複製しました。続きを編集できます");
+  }
   if (act === "load") {
     state.manualEdit = true;
     $("#pvArea").value = item.text;
@@ -17045,6 +17622,29 @@ function closeSheet(id) {
 function closeAllSheets() { $$(".sheet.on").forEach(s => s.classList.remove("on")); $("#veil").classList.remove("on"); }
 $("#veil").addEventListener("click", closeAllSheets);
 $$("[data-close]").forEach(b => b.addEventListener("click", () => closeSheet(b.closest(".sheet").id)));
+
+/* ---------- ボトムシート: 下スワイプで閉じる ---------- */
+$$(".sheet").forEach(sheet => {
+  const head = sheet.querySelector(".sheet-head");
+  if (!head) return;
+  let startY = 0, curY = 0, dragging = false;
+  head.addEventListener("touchstart", e => { startY = e.touches[0].clientY; dragging = true; sheet.style.transition = "none"; }, { passive: true });
+  head.addEventListener("touchmove", e => {
+    if (!dragging) return;
+    curY = e.touches[0].clientY;
+    const dy = Math.max(0, curY - startY);
+    sheet.style.transform = `translateY(${dy}px)`;
+  }, { passive: true });
+  head.addEventListener("touchend", () => {
+    if (!dragging) return;
+    dragging = false;
+    sheet.style.transition = "";
+    const dy = Math.max(0, curY - startY);
+    sheet.style.transform = "";
+    if (dy > 90) closeSheet(sheet.id);
+    startY = curY = 0;
+  });
+});
 
 /* ---------- モード切替 (F-01) 入力の引き継ぎ ---------- */
 function switchMode(mode) {
@@ -17074,6 +17674,39 @@ $$(".mode-tab").forEach(t => t.addEventListener("click", () => switchMode(t.data
 [["b-subject", "subject"], ["b-action", "action"], ["b-scene", "scene"]].forEach(([id, key]) => {
   $("#" + id).addEventListener("input", e => { state.basic[key] = e.target.value; state.manualEdit = false; render(); });
 });
+$("#btnResetBasic").addEventListener("click", () => {
+  if (!confirmPending) { confirmPending = true; toast("⚠ もう一度タップで基本モードをリセット"); return; }
+  const snapshot = { ...state.basic };
+  state.basic = { subject: "", action: "", scene: "" };
+  ["b-subject", "b-action", "b-scene"].forEach(id => $("#" + id).value = "");
+  state.manualEdit = false; confirmPending = false;
+  render();
+  toastUndo("基本モードをリセットしました", () => {
+    state.basic = snapshot;
+    $("#b-subject").value = snapshot.subject; $("#b-action").value = snapshot.action; $("#b-scene").value = snapshot.scene;
+    render();
+  });
+});
+function randomPick(items, n) {
+  const pool = items.slice();
+  const out = [];
+  while (pool.length && out.length < n) out.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+  return out;
+}
+function allItemsFlat(groups) { return groups.flatMap(g => g.items); }
+$("#btnGachaTag").addEventListener("click", () => {
+  const picks = [
+    ...randomPick(allItemsFlat(DICT.subject_tags), 1),
+    ...randomPick(allItemsFlat(DICT.appearance_tags), 2),
+    ...randomPick(allItemsFlat(DICT.action_tags), 1),
+    ...randomPick(allItemsFlat(DICT.scene_tags), 1),
+    ...randomPick(allItemsFlat(DICT.quality_tags), 1)
+  ];
+  picks.forEach(it => { if (!state.tag.tags.some(x => x.t.toLowerCase() === it.en.toLowerCase())) { state.tag.tags.push({ t: it.en, w: 1.0 }); pushRecentTag(it.en); } });
+  state.manualEdit = false;
+  renderTagChips(); render();
+  toast(`🎲 ランダムに${picks.length}件追加しました`);
+});
 
 /* ---------- 高度公式 (F-03) ---------- */
 $$(".acc-head").forEach(h => h.addEventListener("click", () => $("#" + h.dataset.acc).classList.toggle("open")));
@@ -17092,6 +17725,43 @@ function updateAccStates() {
   $("#st-aes").textContent = aesN ? aesN + "件選択" : "";
   $("#st-style").textContent = state.adv.style || "";
 }
+
+$("#btnResetAdv").addEventListener("click", () => {
+  if (!confirmPending) { confirmPending = true; toast("⚠ もう一度タップで高度モードをリセット"); return; }
+  const snapshot = JSON.parse(JSON.stringify(state.adv));
+  state.adv = {
+    charas: [], lookMain: "", lookDetail: "", scene: "", pose: "",
+    aes: { lighting_source: [], light_env: [], shot_type: [], composition: [], camera_angle: [] },
+    style: null, quality: []
+  };
+  ["a-lookMain", "a-lookDetail", "a-scene", "a-pose"].forEach(id => $("#" + id).value = "");
+  renderCharaChips(state.adv.charas, "a-charaChips");
+  renderAesChips(); renderStyleChips(); renderQualityChipsAdv();
+  state.manualEdit = false; confirmPending = false;
+  render(); updateAccStates();
+  toastUndo("高度モードをリセットしました", () => {
+    state.adv = snapshot;
+    $("#a-lookMain").value = snapshot.lookMain; $("#a-lookDetail").value = snapshot.lookDetail;
+    $("#a-scene").value = snapshot.scene; $("#a-pose").value = snapshot.pose;
+    renderCharaChips(state.adv.charas, "a-charaChips");
+    renderAesChips(); renderStyleChips(); renderQualityChipsAdv();
+    render(); updateAccStates();
+  });
+});
+$("#btnGachaAdv").addEventListener("click", () => {
+  const look = randomPick(allItemsFlat(DICT.appearance_tags), 3).map(x => x.en).join(", ");
+  const scene = randomPick(allItemsFlat(DICT.scene_tags), 2).map(x => x.en).join(", ");
+  const pose = randomPick(allItemsFlat(DICT.action_tags), 2).map(x => x.en).join(", ");
+  if (!state.adv.lookMain.trim()) { state.adv.lookMain = look; $("#a-lookMain").value = look; }
+  if (!state.adv.scene.trim()) { state.adv.scene = scene; $("#a-scene").value = scene; }
+  if (!state.adv.pose.trim()) { state.adv.pose = pose; $("#a-pose").value = pose; }
+  const q = randomPick(allItemsFlat(DICT.quality_tags), 2);
+  q.forEach(it => { if (!state.adv.quality.some(x => x.toLowerCase() === it.en.toLowerCase())) state.adv.quality.push(it.en); });
+  renderQualityChipsAdv();
+  state.manualEdit = false;
+  render(); updateAccStates();
+  toast("🎲 空欄にランダムな案を入れました");
+});
 
 /* キャラ呼び出しヘルパー (F-05) */
 $("#variantNote").textContent = DICT.variant_note;
@@ -17189,6 +17859,64 @@ function renderStyleChips() {
 $("#btnStylePicker").addEventListener("click", () => { renderStyleGrid(); openSheet("sheetStyle"); });
 $("#styleSearch").addEventListener("input", renderStyleGrid);
 
+/* ---------- マイ構成（撮影美学＋スタイル＋クオリティの保存セット） ---------- */
+function getMyPresets() { return store.get(K.myPresets, []); }
+function summarizePreset(p) {
+  const parts = [];
+  AES_CATS.forEach(c => (p.aes[c.key] || []).forEach(i => { const it = DICT[c.key][i]; if (it) parts.push(it.en); }));
+  if (p.style) parts.push(p.style);
+  parts.push(...(p.quality || []));
+  return parts.join(", ") || "(空の構成)";
+}
+function applyPreset(p) {
+  state.adv.aes = JSON.parse(JSON.stringify(p.aes || { lighting_source: [], light_env: [], shot_type: [], composition: [], camera_angle: [] }));
+  state.adv.style = p.style || null;
+  state.adv.quality = (p.quality || []).slice();
+  renderAesChips(); renderStyleChips(); renderQualityChipsAdv();
+  state.manualEdit = false;
+  render(); updateAccStates();
+}
+function renderPresetList(containerId, mode) {
+  const presets = getMyPresets();
+  const el = $("#" + containerId);
+  el.innerHTML = presets.length ? presets.map((p, i) => `
+    <div class="hist-item" data-idx="${i}">
+      <div class="h-meta"><span class="h-mode" style="color:var(--kin)">${esc(p.name)}</span></div>
+      <div class="h-body">${esc(summarizePreset(p))}</div>
+      <div class="h-acts">
+        ${mode === "apply" ? '<button class="btn small primary grow" data-act="apply">適用</button>' : ""}
+        <button class="btn small danger" data-act="del">削除</button>
+      </div>
+    </div>`).join("") : '<div class="empty">保存された構成はまだありません</div>';
+  $$("#" + containerId + " [data-act]").forEach(b => b.addEventListener("click", () => {
+    const idx = +b.closest("[data-idx]").dataset.idx;
+    const list = getMyPresets();
+    const p = list[idx];
+    if (b.dataset.act === "del") {
+      list.splice(idx, 1); store.set(K.myPresets, list);
+      renderPresetList(containerId, mode);
+      toastUndo("削除しました", () => { const l2 = getMyPresets(); l2.splice(idx, 0, p); store.set(K.myPresets, l2); renderPresetList(containerId, mode); });
+    }
+    if (b.dataset.act === "apply") {
+      applyPreset(p);
+      closeSheet("sheetPresetApply");
+      toast(`「${p.name}」を適用しました`);
+    }
+  }));
+}
+$("#btnPresetSaveOpen").addEventListener("click", () => { $("#presetNameInput").value = ""; openSheet("sheetPresetSave"); });
+$("#presetSaveConfirm").addEventListener("click", () => {
+  const name = $("#presetNameInput").value.trim();
+  if (!name) { toast("構成名を入力してください"); return; }
+  const list = getMyPresets();
+  list.unshift({ name, aes: JSON.parse(JSON.stringify(state.adv.aes)), style: state.adv.style, quality: state.adv.quality.slice(), ts: Date.now() });
+  store.set(K.myPresets, list);
+  closeSheet("sheetPresetSave");
+  renderPresetList("myPresetsList", "manage");
+  toast(`「${name}」を保存しました 💾`);
+});
+$("#btnPresetApply").addEventListener("click", () => { renderPresetList("presetApplyList", "apply"); openSheet("sheetPresetApply"); });
+
 /* ---------- 主体・形容・動作タグ辞典 ---------- */
 let tagDictCtx = { dictKey: "subject", targetType: "textarea", targetId: "b-subject" };
 
@@ -17240,9 +17968,18 @@ function registerUserTags(genre, tagObjs) {
   return added;
 }
 
+function specialTagGroups() {
+  const groups = [];
+  const favs = getFavTags();
+  if (favs.length) groups.push({ label: "⭐ お気に入り", items: favs, _special: true });
+  const recent = getRecentTags();
+  if (recent.length) groups.push({ label: "🕘 最近使った", items: recent.map(t => ({ ja: t, en: t })), _special: true });
+  return groups;
+}
 function getTagGroups(dictKey) {
   if (dictKey === "all") {
     return [
+      ...specialTagGroups(),
       ...userDictGroups(),
       ...DICT.quality_tags.map(g => ({ ...g, label: "【品質】" + g.label })),
       ...DICT.subject_tags.map(g => ({ ...g, label: "【主体】" + g.label })),
@@ -17254,7 +17991,7 @@ function getTagGroups(dictKey) {
   const map = { subject: DICT.subject_tags, appearance: DICT.appearance_tags, action: DICT.action_tags, scene: DICT.scene_tags, quality: DICT.quality_tags };
   // 個別カテゴリのピッカーでも、あなたが「まとめて貼り付け」で登録したジャンルを
   // 【登録】として先頭に表示する（Tag辞典を開かなくても各所で使えるように）。
-  return [...userDictGroups(), ...(map[dictKey] || [])];
+  return [...specialTagGroups(), ...userDictGroups(), ...(map[dictKey] || [])];
 }
 
 function isTokenActive(token) {
@@ -17277,6 +18014,7 @@ function insertToken(elId, token) {
       .replace(/,\s*,/g, ",").replace(/^\s*,\s*/, "").replace(/,\s*$/, "").trim();
   } else {
     next = cur.trim() ? cur.trim() + ", " + token : token;
+    pushRecentTag(token);
   }
   el.value = next;
   el.dispatchEvent(new Event("input", { bubbles: true }));
@@ -17285,24 +18023,54 @@ function insertToken(elId, token) {
 function toggleTagArrayToken(token) {
   const arr = state.tag.tags;
   const pos = arr.findIndex(x => x.t.toLowerCase() === token.toLowerCase());
-  if (pos >= 0) arr.splice(pos, 1); else arr.push({ t: token, w: 1.0 });
+  if (pos >= 0) arr.splice(pos, 1); else { arr.push({ t: token, w: 1.0 }); pushRecentTag(token); }
   state.manualEdit = false;
   renderTagChips(); render();
 }
 
+/* 統合辞典(all)は数千件になるため、検索していない間はカテゴリを折りたたみ、
+   開いたカテゴリだけ描画する（初回表示の負荷軽減）。検索中は全展開でフラット表示。 */
+let dictExpanded = new Set();
 function renderTagDictBody() {
-  const q = $("#tagDictSearch").value.trim().toLowerCase();
+  const qRaw = $("#tagDictSearch").value.trim();
+  const q = kanaNorm(qRaw);
+  const selOnly = $("#tagDictSelOnly").checked;
   const groups = getTagGroups(tagDictCtx.dictKey);
-  const html = groups.map(g => {
-    const items = g.items.filter(it => !q || it.ja.toLowerCase().includes(q) || it.en.toLowerCase().includes(q));
+  const lazy = tagDictCtx.dictKey === "all" && !q;
+
+  const renderGrid = items => `<div class="dict-grid">${
+    items.map(it => `<div class="dict-card ${isTokenActive(it.en) ? "sel" : ""}" data-en="${esc(it.en)}" role="button" tabindex="0">
+      <button class="fav-star ${isFavTag(it.en) ? "on" : ""}" data-fav-ja="${esc(it.ja)}" data-fav-en="${esc(it.en)}" aria-label="お気に入り">★</button>
+      <div class="dj">${esc(it.ja)}</div><div class="de">${esc(it.en)}</div>${it.hint ? `<div class="dh">${esc(it.hint)}</div>` : ""}
+    </div>`).join("")
+  }</div>`;
+
+  const html = groups.map((g, gi) => {
+    let items = g.items.filter(it => !q || kanaNorm(it.ja).includes(q) || it.en.toLowerCase().includes(q.toLowerCase()));
+    if (selOnly) items = items.filter(it => isTokenActive(it.en));
     if (!items.length) return "";
-    return `<div class="dict-cat"><h4>${esc(g.label)}</h4><div class="dict-grid">${
-      items.map(it => `<button class="dict-card ${isTokenActive(it.en) ? "sel" : ""}" data-en="${esc(it.en)}">
-        <div class="dj">${esc(it.ja)}</div><div class="de">${esc(it.en)}</div>${it.hint ? `<div class="dh">${esc(it.hint)}</div>` : ""}
-      </button>`).join("")
-    }</div></div>`;
+    if (lazy && !g._special) {
+      const gid = "gi" + gi;
+      const open = dictExpanded.has(gid);
+      return `<div class="dict-cat">
+        <button class="dcat-head ${open ? "open" : ""}" data-gid="${gid}">${esc(g.label)} <span class="cnt">${items.length}件</span></button>
+        ${open ? renderGrid(items) : ""}
+      </div>`;
+    }
+    return `<div class="dict-cat"><h4>${esc(g.label)}</h4>${renderGrid(items)}</div>`;
   }).join("");
   $("#tagDictBody").innerHTML = html || '<div class="empty">該当するタグが見つかりません</div>';
+
+  $$("#tagDictBody .dcat-head").forEach(h => h.addEventListener("click", () => {
+    const gid = h.dataset.gid;
+    if (dictExpanded.has(gid)) dictExpanded.delete(gid); else dictExpanded.add(gid);
+    renderTagDictBody();
+  }));
+  $$("#tagDictBody .fav-star").forEach(s => s.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleFavTag(s.dataset.favJa, s.dataset.favEn);
+    renderTagDictBody();
+  }));
   $$("#tagDictBody .dict-card").forEach(c => c.addEventListener("click", () => {
     const token = c.dataset.en;
     if (tagDictCtx.targetType === "tagarray") toggleTagArrayToken(token);
@@ -17311,10 +18079,11 @@ function renderTagDictBody() {
     renderTagDictBody();
   }));
 }
+$("#tagDictSelOnly").addEventListener("change", renderTagDictBody);
 function toggleAdvQualityToken(token) {
   const arr = state.adv.quality;
   const pos = arr.findIndex(x => x.toLowerCase() === token.toLowerCase());
-  if (pos >= 0) arr.splice(pos, 1); else arr.push(token);
+  if (pos >= 0) arr.splice(pos, 1); else { arr.push(token); pushRecentTag(token); }
   state.manualEdit = false;
   renderQualityChipsAdv(); render(); updateAccStates();
 }
@@ -17331,11 +18100,53 @@ $("#tagDictSearch").addEventListener("input", renderTagDictBody);
 
 function openTagDict(dictKey, targetType, targetId, title) {
   tagDictCtx = { dictKey, targetType, targetId };
+  dictExpanded = new Set();
   $("#tagDictTitle").textContent = title;
   $("#tagDictSearch").value = "";
+  $("#tagDictSelOnly").checked = false;
   renderTagDictBody();
   openSheet("sheetTagDict");
 }
+
+/* ---------- ネガティブプロンプト ---------- */
+$("#negArea").addEventListener("input", e => { state.negative = e.target.value; });
+function renderNegBody() {
+  const q = kanaNorm($("#negSearch").value.trim());
+  const html = DICT.negative_presets.map(g => {
+    const items = g.items.filter(it => !q || kanaNorm(it.ja).includes(q) || it.en.toLowerCase().includes(q.toLowerCase()));
+    if (!items.length) return "";
+    return `<div class="dict-cat"><h4>${esc(g.label)}</h4><div class="dict-grid">${
+      items.map(it => {
+        const active = state.negative.toLowerCase().split(/,\s*/).some(x => x === it.en.toLowerCase());
+        return `<button class="dict-card ${active ? "sel" : ""}" data-en="${esc(it.en)}"><div class="dj">${esc(it.ja)}</div><div class="de">${esc(it.en)}</div></button>`;
+      }).join("")
+    }</div></div>`;
+  }).join("");
+  $("#negBody").innerHTML = html || '<div class="empty">該当するタグが見つかりません</div>';
+  $$("#negBody .dict-card").forEach(c => c.addEventListener("click", () => {
+    toggleNegativeToken(c.dataset.en);
+    renderNegBody();
+  }));
+}
+function toggleNegativeToken(token) {
+  const cur = state.negative.trim();
+  const idx = cur.toLowerCase().indexOf(token.toLowerCase());
+  if (idx >= 0) {
+    state.negative = (cur.slice(0, idx) + cur.slice(idx + token.length))
+      .replace(/,\s*,/g, ",").replace(/^\s*,\s*/, "").replace(/,\s*$/, "").trim();
+  } else {
+    state.negative = cur ? cur + ", " + token : token;
+  }
+  $("#negArea").value = state.negative;
+}
+$("#negSearch").addEventListener("input", renderNegBody);
+$("#btnNegPicker").addEventListener("click", () => { $("#negSearch").value = ""; renderNegBody(); openSheet("sheetNegative"); });
+$("#btnCopyNeg").addEventListener("click", async () => {
+  const text = state.negative.trim();
+  if (!text) { toast("ネガティブプロンプトが空です"); return; }
+  try { await navigator.clipboard.writeText(text); toast("ネガティブプロンプトをコピーしました"); }
+  catch (e) { toast("コピーできませんでした"); }
+});
 
 // 基本公式
 $("#btnSubjTagBasic").addEventListener("click", () => openTagDict("subject", "textarea", "b-subject", "主体タグ — 主体欄へ"));
@@ -17369,34 +18180,59 @@ function addTags() {
 $("#tagAdd").addEventListener("click", addTags);
 $("#btnClearTags").addEventListener("click", () => {
   if (!confirmPending) { confirmPending = true; toast(`⚠ もう一度タップでタグ${state.tag.tags.length}件を全削除`); return; }
+  const snapshot = state.tag.tags.slice();
   state.tag.tags = [];
   state.editingTag = -1; $("#weightBox").hidden = true;
   state.manualEdit = false; confirmPending = false;
   renderTagChips(); render();
-  toast("タグを全て削除しました");
+  toastUndo("タグを全て削除しました", () => { state.tag.tags = snapshot; renderTagChips(); render(); });
 });
 $("#tagInput").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); addTags(); } });
 
 function renderTagChips() {
   $("#tagChips").innerHTML = state.tag.tags.map((x, i) => {
     const wLabel = Math.abs(x.w - 1) > 0.001 ? `<span class="w">:${x.w.toFixed(2).replace(/0$/, "")}</span>` : "";
+    if (state.reorderMode) {
+      return `<span class="chip reorder">
+        <button class="move-btn" data-act="left" data-i="${i}" ${i === 0 ? "disabled" : ""} aria-label="左へ移動">◀</button>
+        <span class="chip-label">${esc(x.t)}${wLabel}</span>
+        <button class="move-btn" data-act="right" data-i="${i}" ${i === state.tag.tags.length - 1 ? "disabled" : ""} aria-label="右へ移動">▶</button>
+      </span>`;
+    }
     return `<span class="chip ${i === state.editingTag ? "sel" : ""}">
       <span class="chip-label" data-i="${i}">${esc(x.t)}${wLabel}</span>
       <button class="x" data-i="${i}" aria-label="このタグを削除">✕</button>
     </span>`;
   }).join("");
-  $$("#tagChips .chip-label").forEach(c => c.addEventListener("click", () => openWeight(+c.dataset.i)));
-  $$("#tagChips .x").forEach(x => x.addEventListener("click", (e) => {
-    e.stopPropagation();
-    const i = +x.dataset.i;
-    state.tag.tags.splice(i, 1);
-    if (state.editingTag === i) { state.editingTag = -1; $("#weightBox").hidden = true; }
-    else if (state.editingTag > i) { state.editingTag--; }
-    state.manualEdit = false;
-    renderTagChips(); render();
-  }));
+  if (state.reorderMode) {
+    $$("#tagChips .move-btn").forEach(b => b.addEventListener("click", () => {
+      const i = +b.dataset.i;
+      const j = b.dataset.act === "left" ? i - 1 : i + 1;
+      if (j < 0 || j >= state.tag.tags.length) return;
+      [state.tag.tags[i], state.tag.tags[j]] = [state.tag.tags[j], state.tag.tags[i]];
+      state.manualEdit = false;
+      renderTagChips(); render();
+    }));
+  } else {
+    $$("#tagChips .chip-label").forEach(c => c.addEventListener("click", () => openWeight(+c.dataset.i)));
+    $$("#tagChips .x").forEach(x => x.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const i = +x.dataset.i;
+      state.tag.tags.splice(i, 1);
+      if (state.editingTag === i) { state.editingTag = -1; $("#weightBox").hidden = true; }
+      else if (state.editingTag > i) { state.editingTag--; }
+      state.manualEdit = false;
+      renderTagChips(); render();
+    }));
+  }
   $("#btnClearTags").hidden = state.tag.tags.length === 0;
 }
+$("#btnReorderToggle").addEventListener("click", () => {
+  state.reorderMode = !state.reorderMode;
+  $("#btnReorderToggle").textContent = state.reorderMode ? "✓ 並べ替え中（完了）" : "↕ 並べ替えモード";
+  $("#btnReorderToggle").classList.toggle("primary", state.reorderMode);
+  renderTagChips();
+});
 function openWeight(i) {
   state.editingTag = i;
   const x = state.tag.tags[i];
@@ -17552,7 +18388,7 @@ $("#btnCopy2").addEventListener("click", copyPrompt);
 $("#btnFav").addEventListener("click", () => {
   const text = $("#pvArea").value.trim();
   if (!text) { toast("プロンプトが空です"); return; }
-  saveHistory(text, true);
+  saveHistory(text, true, captureSnapshot());
   toast("お気に入りに保存しました ★");
 });
 
@@ -17566,23 +18402,74 @@ $("#btnSettings").addEventListener("click", () => {
   $("#setAi").checked = !!store.get(K.ai, false);
   const ov = store.get(K.styles, null);
   $("#setStyles").value = Array.isArray(ov) ? ov.join("\n") : "";
+  $("#setTheme").checked = store.get(K.theme, "dark") === "light";
+  $("#setEngFirst").checked = !!store.get(K.engFirst, false);
+  $("#setTwoLine").checked = !!store.get(K.twoLine, false);
   renderUserDictManage();
+  renderPresetList("myPresetsList", "manage");
   openSheet("sheetSettings");
 });
+$("#setTheme").addEventListener("change", e => { store.set(K.theme, e.target.checked ? "light" : "dark"); applyDisplayPrefs(); });
+$("#setEngFirst").addEventListener("change", e => { store.set(K.engFirst, e.target.checked); applyDisplayPrefs(); });
+$("#setTwoLine").addEventListener("change", e => { store.set(K.twoLine, e.target.checked); applyDisplayPrefs(); });
+$("#btnReplayOnboarding").addEventListener("click", () => { closeSheet("sheetSettings"); startOnboarding(); });
+/* ---------- オンボーディング ---------- */
+const ONB_SLIDES = [
+  { emoji: "🌺", title: "椿ノ工房へようこそ", body: "Tsubaki.2向けの英語プロンプトを、日本語のタップ操作だけで組み立てられるアプリです。上部のタブで「基本・高度・Tag・型紙」の4モードを切り替えられます。" },
+  { emoji: "📖", title: "辞書からタグを選ぶ", body: "各入力欄の下にあるボタンから、主体・形容・動作・場面・撮影美学・画風など3000件超の辞書をタップで選択できます。検索やお気に入り★、最近使ったタグもここから。" },
+  { emoji: "📇", title: "自分の辞書・キャラを育てる", body: "「まとめて辞書登録」で自分だけのタグをジャンル分けして蓄積、「キャラクターライブラリ」でPixAI上で見つけたキャラタグを保存できます。設定からいつでも見返せます。" }
+];
+let onbIdx = 0;
+function renderOnbSlide() {
+  const s = ONB_SLIDES[onbIdx];
+  $("#onbContent").innerHTML = `<div class="onb-emoji">${s.emoji}</div><h3>${esc(s.title)}</h3><p>${esc(s.body)}</p>`;
+  $("#onbDots").innerHTML = ONB_SLIDES.map((_, i) => `<span class="${i === onbIdx ? "on" : ""}"></span>`).join("");
+  $("#onbNext").textContent = onbIdx === ONB_SLIDES.length - 1 ? "はじめる" : "次へ";
+}
+function startOnboarding() { onbIdx = 0; renderOnbSlide(); $("#onbVeil").hidden = false; }
+function endOnboarding() { $("#onbVeil").hidden = true; store.set(K.onboarded, true); }
+$("#onbNext").addEventListener("click", () => {
+  if (onbIdx < ONB_SLIDES.length - 1) { onbIdx++; renderOnbSlide(); } else endOnboarding();
+});
+$("#onbSkip").addEventListener("click", endOnboarding);
+
 function renderUserDictManage() {
   const ud = getUserDict();
   const genres = Object.keys(ud).filter(g => Array.isArray(ud[g]) && ud[g].length);
   $("#userDictManage").innerHTML = genres.length ? genres.map(g => `
     <div class="hist-item" data-genre="${esc(g)}" style="padding:9px 11px">
       <div class="h-meta"><span class="h-mode" style="color:var(--kin)">📚 ${esc(g)}</span><span>${ud[g].length}件</span>
-        <button class="btn small danger" data-act="delgenre" style="margin-left:auto">削除</button></div>
-      <div class="h-body">${ud[g].map(x => esc(x.ja === x.en ? x.en : `${x.ja}=${x.en}`)).join(", ")}</div>
+        <button class="btn small danger" data-act="delgenre" style="margin-left:auto">ジャンル削除</button></div>
+      <div class="chips" style="margin-top:6px">${ud[g].map((x, i) =>
+        `<span class="chip">${esc(x.ja === x.en ? x.en : `${x.ja}=${x.en}`)}<button class="x" data-tagidx="${i}" aria-label="このタグを削除">✕</button></span>`).join("")}</div>
     </div>`).join("")
     : '<div class="empty" style="padding:16px 0">登録辞書はまだ空です<br>Tagモードの「まとめて貼り付け」で先頭列にジャンル名を書くと登録されます</div>';
   $$("#userDictManage [data-act='delgenre']").forEach(b => b.addEventListener("click", () => {
     const g = b.closest("[data-genre]").dataset.genre;
-    const ud2 = getUserDict(); delete ud2[g]; store.set(K.userDict, ud2);
-    renderUserDictManage(); toast(`ジャンル「${g}」を削除しました`);
+    const ud2 = getUserDict();
+    const snapshot = ud2[g].slice();
+    delete ud2[g]; store.set(K.userDict, ud2);
+    renderUserDictManage();
+    toastUndo(`ジャンル「${g}」を削除しました`, () => {
+      const ud3 = getUserDict(); ud3[g] = snapshot; store.set(K.userDict, ud3); renderUserDictManage();
+    });
+  }));
+  $$("#userDictManage .chip .x").forEach(x => x.addEventListener("click", () => {
+    const g = x.closest("[data-genre]").dataset.genre;
+    const idx = +x.dataset.tagidx;
+    const ud2 = getUserDict();
+    if (!ud2[g]) return;
+    const removed = ud2[g][idx];
+    ud2[g].splice(idx, 1);
+    if (!ud2[g].length) delete ud2[g];
+    store.set(K.userDict, ud2);
+    renderUserDictManage();
+    toastUndo(`タグ「${removed.en}」を削除しました`, () => {
+      const ud3 = getUserDict();
+      if (!Array.isArray(ud3[g])) ud3[g] = [];
+      ud3[g].splice(idx, 0, removed);
+      store.set(K.userDict, ud3); renderUserDictManage();
+    });
   }));
 }
 $("#setAi").addEventListener("change", e => {
@@ -17672,13 +18559,32 @@ $("#btnAi").addEventListener("click", async () => {
 });
 
 /* ---------- 初期化 ---------- */
+applyDisplayPrefs();
 renderTplGrid();
 renderTplForm();
 renderAesChips();
 renderStyleChips();
 renderQualityChipsAdv();
 updateAccStates();
-render();
+
+// 下書きの自動復元（前回の入力内容があれば静かに復元する）
+(function restoreDraftIfAny() {
+  const draft = store.get(K.draft, null);
+  if (draft && (
+    (draft.basic && (draft.basic.subject || draft.basic.action || draft.basic.scene)) ||
+    (draft.adv && (draft.adv.lookMain || draft.adv.lookDetail || draft.adv.scene || draft.adv.pose || (draft.adv.charas && draft.adv.charas.length))) ||
+    (draft.tag && draft.tag.tags && draft.tag.tags.length)
+  )) {
+    applySnapshot(draft);
+    toast("前回の下書きを復元しました");
+  } else {
+    render();
+  }
+})();
+
+// 初回のみオンボーディングを表示
+if (!store.get(K.onboarded, false)) startOnboarding();
+
 </script>
 </body>
 </html>
