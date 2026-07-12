@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="椿ノ工房">
+<meta name="theme-color" content="#171319">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj4KPHJlY3Qgd2lkdGg9IjE4MCIgaGVpZ2h0PSIxODAiIGZpbGw9IiMxNzEzMTkiLz4KPGNpcmNsZSBjeD0iOTAiIGN5PSI5MCIgcj0iNzgiIGZpbGw9IiMyYzI0MzQiLz4KPGNpcmNsZSBjeD0iOTAiIGN5PSI5MCIgcj0iNzgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhhNzQ1MCIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjx0ZXh0IHg9IjkwIiB5PSIxMTgiIGZvbnQtc2l6ZT0iOTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzZXJpZiIgZmlsbD0iI2Q4NGE1ZiI+5qS/PC90ZXh0Pgo8L3N2Zz4=">
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj4KPHJlY3Qgd2lkdGg9IjE4MCIgaGVpZ2h0PSIxODAiIGZpbGw9IiMxNzEzMTkiLz4KPGNpcmNsZSBjeD0iOTAiIGN5PSI5MCIgcj0iNzgiIGZpbGw9IiMyYzI0MzQiLz4KPGNpcmNsZSBjeD0iOTAiIGN5PSI5MCIgcj0iNzgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhhNzQ1MCIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjx0ZXh0IHg9IjkwIiB5PSIxMTgiIGZvbnQtc2l6ZT0iOTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzZXJpZiIgZmlsbD0iI2Q4NGE1ZiI+5qS/PC90ZXh0Pgo8L3N2Zz4=">
 <title>椿ノ工房 — Tsubaki.2 Prompt Builder</title>
 
 <!-- ============================================================
@@ -16200,6 +16206,8 @@ body[data-theme="light"] {
   --line: #ddd2ba; --kinu: #2a2420; --sub: #6b5d52; --faint: #a89a86;
   --tsubaki: #c53d54; --tsubaki-deep: #a12f47; --kin: #96772f; --kin-dim: #c9a86a;
 }
+/* 文字を大きく（WebKit系のzoomでボタン等も含め一括拡大。iPhone Safari前提のため許容） */
+body.text-lg { zoom: 1.18; }
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 [hidden] { display: none !important; } /* 各要素のdisplay指定よりhidden属性を常に優先させる */
 html { -webkit-text-size-adjust: 100%; }
@@ -16264,7 +16272,7 @@ nav.modes {
   background: var(--surface); text-align: center; color: var(--sub);
   font-size: 13px; letter-spacing: .04em; white-space: nowrap;
 }
-.mode-tab .m-sub { display: block; font-size: 10px; color: var(--faint); letter-spacing: .08em; }
+.mode-tab .m-sub { display: block; font-size: 10px; color: var(--sub); letter-spacing: .08em; }
 .mode-tab.on {
   background: linear-gradient(160deg, var(--tsubaki-deep), var(--tsubaki));
   border-color: var(--tsubaki); color: #fff;
@@ -16307,7 +16315,7 @@ main { position: relative; z-index: 1; padding: 14px 14px 0; max-width: 640px; m
   width: 100%; display: flex; align-items: center; gap: 10px;
   padding: 13px 14px; text-align: left; font-size: 14.5px; font-weight: 600;
 }
-.acc-head .step { font-size: 11px; color: var(--faint); font-weight: 400; letter-spacing: .1em; }
+.acc-head .step { font-size: 11px; color: var(--sub); font-weight: 400; letter-spacing: .1em; }
 .acc-head .state { margin-left: auto; font-size: 11px; color: var(--kin); font-weight: 400; max-width: 40%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .acc-head .chev { color: var(--faint); transition: transform .2s; font-size: 12px; }
 .acc.open .chev { transform: rotate(90deg); }
@@ -16321,7 +16329,11 @@ main { position: relative; z-index: 1; padding: 14px 14px 0; max-width: 640px; m
   padding: 6px 11px; border-radius: 999px; font-size: 12.5px;
   background: var(--surface2); border: 1px solid var(--line); color: var(--kinu);
 }
-.chip .x { color: var(--faint); font-size: 14px; line-height: 1; padding: 0 1px; }
+.chip .x {
+  color: var(--sub); font-size: 13px; line-height: 1;
+  padding: 5px; margin: -5px -3px -5px 1px; border-radius: 50%;
+}
+.chip .x:active { background: rgba(255,255,255,.14); }
 .chip .chip-label { cursor: pointer; }
 .chip.sel { border-color: var(--kin); background: rgba(201,168,106,.12); color: var(--kin); }
 .chip .w { color: var(--tsubaki); font-size: 11px; }
@@ -16342,11 +16354,12 @@ main { position: relative; z-index: 1; padding: 14px 14px 0; max-width: 640px; m
 }
 .sheet-veil.on { opacity: 1; pointer-events: auto; }
 .sheet {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+  position: fixed; left: 0; right: 0; bottom: var(--kb-offset, 0px); z-index: 50;
   background: var(--surface); border-top: 1px solid var(--kin-dim);
   border-radius: 20px 20px 0 0;
-  max-height: 82vh; display: flex; flex-direction: column;
-  transform: translateY(105%); transition: transform .26s cubic-bezier(.3,.8,.3,1);
+  max-height: min(82vh, calc(var(--vvh, 100vh) - 16px));
+  display: flex; flex-direction: column;
+  transform: translateY(105%); transition: transform .26s cubic-bezier(.3,.8,.3,1), bottom .15s ease;
   padding-bottom: var(--safe-b);
 }
 .sheet.on { transform: none; }
@@ -16366,7 +16379,8 @@ main { position: relative; z-index: 1; padding: 14px 14px 0; max-width: 640px; m
   text-align: left; padding: 10px 11px; border-radius: 11px;
   background: var(--surface2); border: 1px solid var(--line); cursor: pointer;
 }
-.dict-card .dj { font-size: 13.5px; font-weight: 600; }
+.dict-card .dj { font-size: 13.5px; font-weight: 600; padding-right: 22px; }
+mark { background: rgba(201,168,106,.35); color: inherit; border-radius: 3px; padding: 0 1px; }
 .dict-card .de { font-size: 11px; color: var(--kin); margin-top: 1px; word-break: break-word; }
 .dict-card .dh { font-size: 10.5px; color: var(--sub); margin-top: 4px; line-height: 1.5; }
 .dict-card.sel { border-color: var(--tsubaki); background: rgba(216,74,95,.12); }
@@ -16412,7 +16426,7 @@ main { position: relative; z-index: 1; padding: 14px 14px 0; max-width: 640px; m
 
 /* ---------- 履歴 ---------- */
 .hist-item { border: 1px solid var(--line); border-radius: 11px; background: var(--surface2); padding: 11px 12px; margin-bottom: 9px; }
-.hist-item .h-meta { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--faint); margin-bottom: 5px; }
+.hist-item .h-meta { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--sub); margin-bottom: 5px; }
 .hist-item .h-mode { color: var(--kin); }
 .hist-item .h-body { font-size: 12px; font-family: ui-monospace, Menlo, monospace; color: var(--sub); max-height: 54px; overflow: hidden; word-break: break-all; }
 .hist-item .h-acts { display: flex; gap: 8px; margin-top: 8px; }
@@ -16472,7 +16486,7 @@ input[type="range"]::-webkit-slider-thumb {
   background: rgba(0,0,0,.18); color: inherit; border: none; border-radius: 999px;
   padding: 3px 10px; font-size: 12px; font-weight: 700; letter-spacing: .03em;
 }
-.empty { text-align: center; color: var(--faint); font-size: 13px; padding: 30px 0; line-height: 1.9; }
+.empty { text-align: center; color: var(--sub); font-size: 13px; padding: 30px 0; line-height: 1.9; }
 @media (min-width: 480px) { .dict-grid { grid-template-columns: 1fr 1fr 1fr; } }
 
 /* ---------- 改善: 各種追加UI ---------- */
@@ -16487,8 +16501,8 @@ input[type="range"]::-webkit-slider-thumb {
 /* お気に入りタグの★ */
 .dict-card { position: relative; }
 .fav-star {
-  position: absolute; top: 4px; right: 6px; font-size: 13px; color: var(--faint);
-  background: none; border: none; padding: 2px; line-height: 1; z-index: 2;
+  position: absolute; top: 2px; right: 2px; font-size: 15px; color: var(--sub);
+  background: none; border: none; padding: 8px; line-height: 1; z-index: 2;
 }
 .fav-star.on { color: var(--kin); }
 
@@ -16514,8 +16528,9 @@ input[type="range"]::-webkit-slider-thumb {
 .dcat-head .cnt { font-size: 10.5px; color: var(--faint); font-weight: 400; }
 
 /* 並べ替えモード */
-.chip.reorder { padding-right: 4px; }
-.chip .move-btn { color: var(--kin); font-size: 12px; padding: 0 3px; }
+.chip.reorder { padding: 9px 4px; }
+.chip .move-btn { color: var(--kin); font-size: 14px; padding: 9px 7px; margin: -9px -2px; border-radius: 8px; }
+.chip .move-btn:active { background: rgba(255,255,255,.14); }
 .chip .move-btn:disabled { color: var(--faint); opacity: .4; }
 
 /* ネガティブプロンプト */
@@ -16614,8 +16629,8 @@ input[type="range"]::-webkit-slider-thumb {
 
   <!-- 1. キャラクター呼び出し (F-05) -->
   <div class="acc" id="acc1">
-    <button class="acc-head" data-acc="acc1"><span class="dot" style="color:var(--c-chara)"></span>キャラクター呼び出し <span class="step">STEP 1・省略可</span><span class="state" id="st-chara"></span><span class="chev">▶</span></button>
-    <div class="acc-body">
+    <button class="acc-head" data-acc="acc1" aria-expanded="false" aria-controls="acc1-body"><span class="dot" style="color:var(--c-chara)"></span>キャラクター呼び出し <span class="step">STEP 1・省略可</span><span class="state" id="st-chara"></span><span class="chev">▶</span></button>
+    <div class="acc-body" id="acc1-body">
       <p class="hint">構文は <b>character:（コロンの後にスペース）+ タグ</b>。下の欄にタグを入れると自動整形します。スペース位置の誤りは自動修正されます。</p>
       <label class="lbl" for="a-charaTag">キャラクタータグ</label>
       <div class="row">
@@ -16630,8 +16645,8 @@ input[type="range"]::-webkit-slider-thumb {
 
   <!-- 2. 主体外観 -->
   <div class="acc" id="acc2">
-    <button class="acc-head" data-acc="acc2"><span class="dot" style="color:var(--c-look)"></span>主体外観記述 <span class="step">STEP 2</span><span class="state" id="st-look"></span><span class="chev">▶</span></button>
-    <div class="acc-body">
+    <button class="acc-head" data-acc="acc2" aria-expanded="false" aria-controls="acc2-body"><span class="dot" style="color:var(--c-look)"></span>主体外観記述 <span class="step">STEP 2</span><span class="state" id="st-look"></span><span class="chev">▶</span></button>
+    <div class="acc-body" id="acc2-body">
       <label class="lbl" for="a-lookMain">主要外見（表情・服装・体型・髪型など）</label>
       <textarea id="a-lookMain" placeholder="例: a shy girl with long black hair, wearing a frilly white maid dress, gentle smile"></textarea>
       <div class="row" style="margin-top:8px; gap:8px">
@@ -16646,8 +16661,8 @@ input[type="range"]::-webkit-slider-thumb {
 
   <!-- 3. 場面 -->
   <div class="acc" id="acc3">
-    <button class="acc-head" data-acc="acc3"><span class="dot" style="color:var(--c-scene)"></span>場面記述 <span class="step">STEP 3</span><span class="state" id="st-scene"></span><span class="chev">▶</span></button>
-    <div class="acc-body">
+    <button class="acc-head" data-acc="acc3" aria-expanded="false" aria-controls="acc3-body"><span class="dot" style="color:var(--c-scene)"></span>場面記述 <span class="step">STEP 3</span><span class="state" id="st-scene"></span><span class="chev">▶</span></button>
+    <div class="acc-body" id="acc3-body">
       <p class="hint">環境の雰囲気・構成・詳細。形容詞や短いフレーズでOK。</p>
       <textarea id="a-scene" placeholder="例: an urban rooftop at night, vast starry sky, distant city lights below"></textarea>
       <button class="btn small gold wide" id="btnSceneTagAdv" style="margin-top:8px">🌄 場面タグから選ぶ</button>
@@ -16656,8 +16671,8 @@ input[type="range"]::-webkit-slider-thumb {
 
   <!-- 4. 姿勢・動作 -->
   <div class="acc" id="acc4">
-    <button class="acc-head" data-acc="acc4"><span class="dot" style="color:var(--c-pose)"></span>姿勢・動作記述 <span class="step">STEP 4</span><span class="state" id="st-pose"></span><span class="chev">▶</span></button>
-    <div class="acc-body">
+    <button class="acc-head" data-acc="acc4" aria-expanded="false" aria-controls="acc4-body"><span class="dot" style="color:var(--c-pose)"></span>姿勢・動作記述 <span class="step">STEP 4</span><span class="state" id="st-pose"></span><span class="chev">▶</span></button>
+    <div class="acc-body" id="acc4-body">
       <p class="hint">体の姿勢と、動作の<b>範囲・速度・効果</b>を記述。</p>
       <textarea id="a-pose" placeholder="例: sitting cross-legged, leaning slightly forward, hair swaying gently in the breeze"></textarea>
       <button class="btn small gold wide" id="btnActTagPose" style="margin-top:8px">🏃 動作タグから選ぶ</button>
@@ -16666,8 +16681,8 @@ input[type="range"]::-webkit-slider-thumb {
 
   <!-- 5. 撮影美学 (F-06) -->
   <div class="acc" id="acc5">
-    <button class="acc-head" data-acc="acc5"><span class="dot" style="color:var(--c-aes)"></span>撮影美学制御 <span class="step">STEP 5</span><span class="state" id="st-aes"></span><span class="chev">▶</span></button>
-    <div class="acc-body">
+    <button class="acc-head" data-acc="acc5" aria-expanded="false" aria-controls="acc5-body"><span class="dot" style="color:var(--c-aes)"></span>撮影美学制御 <span class="step">STEP 5</span><span class="state" id="st-aes"></span><span class="chev">▶</span></button>
+    <div class="acc-body" id="acc5-body">
       <p class="hint">光源・光線環境・景別・構図・カメラアングルの5カテゴリ。辞書から選ぶと英語プロンプト片が組み込まれます。</p>
       <button class="btn gold wide" id="btnAesPicker">📖 撮影美学辞書から選ぶ</button>
       <div class="chips" id="aesChips"></div>
@@ -16676,8 +16691,8 @@ input[type="range"]::-webkit-slider-thumb {
 
   <!-- 6. スタイルプリセット (F-07) -->
   <div class="acc" id="acc6">
-    <button class="acc-head" data-acc="acc6"><span class="dot" style="color:var(--c-style)"></span>スタイルプリセット <span class="step">STEP 6・省略可</span><span class="state" id="st-style"></span><span class="chev">▶</span></button>
-    <div class="acc-body">
+    <button class="acc-head" data-acc="acc6" aria-expanded="false" aria-controls="acc6-body"><span class="dot" style="color:var(--c-style)"></span>スタイルプリセット <span class="step">STEP 6・省略可</span><span class="state" id="st-style"></span><span class="chev">▶</span></button>
+    <div class="acc-body" id="acc6-body">
       <p class="hint">Tsubaki.2内蔵の39種から選択。名称一覧は設定画面から更新できます。</p>
       <button class="btn gold wide" id="btnStylePicker">🎨 プリセット一覧から選ぶ</button>
       <div class="chips" id="styleChips"></div>
@@ -16685,8 +16700,8 @@ input[type="range"]::-webkit-slider-thumb {
       <button class="btn gold wide" id="btnQualityAdv">✨ 画風・クオリティタグから選ぶ</button>
       <div class="chips" id="qualityChipsAdv"></div>
       <div class="row" style="margin-top:14px; gap:8px">
-        <button class="btn small grow" id="btnPresetApply">📂 マイ構成を適用</button>
-        <button class="btn small gold grow" id="btnPresetSaveOpen">💾 この組み合わせを保存</button>
+        <button class="btn small grow" id="btnPresetApply" style="white-space:nowrap">📂 構成を適用</button>
+        <button class="btn small gold grow" id="btnPresetSaveOpen" style="white-space:nowrap">💾 構成を保存</button>
       </div>
     </div>
   </div>
@@ -16703,7 +16718,7 @@ input[type="range"]::-webkit-slider-thumb {
     <h3><span class="dot" style="color:var(--c-pose)"></span>タグ入力</h3>
     <p class="hint">カンマ区切りで入力して「追加」。チップをタップすると重み <b>(tag:1.3)</b> を調整できます。</p>
     <div class="row">
-      <input id="tagInput" class="grow" placeholder="1girl, long hair, school uniform" autocapitalize="off" autocorrect="off">
+      <input id="tagInput" class="grow" placeholder="1girl, long hair, school uniform" autocapitalize="off" autocorrect="off" enterkeyhint="done">
       <button class="btn small gold" id="tagAdd">追加</button>
     </div>
     <div class="row" style="margin-top:8px; gap:8px">
@@ -16773,15 +16788,18 @@ input[type="range"]::-webkit-slider-thumb {
       <span style="font-size:11.5px; color:var(--sub)"><span id="pvCount2">0</span> 文字</span>
       <button class="btn small" id="btnRebuild" hidden>↺ フォームから再生成</button>
     </div>
-    <div class="row" style="justify-content:space-between; margin-top:8px">
-      <span class="f-lbl" style="font-size:12px;color:var(--sub)">コピー時の改行</span>
+    <div class="row set-row" style="margin-top:8px; border-bottom:none; padding:6px 0">
+      <div class="grow">
+        <div class="s-lbl" style="font-size:13px">コピー時に1行へまとめる</div>
+        <div class="s-sub" style="font-size:11px">オフのままだと改行を含めてコピーします（9コマ漫画などで便利）</div>
+      </div>
       <label class="tgl"><input type="checkbox" id="setSingleLine"><span class="tk"></span></label>
-      <span style="font-size:11px;color:var(--sub)" id="singleLineLbl">1行にまとめる</span>
     </div>
     <div class="pv-warns" id="pvWarns"></div>
     <div class="pv-tools">
       <button class="btn primary grow" id="btnCopy2">📋 コピー</button>
       <button class="btn gold" id="btnFav">★ 保存</button>
+      <button class="btn" id="btnShare" hidden>📤 共有</button>
       <button class="btn" id="btnAi" hidden>✦ AIで英訳・整形</button>
     </div>
     <p class="hint" style="margin-top:10px">👇 色分け部分をタップすると、元の入力欄にジャンプします</p>
@@ -16803,7 +16821,7 @@ input[type="range"]::-webkit-slider-thumb {
 <div class="sheet" id="sheetNegative" role="dialog" aria-label="ネガティブプロンプト辞典">
   <div class="sheet-head"><h3 class="serif">ネガティブプロンプト辞典</h3><button class="btn small primary" data-close>決定</button></div>
   <div class="sheet-body">
-    <input id="negSearch" placeholder="🔍 検索" style="margin-bottom:10px">
+    <input id="negSearch" placeholder="🔍 検索" style="margin-bottom:10px" enterkeyhint="search" type="search" autocapitalize="off" autocorrect="off">
     <div id="negBody"></div>
   </div>
 </div>
@@ -16852,7 +16870,7 @@ input[type="range"]::-webkit-slider-thumb {
   <div class="sheet-head"><h3 class="serif">キャラクターライブラリ</h3><button class="icon-btn" data-close aria-label="閉じる">✕</button></div>
   <div class="sheet-body">
     <div class="banner info"><span class="b-ico">💡</span><span>PixAIの<b>character:</b>タグはユーザー投稿のLoRAに紐づくため、実在の版権キャラ一覧を本アプリで断定的に提供することは避けています。ここは<b>あなたがPixAI上で確認したタグ</b>を自分で登録・蓄積していく個人辞典です。</span></div>
-    <input id="charaLibSearch" placeholder="🔍 登録済みキャラを検索" style="margin-bottom:10px">
+    <input id="charaLibSearch" placeholder="🔍 登録済みキャラを検索" style="margin-bottom:10px" enterkeyhint="search" type="search" autocapitalize="off" autocorrect="off">
     <div id="charaLibList"></div>
     <button class="btn gold wide" id="btnOpenBulkChara" style="margin-top:12px">📋 まとめて登録</button>
     <div class="card" style="margin-top:14px">
@@ -16874,7 +16892,7 @@ input[type="range"]::-webkit-slider-thumb {
 <div class="sheet" id="sheetTagDict" role="dialog" aria-label="タグ辞典">
   <div class="sheet-head"><h3 class="serif" id="tagDictTitle">タグ辞典</h3><button class="btn small primary" data-close>決定</button></div>
   <div class="sheet-body">
-    <input id="tagDictSearch" placeholder="🔍 タグを検索（日本語/英語・かなもOK）" style="margin-bottom:8px">
+    <input id="tagDictSearch" placeholder="🔍 タグを検索（日本語/英語・かなもOK）" style="margin-bottom:8px" enterkeyhint="search" type="search" autocapitalize="off" autocorrect="off">
     <div class="filter-row">
       <span class="f-lbl">選択中のみ表示</span>
       <label class="tgl"><input type="checkbox" id="tagDictSelOnly"><span class="tk"></span></label>
@@ -16893,7 +16911,7 @@ input[type="range"]::-webkit-slider-thumb {
 <div class="sheet" id="sheetStyle" role="dialog" aria-label="スタイルプリセット">
   <div class="sheet-head"><h3 class="serif">スタイルプリセット</h3><button class="btn small primary" data-close>決定</button></div>
   <div class="sheet-body">
-    <input id="styleSearch" placeholder="🔍 プリセット名で検索" style="margin-bottom:10px">
+    <input id="styleSearch" placeholder="🔍 プリセット名で検索" style="margin-bottom:10px" enterkeyhint="search" type="search" autocapitalize="off" autocorrect="off">
     <p class="hint" id="styleNote"></p>
     <div class="dict-grid" id="styleGrid" style="grid-template-columns:1fr 1fr"></div>
   </div>
@@ -16939,6 +16957,13 @@ input[type="range"]::-webkit-slider-thumb {
       </div>
       <div class="set-row">
         <div class="grow">
+          <div class="s-lbl">文字を大きく</div>
+          <div class="s-sub">画面全体の文字・ボタンを少し大きく表示します</div>
+        </div>
+        <label class="tgl"><input type="checkbox" id="setFontLarge"><span class="tk"></span></label>
+      </div>
+      <div class="set-row">
+        <div class="grow">
           <div class="s-lbl">使い方ガイドを見る</div>
           <div class="s-sub">初回に表示される3枚のカードをもう一度表示します</div>
         </div>
@@ -16978,6 +17003,9 @@ input[type="range"]::-webkit-slider-thumb {
         <button class="btn grow" id="btnImportShow">⬆ 読み込む</button>
       </div>
       <div id="importBox" hidden style="margin-top:10px">
+        <button class="btn gold wide" id="btnImportFile">📁 ファイルを選んで読み込む</button>
+        <input type="file" id="importFileInput" accept="application/json,.json" hidden>
+        <p class="hint" style="text-align:center; margin:8px 0">または貼り付け</p>
         <textarea id="importArea" rows="4" placeholder="ここにJSONを貼り付け"></textarea>
         <button class="btn primary wide" id="btnImportRun" style="margin-top:8px">インポート実行</button>
       </div>
@@ -17066,7 +17094,8 @@ const K = {
   charaLib: "tsubaki.charaLibrary", userDict: "tsubaki.userDict",
   recentTags: "tsubaki.recentTags", favTags: "tsubaki.favTags", myPresets: "tsubaki.myPresets",
   theme: "tsubaki.theme", engFirst: "tsubaki.engFirst", twoLine: "tsubaki.twoLinePreview",
-  singleLine: "tsubaki.singleLineCopy", onboarded: "tsubaki.onboarded", draft: "tsubaki.draft"
+  singleLine: "tsubaki.singleLineCopy", onboarded: "tsubaki.onboarded", draft: "tsubaki.draft",
+  fontLarge: "tsubaki.fontLarge"
 };
 
 /* ---------- 状態 ---------- */
@@ -17125,6 +17154,94 @@ function toKatakana(s) {
 }
 function kanaNorm(s) { return toKatakana((s || "").toLowerCase()); }
 
+/* ---------- ローマ字→ひらがな変換（ローマ字入力での検索対応） ----------
+   例: 「tsuinteru」と打っても辞書のカタカナ表記「ツインテール」にヒットする。
+   長音符の判定は簡易的（同一母音の連続を「ー」扱い）。完全な正確性より
+   実用上の検索ヒット率を優先した軽量実装。 */
+const ROMAJI_TABLE = {
+  kya:"きゃ",kyu:"きゅ",kyo:"きょ",sha:"しゃ",shu:"しゅ",sho:"しょ",
+  cha:"ちゃ",chu:"ちゅ",cho:"ちょ",nya:"にゃ",nyu:"にゅ",nyo:"にょ",
+  hya:"ひゃ",hyu:"ひゅ",hyo:"ひょ",mya:"みゃ",myu:"みゅ",myo:"みょ",
+  rya:"りゃ",ryu:"りゅ",ryo:"りょ",gya:"ぎゃ",gyu:"ぎゅ",gyo:"ぎょ",
+  bya:"びゃ",byu:"びゅ",byo:"びょ",pya:"ぴゃ",pyu:"ぴゅ",pyo:"ぴょ",
+  dya:"ぢゃ",dyu:"ぢゅ",dyo:"ぢょ",ja:"じゃ",ju:"じゅ",jo:"じょ",
+  shi:"し",chi:"ち",tsu:"つ",ji:"じ",
+  ka:"か",ki:"き",ku:"く",ke:"け",ko:"こ",
+  sa:"さ",su:"す",se:"せ",so:"そ",ta:"た",te:"て",to:"と",
+  na:"な",ni:"に",nu:"ぬ",ne:"ね",no:"の",
+  ha:"は",hi:"ひ",fu:"ふ",he:"へ",ho:"ほ",
+  ma:"ま",mi:"み",mu:"む",me:"め",mo:"も",
+  ya:"や",yu:"ゆ",yo:"よ",ra:"ら",ri:"り",ru:"る",re:"れ",ro:"ろ",
+  wa:"わ",wo:"を",
+  ga:"が",gi:"ぎ",gu:"ぐ",ge:"げ",go:"ご",
+  za:"ざ",zu:"ず",ze:"ぜ",zo:"ぞ",
+  da:"だ",di:"ぢ",du:"づ",de:"で",do:"ど",
+  ba:"ば",bi:"び",bu:"ぶ",be:"べ",bo:"ぼ",
+  pa:"ぱ",pi:"ぴ",pu:"ぷ",pe:"ぺ",po:"ぽ",
+  a:"あ",i:"い",u:"う",e:"え",o:"お",n:"ん"
+};
+function romajiToHiragana(input) {
+  const s = (input || "").toLowerCase();
+  let out = "", i = 0, lastVowel = null;
+  while (i < s.length) {
+    if (i + 1 < s.length && s[i] === s[i + 1] && /[kstpgzbdcfmr]/.test(s[i])) { out += "っ"; i++; lastVowel = null; continue; }
+    // 直前の母音と同じ母音が続く場合は長音「ー」（例: teeru→てーる、tsuu→つう→つー ではなくtsu+uのuuを吸収）
+    if (lastVowel && s[i] === lastVowel && /[aiueo]/.test(s[i])) { out += "ー"; i++; continue; }
+    let matched = false;
+    for (let len = 3; len >= 1; len--) {
+      const seg = s.slice(i, i + len);
+      if (ROMAJI_TABLE[seg]) {
+        out += ROMAJI_TABLE[seg]; i += len; matched = true;
+        lastVowel = seg === "n" ? null : seg.slice(-1);
+        break;
+      }
+    }
+    if (!matched) { out += s[i]; lastVowel = null; i++; }
+  }
+  return out;
+}
+/* 検索クエリを複数の正規化候補（そのまま/かな正規化/ローマ字経由）で照合できるようにする */
+function queryVariants(q) {
+  const raw = (q || "").trim();
+  if (!raw) return [];
+  return [...new Set([raw.toLowerCase(), kanaNorm(raw), toKatakana(romajiToHiragana(raw))])].filter(Boolean);
+}
+/* スペース区切りの複数語AND検索: 各語がja/enのいずれかにヒットすればOK */
+function matchesAllTerms(terms, ja, en) {
+  const jaNorm = kanaNorm(ja), enNorm = en.toLowerCase();
+  return terms.every(term => {
+    const variants = queryVariants(term);
+    return variants.some(v => jaNorm.includes(v) || enNorm.includes(v));
+  });
+}
+/* ヒット語をハイライト表示するための簡易マーキング。かな正規化は1文字=1文字対応のため
+   位置がそのまま元の文字列に使える。ローマ字経由のヒットは元文字列中の対応位置が
+   一意に定まらないためハイライト対象外とする（検索自体は有効）。 */
+function highlightTerms(text, terms, isJa) {
+  if (!terms.length || !text) return esc(text);
+  const norm = isJa ? kanaNorm(text) : text.toLowerCase();
+  const ranges = [];
+  terms.forEach(term => {
+    const variants = isJa ? [kanaNorm(term), toKatakana(romajiToHiragana(term))] : [term.toLowerCase()];
+    variants.forEach(v => {
+      if (!v) return;
+      let idx = 0;
+      while ((idx = norm.indexOf(v, idx)) >= 0) { ranges.push([idx, idx + v.length]); idx += v.length; }
+    });
+  });
+  if (!ranges.length) return esc(text);
+  ranges.sort((a, b) => a[0] - b[0]);
+  const merged = [ranges[0]];
+  ranges.slice(1).forEach(([s, e]) => {
+    const last = merged[merged.length - 1];
+    if (s <= last[1]) last[1] = Math.max(last[1], e); else merged.push([s, e]);
+  });
+  let out = "", pos = 0;
+  merged.forEach(([s, e]) => { out += esc(text.slice(pos, s)) + "<mark>" + esc(text.slice(s, e)) + "</mark>"; pos = e; });
+  out += esc(text.slice(pos));
+  return out;
+}
+
 /* ---------- 最近使ったタグ ---------- */
 function pushRecentTag(token) {
   if (!token) return;
@@ -17149,7 +17266,23 @@ function toggleFavTag(ja, en) {
 function applyDisplayPrefs() {
   document.body.dataset.theme = store.get(K.theme, "dark");
   document.body.classList.toggle("eng-first", !!store.get(K.engFirst, false));
+  document.body.classList.toggle("text-lg", !!store.get(K.fontLarge, false));
   $("#pvMini")?.classList.toggle("two-line", !!store.get(K.twoLine, false));
+}
+
+/* 設定行はスイッチだけでなく行全体をタップしても切り替えられるようにする */
+function enableFullRowToggle() {
+  $$(".set-row").forEach(row => {
+    const input = row.querySelector(".tgl input[type='checkbox']");
+    if (!input || row.dataset.rowToggleBound) return;
+    row.dataset.rowToggleBound = "1";
+    row.style.cursor = "pointer";
+    row.addEventListener("click", (e) => {
+      if (e.target.closest(".tgl")) return; // スイッチ自体は既にネイティブ動作するので二重発火を防ぐ
+      input.checked = !input.checked;
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+  });
 }
 
 /* ---------- キャラ呼び出し整形 (F-05, F-11) ---------- */
@@ -17397,6 +17530,14 @@ function joinSegments(seg) {
 
 /* ---------- バリデーション (F-11) ---------- */
 const LONG_PROMPT_WARN_LEN = 380; // Tsubaki.2は長すぎるプロンプトだと後半が効きにくくなる傾向があるための目安値
+/* 明らかに矛盾するペア（誤って両方入れてしまうケースの検出用。曖昧な組は含めない） */
+const CONFLICT_PAIRS = [
+  ["day", "night"], ["daytime", "nighttime"], ["morning", "evening"],
+  ["monochrome", "multicolored"], ["indoor", "outdoor"], ["indoors", "outdoors"],
+  ["long hair", "short hair"], ["standing", "sitting"], ["standing", "lying"],
+  ["sunny", "rainy"], ["smiling", "crying"], ["open eyes", "closed eyes"],
+  ["front view", "back view"], ["solo", "multiple girls"], ["solo", "multiple boys"]
+];
 function validate(text) {
   const warns = [];
   if (hasJa(text)) warns.push({ type: "warn", msg: "日本語が含まれています。自動変換オフでは英語プロンプトが必須です。英語に置き換えるか、AIアシスト（設定）をご利用ください。" });
@@ -17411,6 +17552,24 @@ function validate(text) {
     if (!state.adv.scene.trim()) warns.push({ type: "warn", msg: "「場面記述」が未入力です。" });
   }
   if (text.length > LONG_PROMPT_WARN_LEN) warns.push({ type: "info", msg: `文字数が多め（${text.length}文字）です。プロンプトが長すぎると後半の要素が効きにくくなる場合があります。` });
+
+  // 重複タグの検出（カンマ区切りの各要素を比較。改行を含むテンプレ系は対象外）
+  if (!text.includes("\n")) {
+    const tokens = text.split(",").map(t => t.trim().toLowerCase()).filter(Boolean);
+    const seen = new Map();
+    tokens.forEach(t => seen.set(t, (seen.get(t) || 0) + 1));
+    const dups = [...seen.entries()].filter(([, n]) => n > 1).map(([t]) => t);
+    if (dups.length) warns.push({ type: "info", msg: `同じタグが重複しています: ${dups.slice(0, 3).join("、")}${dups.length > 3 ? " 他" : ""}` });
+  }
+
+  // 簡易矛盾検出（明らかに相反する語の組が両方含まれる場合のみ警告）
+  const lower = text.toLowerCase();
+  const conflicts = CONFLICT_PAIRS.filter(([a, b]) =>
+    new RegExp(`\\b${a}\\b`).test(lower) && new RegExp(`\\b${b}\\b`).test(lower));
+  if (conflicts.length) {
+    const msg = conflicts.slice(0, 2).map(([a, b]) => `「${a}」と「${b}」`).join("、");
+    warns.push({ type: "info", msg: `矛盾する可能性がある組み合わせがあります: ${msg}` });
+  }
   return warns;
 }
 
@@ -17475,7 +17634,10 @@ function jumpToBlock(mode, block) {
   setTimeout(() => {
     if (mode === "adv") {
       const accId = JUMP_ACC_MAP[block];
-      if (accId) $("#" + accId).classList.add("open");
+      if (accId) {
+        $("#" + accId).classList.add("open");
+        $(`.acc-head[data-acc="${accId}"]`)?.setAttribute("aria-expanded", "true");
+      }
     }
     const fieldId = JUMP_FIELD_MAP[mode] && JUMP_FIELD_MAP[mode][block];
     let el = fieldId ? $("#" + fieldId) : (mode === "adv" ? $("#" + JUMP_ACC_MAP[block]) : null);
@@ -17611,17 +17773,75 @@ $("#histList").addEventListener("click", e => {
 });
 
 /* ---------- シート開閉 ---------- */
+let bodyScrollY = 0;
+function lockBodyScroll() {
+  bodyScrollY = window.scrollY;
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${bodyScrollY}px`;
+  document.body.style.left = "0"; document.body.style.right = "0";
+}
+function unlockBodyScroll() {
+  document.body.style.position = "";
+  document.body.style.top = ""; document.body.style.left = ""; document.body.style.right = "";
+  window.scrollTo(0, bodyScrollY);
+}
+let sheetHistoryActive = false;
 function openSheet(id) {
+  if (!$$(".sheet.on").length) {
+    lockBodyScroll();
+    history.pushState({ tsubakiSheet: true }, "");
+    sheetHistoryActive = true;
+  }
   $("#veil").classList.add("on");
   $("#" + id).classList.add("on");
 }
 function closeSheet(id) {
   $("#" + id).classList.remove("on");
-  if (!$$(".sheet.on").length) $("#veil").classList.remove("on");
+  if (!$$(".sheet.on").length) {
+    $("#veil").classList.remove("on"); unlockBodyScroll();
+    if (sheetHistoryActive) { sheetHistoryActive = false; history.back(); }
+  }
 }
-function closeAllSheets() { $$(".sheet.on").forEach(s => s.classList.remove("on")); $("#veil").classList.remove("on"); }
+function closeAllSheets() {
+  $$(".sheet.on").forEach(s => s.classList.remove("on"));
+  $("#veil").classList.remove("on"); unlockBodyScroll();
+  if (sheetHistoryActive) { sheetHistoryActive = false; history.back(); }
+}
+/* Androidの戻るボタン・スワイプ戻るジェスチャでページ離脱ではなくシートを閉じる */
+window.addEventListener("popstate", () => {
+  if ($$(".sheet.on").length) {
+    sheetHistoryActive = false;
+    $$(".sheet.on").forEach(s => s.classList.remove("on"));
+    $("#veil").classList.remove("on"); unlockBodyScroll();
+  }
+});
 $("#veil").addEventListener("click", closeAllSheets);
 $$("[data-close]").forEach(b => b.addEventListener("click", () => closeSheet(b.closest(".sheet").id)));
+
+/* ---------- ボトムシート: キーボード表示時に実ビューポートへ追従 ----------
+   スマホでは検索欄をタップするとキーボードが出るが、vh単位はキーボードを
+   無視した「元のビューポート高さ」で計算されるため、検索結果が少なく
+   シートの高さが低い場合にキーボードの裏へ隠れてしまう。
+   visualViewportの実測値をCSS変数に反映し、シートを常にキーボードの
+   上にきちんと収まるよう位置・高さを補正する。 */
+function updateViewportVars() {
+  const vv = window.visualViewport;
+  const root = document.documentElement.style;
+  if (vv) {
+    root.setProperty("--vvh", vv.height + "px");
+    const kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+    root.setProperty("--kb-offset", kb + "px");
+  } else {
+    root.setProperty("--vvh", window.innerHeight + "px");
+    root.setProperty("--kb-offset", "0px");
+  }
+}
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", updateViewportVars);
+  window.visualViewport.addEventListener("scroll", updateViewportVars);
+}
+window.addEventListener("resize", updateViewportVars);
+updateViewportVars();
 
 /* ---------- ボトムシート: 下スワイプで閉じる ---------- */
 $$(".sheet").forEach(sheet => {
@@ -17709,8 +17929,13 @@ $("#btnGachaTag").addEventListener("click", () => {
 });
 
 /* ---------- 高度公式 (F-03) ---------- */
-$$(".acc-head").forEach(h => h.addEventListener("click", () => $("#" + h.dataset.acc).classList.toggle("open")));
+$$(".acc-head").forEach(h => h.addEventListener("click", () => {
+  const acc = $("#" + h.dataset.acc);
+  const nowOpen = acc.classList.toggle("open");
+  h.setAttribute("aria-expanded", nowOpen ? "true" : "false");
+}));
 $("#acc1").classList.add("open");
+$('.acc-head[data-acc="acc1"]').setAttribute("aria-expanded", "true");
 
 [["a-lookMain", "lookMain"], ["a-lookDetail", "lookDetail"], ["a-scene", "scene"], ["a-pose", "pose"]].forEach(([id, key]) => {
   $("#" + id).addEventListener("input", e => { state.adv[key] = e.target.value; state.manualEdit = false; render(); updateAccStates(); });
@@ -18033,20 +18258,20 @@ function toggleTagArrayToken(token) {
 let dictExpanded = new Set();
 function renderTagDictBody() {
   const qRaw = $("#tagDictSearch").value.trim();
-  const q = kanaNorm(qRaw);
+  const terms = qRaw.split(/[\s\u3000]+/).filter(Boolean);
   const selOnly = $("#tagDictSelOnly").checked;
   const groups = getTagGroups(tagDictCtx.dictKey);
-  const lazy = tagDictCtx.dictKey === "all" && !q;
+  const lazy = tagDictCtx.dictKey === "all" && !terms.length;
 
   const renderGrid = items => `<div class="dict-grid">${
     items.map(it => `<div class="dict-card ${isTokenActive(it.en) ? "sel" : ""}" data-en="${esc(it.en)}" role="button" tabindex="0">
       <button class="fav-star ${isFavTag(it.en) ? "on" : ""}" data-fav-ja="${esc(it.ja)}" data-fav-en="${esc(it.en)}" aria-label="お気に入り">★</button>
-      <div class="dj">${esc(it.ja)}</div><div class="de">${esc(it.en)}</div>${it.hint ? `<div class="dh">${esc(it.hint)}</div>` : ""}
+      <div class="dj">${highlightTerms(it.ja, terms, true)}</div><div class="de">${highlightTerms(it.en, terms, false)}</div>${it.hint ? `<div class="dh">${esc(it.hint)}</div>` : ""}
     </div>`).join("")
   }</div>`;
 
   const html = groups.map((g, gi) => {
-    let items = g.items.filter(it => !q || kanaNorm(it.ja).includes(q) || it.en.toLowerCase().includes(q.toLowerCase()));
+    let items = g.items.filter(it => !terms.length || matchesAllTerms(terms, it.ja, it.en));
     if (selOnly) items = items.filter(it => isTokenActive(it.en));
     if (!items.length) return "";
     if (lazy && !g._special) {
@@ -18111,14 +18336,14 @@ function openTagDict(dictKey, targetType, targetId, title) {
 /* ---------- ネガティブプロンプト ---------- */
 $("#negArea").addEventListener("input", e => { state.negative = e.target.value; });
 function renderNegBody() {
-  const q = kanaNorm($("#negSearch").value.trim());
+  const terms = $("#negSearch").value.trim().split(/[\s\u3000]+/).filter(Boolean);
   const html = DICT.negative_presets.map(g => {
-    const items = g.items.filter(it => !q || kanaNorm(it.ja).includes(q) || it.en.toLowerCase().includes(q.toLowerCase()));
+    const items = g.items.filter(it => !terms.length || matchesAllTerms(terms, it.ja, it.en));
     if (!items.length) return "";
     return `<div class="dict-cat"><h4>${esc(g.label)}</h4><div class="dict-grid">${
       items.map(it => {
         const active = state.negative.toLowerCase().split(/,\s*/).some(x => x === it.en.toLowerCase());
-        return `<button class="dict-card ${active ? "sel" : ""}" data-en="${esc(it.en)}"><div class="dj">${esc(it.ja)}</div><div class="de">${esc(it.en)}</div></button>`;
+        return `<button class="dict-card ${active ? "sel" : ""}" data-en="${esc(it.en)}"><div class="dj">${highlightTerms(it.ja, terms, true)}</div><div class="de">${highlightTerms(it.en, terms, false)}</div></button>`;
       }).join("")
     }</div></div>`;
   }).join("");
@@ -18385,6 +18610,13 @@ $("#pvArea").addEventListener("input", () => { state.manualEdit = true; render()
 $("#btnRebuild").addEventListener("click", () => { state.manualEdit = false; render(); toast("フォームから再生成しました"); });
 $("#btnCopy").addEventListener("click", copyPrompt);
 $("#btnCopy2").addEventListener("click", copyPrompt);
+if (navigator.share) $("#btnShare").hidden = false;
+$("#btnShare").addEventListener("click", async () => {
+  const text = getCopyText();
+  if (!text.trim()) { toast("プロンプトが空です"); return; }
+  try { await navigator.share({ text }); }
+  catch (e) { if (e.name !== "AbortError") toast("共有できませんでした"); }
+});
 $("#btnFav").addEventListener("click", () => {
   const text = $("#pvArea").value.trim();
   if (!text) { toast("プロンプトが空です"); return; }
@@ -18405,6 +18637,7 @@ $("#btnSettings").addEventListener("click", () => {
   $("#setTheme").checked = store.get(K.theme, "dark") === "light";
   $("#setEngFirst").checked = !!store.get(K.engFirst, false);
   $("#setTwoLine").checked = !!store.get(K.twoLine, false);
+  $("#setFontLarge").checked = !!store.get(K.fontLarge, false);
   renderUserDictManage();
   renderPresetList("myPresetsList", "manage");
   openSheet("sheetSettings");
@@ -18412,6 +18645,7 @@ $("#btnSettings").addEventListener("click", () => {
 $("#setTheme").addEventListener("change", e => { store.set(K.theme, e.target.checked ? "light" : "dark"); applyDisplayPrefs(); });
 $("#setEngFirst").addEventListener("change", e => { store.set(K.engFirst, e.target.checked); applyDisplayPrefs(); });
 $("#setTwoLine").addEventListener("change", e => { store.set(K.twoLine, e.target.checked); applyDisplayPrefs(); });
+$("#setFontLarge").addEventListener("change", e => { store.set(K.fontLarge, e.target.checked); applyDisplayPrefs(); });
 $("#btnReplayOnboarding").addEventListener("click", () => { closeSheet("sheetSettings"); startOnboarding(); });
 /* ---------- オンボーディング ---------- */
 const ONB_SLIDES = [
@@ -18485,9 +18719,12 @@ $("#setStylesSave").addEventListener("click", () => {
 
 /* エクスポート/インポート */
 $("#btnExport").addEventListener("click", () => {
-  const data = { app: "tsubaki-koubou", ver: 1, exported: new Date().toISOString(),
+  const data = { app: "tsubaki-koubou", ver: 2, exported: new Date().toISOString(),
     history: store.get(K.hist, []), styleNames: store.get(K.styles, null), aiAssist: store.get(K.ai, false),
-    charaLibrary: store.get(K.charaLib, null), userDict: store.get(K.userDict, null) };
+    charaLibrary: store.get(K.charaLib, null), userDict: store.get(K.userDict, null),
+    myPresets: store.get(K.myPresets, null), favTags: store.get(K.favTags, null), recentTags: store.get(K.recentTags, null),
+    theme: store.get(K.theme, null), engFirst: store.get(K.engFirst, null), twoLine: store.get(K.twoLine, null), singleLine: store.get(K.singleLine, null),
+    fontLarge: store.get(K.fontLarge, null) };
   const json = JSON.stringify(data, null, 2);
   const area = $("#exportArea");
   area.hidden = false; area.value = json;
@@ -18511,16 +18748,40 @@ $("#btnImportRun").addEventListener("click", () => {
     if (typeof data.aiAssist === "boolean") store.set(K.ai, data.aiAssist);
     if (Array.isArray(data.charaLibrary)) store.set(K.charaLib, data.charaLibrary);
     if (data.userDict && typeof data.userDict === "object" && !Array.isArray(data.userDict)) store.set(K.userDict, data.userDict);
+    if (Array.isArray(data.myPresets)) store.set(K.myPresets, data.myPresets);
+    if (Array.isArray(data.favTags)) store.set(K.favTags, data.favTags);
+    if (Array.isArray(data.recentTags)) store.set(K.recentTags, data.recentTags);
+    if (typeof data.theme === "string") store.set(K.theme, data.theme);
+    if (typeof data.engFirst === "boolean") store.set(K.engFirst, data.engFirst);
+    if (typeof data.twoLine === "boolean") store.set(K.twoLine, data.twoLine);
+    if (typeof data.singleLine === "boolean") store.set(K.singleLine, data.singleLine);
+    if (typeof data.fontLarge === "boolean") store.set(K.fontLarge, data.fontLarge);
     renderUserDictManage();
+    renderPresetList("myPresetsList", "manage");
+    applyDisplayPrefs();
     toast("インポートしました 🌺");
     $("#importArea").value = "";
   } catch (e) { toast("読み込み失敗: " + e.message); }
 });
+$("#btnImportFile").addEventListener("click", () => $("#importFileInput").click());
+$("#importFileInput").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    $("#importArea").value = text;
+    $("#importBox").hidden = false;
+    toast("ファイルを読み込みました。内容を確認して「インポート実行」を押してください");
+  } catch (err) { toast("ファイルの読み込みに失敗しました"); }
+  e.target.value = "";
+});
 $("#btnClearAll").addEventListener("click", () => {
   if (!confirmPending) { confirmPending = true; toast("⚠ もう一度タップで全消去"); return; }
-  [K.hist, K.styles, K.ai, K.charaLib, K.userDict].forEach(k => store.del(k));
+  Object.values(K).forEach(k => store.del(k));
   confirmPending = false;
   renderUserDictManage();
+  renderPresetList("myPresetsList", "manage");
+  applyDisplayPrefs();
   toast("保存データを消去しました");
 });
 
@@ -18560,6 +18821,7 @@ $("#btnAi").addEventListener("click", async () => {
 
 /* ---------- 初期化 ---------- */
 applyDisplayPrefs();
+enableFullRowToggle();
 renderTplGrid();
 renderTplForm();
 renderAesChips();
