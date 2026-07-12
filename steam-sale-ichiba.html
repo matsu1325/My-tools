@@ -150,6 +150,30 @@
     </div>
     <div class="row">
       <div class="field">
+        <label for="genre">ジャンル</label>
+        <select id="genre">
+          <option value="" selected>指定なし</option>
+          <option value="19">アクション</option>
+          <option value="21">アドベンチャー</option>
+          <option value="122">RPG</option>
+          <option value="9">ストラテジー</option>
+          <option value="599">シミュレーション</option>
+          <option value="701">スポーツ</option>
+          <option value="699">レース</option>
+          <option value="1664">パズル</option>
+          <option value="1667">ホラー</option>
+          <option value="1743">格闘</option>
+          <option value="492">インディー</option>
+          <option value="597">カジュアル</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="kw">キーワード（任意）</label>
+        <input id="kw" type="text" placeholder="例: ローグライク" autocapitalize="off" autocorrect="off">
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
         <label for="pop">人気の下限（レビュー数）</label>
         <select id="pop">
           <option value="0" selected>指定なし</option>
@@ -251,6 +275,8 @@
     const cc = $('#cc').value;
     const minOff = $('#minoff').value;
     const cap = $('#cap').value.trim();
+    const genreLabel = $('#genre').selectedOptions[0].textContent;
+    const kw = $('#kw').value.trim();
     const known = items.map(i=>i.title).slice(0,60);
 
     const prompt = [
@@ -259,6 +285,8 @@
       '条件: 通貨=' + (CUR[cc]||'日本円') + '。ゲーム本体のみ（DLC・ソフトウェア・サントラは除外）。',
       minOff !== '0' ? '割引率は' + minOff + '%以上。' : '',
       cap ? 'セール価格は ' + cap + ' 以下。' : '',
+      genreLabel !== '指定なし' ? 'ジャンルは「' + genreLabel + '」に該当するものだけ。他ジャンルは含めない。' : '',
+      kw ? 'タイトルまたは内容が「' + kw + '」に関連するものだけ。' : '',
       known.length ? '次のタイトルは既出なので除外: ' + known.join(' / ') : '',
       '最大16件。売れ筋・知名度の高い順に並べる。',
       '',
@@ -321,17 +349,19 @@
     u => 'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(u),
   ];
 
-  function steamUrl(cc, st){
-    const p = new URLSearchParams({
+  function steamUrl(cc, st, tag){
+    const params = {
       query:'', start:String(st), count:String(PAGE), dynamic_data:'', sort_by:'_ASC',
       infinite:'1', category1:'998', specials:'1', filter:'topsellers',
       cc:cc, l:'japanese', supportedlang:'japanese'
-    });
+    };
+    if(tag) params.tags = tag;
+    const p = new URLSearchParams(params);
     return 'https://store.steampowered.com/search/results/?' + p.toString();
   }
 
   async function loadViaSteam(){
-    const url = steamUrl($('#cc').value, start);
+    const url = steamUrl($('#cc').value, start, $('#genre').value);
     let lastErr;
     for(let i=0;i<PROXIES.length;i++){
       try{
@@ -411,6 +441,7 @@
     const minScore = parseInt($('#score').value,10);
     const capRaw = $('#cap').value.trim();
     const cap = capRaw ? parseInt(capRaw,10) : null;
+    const kw = $('#kw').value.trim().toLowerCase();
     const sort = $('#sort').value;
 
     const r = items.filter((it,i)=>{
@@ -419,6 +450,7 @@
       if(minRev > 0 && (it.revCount == null || it.revCount < minRev)) return false;
       if(minScore > 0 && (it.revPct == null || it.revPct < minScore)) return false;
       if(cap != null && it.nowVal > cap) return false;
+      if(kw && !it.title.toLowerCase().includes(kw)) return false;
       return true;
     });
 
@@ -488,6 +520,12 @@
     setStatus('仕入れ口を変えた。「札を出す」で集め直す。'); });
   ['minoff','pop','score','sort','cap'].forEach(id=>{
     $('#'+id).addEventListener('change', ()=>{ if(items.length) render(); });
+  });
+  $('#kw').addEventListener('input', ()=>{ if(items.length) render(); });
+  $('#genre').addEventListener('change', ()=>{
+    // ジャンルはSteam直取りではURL条件、Claude検索では取り直しが必要なので再取得を促す
+    if(items.length){ items=[]; start=0; total=0; listEl.innerHTML=''; moreBtn.hidden=true;
+      setStatus('ジャンルを変えた。「札を出す」で集め直す。'); }
   });
 
   $('#copy').addEventListener('click', async ()=>{
