@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<title>新刊見廻り帖</title>
+<style>
+:root{
+  --sumi:#14161c;
+  --aitetsu:#1d2430;
+  --aitetsu-2:#232c3b;
+  --kinari:#e8e0cd;
+  --shu:#c73e3a;
+  --kincha:#c39a5e;
+  --haiao:#7a8699;
+  --line:#323c4d;
+  --ok:#5e9c76;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{background:var(--sumi);}
+body{
+  font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+  background:
+    radial-gradient(1200px 500px at 50% -10%, #1c2230 0%, transparent 60%),
+    var(--sumi);
+  color:var(--kinari);
+  min-height:100vh;
+  padding:calc(env(safe-area-inset-top) + 20px) 16px calc(env(safe-area-inset-bottom) + 40px);
+  line-height:1.6;
+}
+.wrap{max-width:640px;margin:0 auto;}
+
+header{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  border-bottom:2px solid var(--kincha);
+  padding-bottom:12px;margin-bottom:6px;
+}
+h1{
+  font-size:26px;font-weight:600;letter-spacing:.35em;
+  text-shadow:0 0 24px rgba(195,154,94,.25);
+}
+h1 small{
+  display:block;font-size:10px;letter-spacing:.3em;
+  color:var(--haiao);font-weight:400;margin-top:2px;
+}
+.date-label{
+  font-size:11px;color:var(--haiao);letter-spacing:.15em;
+  writing-mode:vertical-rl;line-height:1;padding-bottom:2px;
+}
+.sub-row{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  gap:10px;margin-bottom:14px;
+}
+.sub{
+  font-size:11px;color:var(--haiao);letter-spacing:.08em;
+  flex:1;
+}
+.btn-settings{
+  flex:none;font-size:11px;letter-spacing:.1em;
+  border:1px solid var(--line);color:var(--haiao);
+  padding:6px 10px;border-radius:3px;background:transparent;
+}
+.btn-settings:active{background:var(--line);color:var(--kinari);}
+
+.settings-box{
+  background:var(--aitetsu);
+  border:1px solid var(--line);
+  border-left:3px solid var(--haiao);
+  padding:14px;margin-bottom:14px;
+}
+.settings-box label{
+  font-size:11px;color:var(--haiao);display:block;margin-bottom:8px;
+  letter-spacing:.05em;
+}
+.settings-box .note{
+  font-size:11px;color:var(--haiao);margin-top:10px;line-height:1.7;
+}
+.settings-box .note a{color:var(--kincha);text-decoration:underline;}
+
+.add-box{
+  background:var(--aitetsu);
+  border:1px solid var(--line);
+  border-left:3px solid var(--kincha);
+  padding:14px;margin-bottom:14px;
+}
+.add-box .row{display:flex;gap:8px;margin-bottom:8px;}
+.add-box .row:last-child{margin-bottom:0;}
+.settings-box .row{display:flex;gap:8px;}
+input[type=text],input[type=number]{
+  width:100%;
+  background:var(--sumi);
+  border:1px solid var(--line);
+  color:var(--kinari);
+  font-family:inherit;
+  font-size:16px;
+  padding:10px 12px;
+  border-radius:3px;
+  outline:none;
+}
+input:focus{border-color:var(--kincha);}
+input::placeholder{color:#4d5768;}
+#in-vol{width:110px;flex:none;}
+button{
+  font-family:inherit;font-size:14px;letter-spacing:.15em;
+  border:1px solid var(--kincha);
+  background:transparent;color:var(--kincha);
+  padding:10px 16px;border-radius:3px;
+  cursor:pointer;white-space:nowrap;
+  transition:background .15s,color .15s;
+}
+button:active{background:var(--kincha);color:var(--sumi);}
+button:disabled{opacity:.35;pointer-events:none;}
+.btn-main{
+  width:100%;font-size:15px;padding:13px;
+  background:linear-gradient(180deg,#2a3345,#222a39);
+  border:1px solid var(--kincha);
+  color:var(--kinari);
+  letter-spacing:.4em;text-indent:.4em;
+  margin-bottom:22px;
+  box-shadow:0 2px 10px rgba(0,0,0,.4);
+}
+.btn-main:active{background:var(--kincha);color:var(--sumi);}
+
+.card{
+  position:relative;
+  background:var(--aitetsu);
+  border:1px solid var(--line);
+  padding:14px 14px 12px;
+  margin-bottom:12px;
+  overflow:hidden;
+}
+.card.has-new{border-color:rgba(199,62,58,.55);}
+.card .title{
+  font-size:17px;font-weight:600;letter-spacing:.05em;
+  padding-right:64px;
+}
+.card .author{font-size:11px;color:var(--haiao);margin-bottom:8px;}
+.card .meta{
+  font-size:12px;color:var(--haiao);
+  border-top:1px dashed var(--line);
+  padding-top:8px;margin-top:8px;
+}
+.card .meta b{color:var(--kinari);font-weight:600;}
+.card .meta .date{color:var(--kincha);}
+.card .meta .soon{color:var(--shu);}
+.card .meta a{color:var(--haiao);}
+.result-line{margin-bottom:3px;}
+.status-tag{
+  display:inline-block;font-size:10px;letter-spacing:.2em;
+  padding:2px 8px;border:1px solid var(--haiao);color:var(--haiao);
+  border-radius:2px;margin-bottom:6px;
+}
+.status-tag.ok{border-color:var(--ok);color:var(--ok);}
+.status-tag.warn{border-color:var(--kincha);color:var(--kincha);}
+.status-tag.err{border-color:var(--shu);color:var(--shu);}
+.card .note{font-size:11px;color:var(--haiao);margin-top:4px;}
+.card .checked-at{font-size:10px;color:#4d5768;margin-top:6px;letter-spacing:.05em;}
+.card .btns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.card .btns button,.card .btns a.btn-link{font-size:12px;padding:7px 14px;}
+.btn-del{border-color:#59616f;color:#8a93a3;}
+.btn-del:active{background:#59616f;color:var(--sumi);}
+a.btn-link{
+  font-family:inherit;letter-spacing:.1em;
+  border:1px solid var(--haiao);color:var(--haiao);
+  border-radius:3px;text-decoration:none;
+  display:inline-block;white-space:nowrap;
+}
+a.btn-link:active{background:var(--haiao);color:var(--sumi);}
+.result-line a{color:var(--kincha);text-decoration:underline;}
+
+.stamp{
+  position:absolute;top:10px;right:10px;
+  width:52px;height:52px;
+  border:2.5px solid var(--shu);
+  border-radius:50%;
+  color:var(--shu);
+  font-size:15px;font-weight:700;letter-spacing:.1em;
+  display:flex;align-items:center;justify-content:center;
+  transform:rotate(-12deg);
+  text-shadow:0 0 8px rgba(199,62,58,.5);
+  box-shadow:0 0 12px rgba(199,62,58,.25), inset 0 0 8px rgba(199,62,58,.15);
+  animation:stampin .4s cubic-bezier(.2,1.6,.4,1);
+}
+@keyframes stampin{
+  from{transform:rotate(-12deg) scale(2.2);opacity:0;}
+  to{transform:rotate(-12deg) scale(1);opacity:1;}
+}
+@media (prefers-reduced-motion: reduce){
+  .stamp{animation:none;}
+}
+.stamp.yotei{border-color:var(--kincha);color:var(--kincha);
+  box-shadow:0 0 12px rgba(195,154,94,.25), inset 0 0 8px rgba(195,154,94,.15);
+  text-shadow:0 0 8px rgba(195,154,94,.5);font-size:13px;}
+
+.spinner{
+  display:inline-block;width:12px;height:12px;
+  border:2px solid var(--line);border-top-color:var(--kincha);
+  border-radius:50%;
+  animation:spin .8s linear infinite;vertical-align:-2px;margin-right:6px;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.empty{
+  text-align:center;color:#4d5768;font-size:13px;
+  padding:44px 0;letter-spacing:.2em;
+  border:1px dashed var(--line);
+}
+.progress{
+  font-size:12px;color:var(--kincha);text-align:center;
+  margin:-12px 0 16px;letter-spacing:.15em;min-height:18px;
+}
+footer{
+  margin-top:30px;text-align:center;
+  font-size:10px;color:#3d4553;letter-spacing:.2em;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>新刊見廻り帖<small>KINDLE SHINKAN WATCH</small></h1>
+    <div class="date-label" id="today-label"></div>
+  </header>
+  <div class="sub-row">
+    <p class="sub">購読中の作品を書き留め、紙媒体の書誌情報から新刊の有無と発売日を見廻ります。設定不要でそのまま使えます（Google Books使用）。</p>
+    <button class="btn-settings" onclick="toggleSettings()">⚙ 設定</button>
+  </div>
+
+  <div class="settings-box" id="settings-box" style="display:none;">
+    <label>楽天ブックスWebサービス アプリID</label>
+    <div class="row">
+      <input type="text" id="in-appid" placeholder="アプリIDを入力">
+      <button onclick="saveAppId()">保存</button>
+    </div>
+    <p class="note">未設定でもGoogle Booksで動作します（登録不要）。和書の巻数・発売予定の精度を上げたい場合は <a href="https://webservice.rakuten.co.jp/" target="_blank" rel="noopener">楽天ウェブサービス</a> で無料登録（審査なし・即時発行）したアプリIDをここに入れると、以後は楽天ブックス優先で見廻ります。IDはこの端末内のみに保存され、外部へは送信されません。</p>
+  </div>
+
+  <div class="add-box">
+    <div class="row">
+      <input type="text" id="in-title" placeholder="作品名（例：葬送のフリーレン）">
+    </div>
+    <div class="row">
+      <input type="text" id="in-author" placeholder="著者（任意・絞り込み用）">
+      <input type="number" id="in-vol" placeholder="既読巻" inputmode="numeric" min="0">
+      <button onclick="addWork()">登録</button>
+    </div>
+  </div>
+
+  <button class="btn-main" id="btn-all" onclick="checkAll()">一 斉 見 廻 り</button>
+  <div class="progress" id="progress"></div>
+
+  <div id="list"></div>
+
+  <footer>― 新刊見廻り帖 ―</footer>
+</div>
+
+<script>
+/* ══════════ 保管庫 ══════════ */
+const Store = {
+  mode: null,
+  mem: null,
+  async load(){
+    if (window.storage) {
+      try {
+        const r = await window.storage.get('kindle-watch:works');
+        this.mode = 'artifact';
+        return r ? JSON.parse(r.value) : [];
+      } catch(e){ this.mode = 'artifact'; return []; }
+    }
+    try {
+      const r = localStorage.getItem('kindle-watch:works');
+      this.mode = 'local';
+      return r ? JSON.parse(r) : [];
+    } catch(e){}
+    this.mode = 'memory';
+    return this.mem || [];
+  },
+  async save(works){
+    const json = JSON.stringify(works);
+    if (this.mode === 'artifact') {
+      try { await window.storage.set('kindle-watch:works', json); return; } catch(e){}
+    }
+    if (this.mode === 'local') {
+      try { localStorage.setItem('kindle-watch:works', json); return; } catch(e){}
+    }
+    this.mem = works;
+  }
+};
+
+let works = [];
+let checking = false;
+const todayStr = new Date().toISOString().slice(0,10);
+
+document.getElementById('today-label').textContent =
+  new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'});
+
+(async ()=>{
+  works = await Store.load();
+  render();
+})();
+
+/* ══════════ アプリID設定 ══════════ */
+function getAppId(){ return localStorage.getItem('kindle-watch:rakuten-appid') || ''; }
+function setAppId(v){ localStorage.setItem('kindle-watch:rakuten-appid', v); }
+function toggleSettings(forceOpen){
+  const box = document.getElementById('settings-box');
+  const show = forceOpen === true ? true : box.style.display === 'none';
+  box.style.display = show ? 'block' : 'none';
+  if(show){
+    document.getElementById('in-appid').value = getAppId();
+    box.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+}
+function saveAppId(){
+  const v = document.getElementById('in-appid').value.trim();
+  setAppId(v);
+  if(v){ toggleSettings(false); }
+}
+
+/* ══════════ 登録・削除 ══════════ */
+async function addWork(){
+  const t = document.getElementById('in-title').value.trim();
+  if(!t) return;
+  const a = document.getElementById('in-author').value.trim();
+  const v = parseInt(document.getElementById('in-vol').value,10);
+  works.unshift({
+    id: Date.now() + '' + Math.random().toString(36).slice(2,6),
+    title: t,
+    author: a || '',
+    ownedVol: isNaN(v) ? null : v,
+    result: null,
+    checkedAt: null,
+    state: 'idle'
+  });
+  document.getElementById('in-title').value = '';
+  document.getElementById('in-author').value = '';
+  document.getElementById('in-vol').value = '';
+  await Store.save(works);
+  render();
+}
+
+async function delWork(id){
+  const w = works.find(x=>x.id===id);
+  if(!confirm('「'+w.title+'」を帳面から消しますか？')) return;
+  works = works.filter(x=>x.id!==id);
+  await Store.save(works);
+  render();
+}
+
+/* ══════════ 楽天ブックスAPI（JSONP・APIキー不要のクライアント直叩き） ══════════ */
+function rakutenSearch(title, author, appId){
+  return new Promise((resolve, reject)=>{
+    const cbName = 'rk_cb_' + Date.now() + '_' + Math.floor(Math.random()*100000);
+    const script = document.createElement('script');
+    const timer = setTimeout(()=>{ cleanup(); reject(new Error('通信がタイムアウトしました')); }, 10000);
+    function cleanup(){
+      clearTimeout(timer);
+      delete window[cbName];
+      if(script.parentNode) script.parentNode.removeChild(script);
+    }
+    window[cbName] = function(data){ cleanup(); resolve(data); };
+    const params = new URLSearchParams({
+      format: 'json',
+      title: title,
+      hits: '30',
+      sort: '-releaseDate',
+      applicationId: appId,
+      callback: cbName
+    });
+    if(author) params.set('author', author);
+    script.src = 'https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?' + params.toString();
+    script.onerror = ()=>{ cleanup(); reject(new Error('APIへの接続に失敗しました')); };
+    document.head.appendChild(script);
+  });
+}
+
+function normTitle(s){
+  return (s||'').normalize('NFKC').replace(/[\s　]/g,'').toLowerCase();
+}
+function extractVolume(rawTitle, seriesTitle){
+  let t = rawTitle.normalize('NFKC');
+  t = t.replace(/[\(（][^\)）]*[\)）]/g, ''); // 括弧内（レーベル名等）を除去
+  let m = t.match(/第\s*(\d+)\s*巻/);
+  if(m) return parseInt(m[1],10);
+  m = t.match(/(\d+)\s*巻/);
+  if(m) return parseInt(m[1],10);
+  const normSeries = normTitle(seriesTitle);
+  const normT = normTitle(t);
+  let rest = normT.startsWith(normSeries) ? normT.slice(normSeries.length) : normT;
+  m = rest.match(/(\d+)/);
+  if(m) return parseInt(m[1],10);
+  m = t.match(/(\d+)\s*$/);
+  if(m) return parseInt(m[1],10);
+  return null;
+}
+function parseGoogleDate(s){
+  // 完全な日付ならISO、年のみ・年月のみは近似ラベルとして返す
+  if(!s) return {iso:null, label:null};
+  let m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m) return {iso:s, label:null};
+  m = s.match(/^(\d{4})-(\d{2})$/);
+  if(m) return {iso:null, label: m[1]+'年'+parseInt(m[2],10)+'月頃'};
+  m = s.match(/^(\d{4})$/);
+  if(m) return {iso:null, label: m[1]+'年頃'};
+  return {iso:null, label:null};
+}
+function nowLabel(){
+  return new Date().toLocaleString('ja-JP',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+
+/* ══════════ 書誌取得：楽天ブックス（アプリID設定時） ══════════ */
+async function fetchRakutenTagged(w, appId){
+  const data = await rakutenSearch(w.title, w.author, appId);
+  if(data && data.error) throw new Error(data.error_description || data.error);
+  const items = (data && data.Items || []).map(x=>x.Item).filter(Boolean);
+  const normSeries = normTitle(w.title);
+  let filtered = items.filter(it => normTitle(it.title).includes(normSeries));
+  if(filtered.length===0) filtered = items;
+  return filtered.map(it=>({
+    title: it.title,
+    volume: extractVolume(it.title, w.title),
+    dateIso: parseSalesDate(it.salesDate),
+    url: it.itemUrl
+  }));
+}
+
+/* ══════════ 書誌取得：Google Books（キー登録不要のフォールバック） ══════════ */
+async function fetchGoogleTagged(w){
+  const q = 'intitle:' + w.title + (w.author ? ' inauthor:' + w.author : '');
+  const url = 'https://www.googleapis.com/books/v1/volumes?q=' + encodeURIComponent(q)
+    + '&country=JP&maxResults=40&orderBy=newest';
+
+  const maxRetries = 2;
+  let res;
+  for(let attempt=0; attempt<=maxRetries; attempt++){
+    res = await fetch(url);
+    if(res.status === 429 && attempt < maxRetries){
+      await new Promise(r=>setTimeout(r, 1800 * (attempt+1))); // 混雑時は間隔を空けて再試行
+      continue;
+    }
+    break;
+  }
+  if(res.status === 429){
+    throw new Error('Google Booksが混雑しています（利用制限）。1分ほど時間を置いて再試行してください');
+  }
+  if(!res.ok) throw new Error('Google Books APIへの接続に失敗しました（'+res.status+'）');
+
+  const data = await res.json();
+  const items = data.items || [];
+  const normSeries = normTitle(w.title);
+  let filtered = items.filter(it => normTitle(it.volumeInfo && it.volumeInfo.title).includes(normSeries));
+  if(filtered.length===0) filtered = items;
+  return filtered.map(it=>{
+    const vi = it.volumeInfo || {};
+    const fullTitle = vi.title ? (vi.title + (vi.subtitle ? ' ' + vi.subtitle : '')) : w.title;
+    const d = parseGoogleDate(vi.publishedDate);
+    return {
+      title: fullTitle,
+      volume: extractVolume(fullTitle, w.title),
+      dateIso: d.iso,
+      dateLabel: d.label,
+      url: vi.infoLink || vi.canonicalVolumeLink || null
+    };
+  });
+}
+
+/* ══════════ 見廻り ══════════ */
+async function checkOne(id){
+  const w = works.find(x=>x.id===id);
+  if(!w || w.state==='loading') return;
+  const appId = getAppId();
+  const source = appId ? '楽天ブックス' : 'Google Books';
+  w.state = 'loading';
+  render();
+  try{
+    const tagged = appId ? await fetchRakutenTagged(w, appId) : await fetchGoogleTagged(w);
+
+    const past = tagged.filter(t=> t.dateIso && t.dateIso <= todayStr);
+    const future = tagged.filter(t=> t.dateIso && t.dateIso > todayStr);
+
+    function pickLatest(list){
+      const withVol = list.filter(t=>t.volume!=null);
+      if(withVol.length) return withVol.sort((a,b)=>b.volume-a.volume)[0];
+      const withDate = list.filter(t=>t.dateIso).sort((a,b)=> b.dateIso.localeCompare(a.dateIso));
+      return withDate[0] || list[0] || null;
+    }
+    const latest = pickLatest(past.length ? past : tagged);
+    const next = future.length ? future.sort((a,b)=> a.dateIso.localeCompare(b.dateIso))[0] : null;
+
+    w.result = {
+      found: tagged.length > 0,
+      latest: latest ? {volume: latest.volume, title: latest.title, date: latest.dateIso, dateLabel: latest.dateLabel, url: latest.url} : null,
+      next: next ? {volume: next.volume, title: next.title, date: next.dateIso, dateLabel: next.dateLabel, url: next.url} : null,
+      note: tagged.length === 0 ? source + 'に該当する書誌が見つかりませんでした' : '',
+      source: source
+    };
+    w.checkedAt = nowLabel();
+    w.state = 'done';
+  } catch(e){
+    w.result = { error: e.message, source: source };
+    w.checkedAt = nowLabel();
+    w.state = 'error';
+  }
+  await Store.save(works);
+  render();
+}
+
+async function checkAll(){
+  if(checking || works.length===0) return;
+  checking = true;
+  const btn = document.getElementById('btn-all');
+  btn.disabled = true;
+  const prog = document.getElementById('progress');
+  const pace = getAppId() ? 300 : 1500; // Google Books（無登録）は間隔を広めに取る
+  for(let i=0;i<works.length;i++){
+    prog.textContent = `見廻り中… ${i+1} / ${works.length} 「${works[i].title}」`;
+    await checkOne(works[i].id);
+    if(i < works.length-1) await new Promise(r=>setTimeout(r,pace));
+  }
+  prog.textContent = '見廻り完了';
+  setTimeout(()=>{ prog.textContent=''; }, 3000);
+  btn.disabled = false;
+  checking = false;
+}
+
+/* ══════════ 判定 ══════════ */
+function judge(w){
+  if(w.state==='error'){
+    return {stamp:null, tag:{cls:'err',text:'確認失敗'},
+      lines:['<span class="note">'+esc(w.result?.error||'不明なエラー')+'</span>'], note:''};
+  }
+  if(!w.result) return null;
+  const r = w.result;
+  if(r.found===false){
+    return {stamp:null, tag:{cls:'err',text:'該当なし'},
+      lines:['書誌が見つかりませんでした（作品名の表記を変えてお試しください）'], note:r.note||''};
+  }
+  const lines = [];
+  let stamp = null;
+  let tag = {cls:'ok', text:'変化なし'};
+
+  const latest = r.latest || {};
+  const hasUnread = latest.volume!=null && w.ownedVol!=null && latest.volume > w.ownedVol;
+  const recent = latest.date && daysAgo(latest.date) <= 45 && daysAgo(latest.date) >= 0;
+
+  const linkLabel = r.source === '楽天ブックス' ? '楽天で見る' : 'Google Booksで見る';
+
+  if(latest.title || latest.volume!=null){
+    lines.push('<div class="result-line">最新刊：<b>'+esc(latest.title||('第'+latest.volume+'巻'))+'</b>'
+      + (latest.date ? '　<span class="date">'+fmtDate(latest.date)+'</span>'
+         : latest.dateLabel ? '　<span class="date">'+esc(latest.dateLabel)+'</span>' : '')
+      + (latest.url ? '　<a href="'+esc(latest.url)+'" target="_blank" rel="noopener">'+linkLabel+'</a>' : '') + '</div>');
+  }
+  if(r.next && (r.next.date || r.next.dateLabel || r.next.title || r.next.volume!=null)){
+    const d = r.next.date;
+    lines.push('<div class="result-line">次巻予定：<b>'+esc(r.next.title||(r.next.volume!=null?'第'+r.next.volume+'巻':'続刊'))+'</b>'
+      + (d ? '　<span class="soon">'+fmtDate(d)+' 発売予定'+countdown(d)+'</span>'
+         : r.next.dateLabel ? '　<span class="soon">'+esc(r.next.dateLabel)+' 発売予定</span>' : '')
+      + (r.next.url ? '　<a href="'+esc(r.next.url)+'" target="_blank" rel="noopener">'+linkLabel+'</a>' : '') + '</div>');
+    stamp = 'yotei';
+    tag = {cls:'warn', text:'発売予定あり'};
+  }
+  if(hasUnread){
+    stamp = 'shinkan';
+    tag = {cls:'warn', text:'未読の新刊'};
+    lines.push('<div class="result-line"><span class="soon">既読 '+w.ownedVol+'巻 → 最新 '+latest.volume+'巻（'+(latest.volume-w.ownedVol)+'冊 未読）</span></div>');
+  } else if(recent && !stamp){
+    stamp = 'shinkan';
+    tag = {cls:'warn', text:'新刊出来'};
+  }
+  return {stamp, tag, lines, note:r.note||''};
+}
+
+function daysAgo(iso){
+  const d = new Date(iso+'T00:00:00');
+  return Math.floor((new Date() - d)/86400000);
+}
+function countdown(iso){
+  const n = -daysAgo(iso);
+  if(n>0) return '（あと'+n+'日）';
+  if(n===0) return '（本日！）';
+  return '';
+}
+function fmtDate(iso){
+  const d = new Date(iso+'T00:00:00');
+  if(isNaN(d)) return esc(iso);
+  return (d.getMonth()+1)+'月'+d.getDate()+'日'+(d.getFullYear()!==new Date().getFullYear() ? '（'+d.getFullYear()+'年）':'');
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function kindleSearchUrl(w){
+  const q = w.title + (w.author ? ' ' + w.author : '');
+  return 'https://www.amazon.co.jp/s?k=' + encodeURIComponent(q) + '&i=digital-text';
+}
+
+/* ══════════ 描画 ══════════ */
+function render(){
+  const list = document.getElementById('list');
+  if(works.length===0){
+    list.innerHTML = '<div class="empty">帳面はまだ白紙です<br>購読中の作品を登録してください</div>';
+    return;
+  }
+  list.innerHTML = works.map(w=>{
+    const j = judge(w);
+    let inner = '';
+    if(w.state==='loading'){
+      inner = '<div class="meta"><span class="spinner"></span>見廻り中…</div>';
+    } else if(j){
+      inner = '<div class="meta">'
+        + '<span class="status-tag '+j.tag.cls+'">'+j.tag.text+'</span>'
+        + j.lines.join('')
+        + (j.note ? '<div class="note">'+esc(j.note)+'</div>' : '')
+        + (w.checkedAt ? '<div class="checked-at">確認 '+w.checkedAt+(w.result&&w.result.source?'　・　'+esc(w.result.source):'')+'</div>' : '')
+        + '</div>';
+    }
+    const stampHtml =
+      j && j.stamp==='shinkan' ? '<div class="stamp">新刊</div>' :
+      j && j.stamp==='yotei'   ? '<div class="stamp yotei">予定</div>' : '';
+    return '<div class="card'+(j&&j.stamp==='shinkan'?' has-new':'')+'">'
+      + stampHtml
+      + '<div class="title">'+esc(w.title)+'</div>'
+      + '<div class="author">'+esc(w.author||'')+(w.ownedVol!=null?(w.author?'　':'')+'既読 '+w.ownedVol+'巻':'')+'</div>'
+      + inner
+      + '<div class="btns">'
+      +   '<button onclick="checkOne(\''+w.id+'\')" '+(w.state==='loading'?'disabled':'')+'>見廻る</button>'
+      +   '<a class="btn-link" href="'+kindleSearchUrl(w)+'" target="_blank" rel="noopener">Kindleで検索</a>'
+      +   '<button class="btn-del" onclick="delWork(\''+w.id+'\')">消す</button>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+document.getElementById('in-title').addEventListener('keydown',e=>{
+  if(e.key==='Enter') addWork();
+});
+</script>
+</body>
+</html>
