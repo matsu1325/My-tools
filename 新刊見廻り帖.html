@@ -311,9 +311,15 @@ function toggleSettings(forceOpen){
   }
 }
 function saveAppId(){
-  const v = document.getElementById('in-appid').value.trim();
+  let v = document.getElementById('in-appid').value.trim();
+  v = v.replace(/[\s\u3000]/g, ''); // 全角スペース等の紛れ込みを除去
   setAppId(v);
-  if(v){ toggleSettings(false); }
+  // 旧形式（数字のみ）・新形式（ハイフン入り英数字）どちらも許容
+  if(v && !/^[0-9a-zA-Z-]{10,60}$/.test(v)){
+    alert('入力されたIDの形式が想定と異なるようです。「Application ID」欄の値と一致しているか、念のため見直してください。');
+  } else if(v){
+    toggleSettings(false);
+  }
 }
 
 /* ══════════ 登録・削除 ══════════ */
@@ -409,6 +415,9 @@ function nowLabel(){
 
 /* ══════════ 書誌取得：楽天ブックス（アプリID設定時） ══════════ */
 async function fetchRakutenTagged(w, appId){
+  if(!/^[0-9a-zA-Z-]{10,60}$/.test(appId)){
+    throw new Error('アプリIDの形式が正しくないようです。「Your Applications」ページの「Application ID」欄の値を、余分な文字を含めずコピーし直してください（Access KeyやAffiliate IDとの取り違えに注意）');
+  }
   const data = await rakutenSearch(w.title, w.author, appId);
   if(data && data.error) throw new Error(data.error_description || data.error);
   const items = (data && data.Items || []).map(x=>x.Item).filter(Boolean);
