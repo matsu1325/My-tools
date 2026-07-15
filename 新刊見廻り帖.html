@@ -221,7 +221,7 @@ footer{
     <div class="date-label" id="today-label"></div>
   </header>
   <div class="sub-row">
-    <p class="sub">購読中の作品を書き留め、紙媒体の書誌情報から新刊の有無と発売日を見廻ります。設定不要でそのまま使えます（Google Books使用）。</p>
+    <p class="sub">購読中の作品を書き留め、紙媒体の書誌情報から新刊の有無と発売日を見廻ります。楽天ブックスの情報を使用します。</p>
     <button class="btn-settings" onclick="toggleSettings()">⚙ 設定</button>
   </div>
 
@@ -231,7 +231,7 @@ footer{
       <input type="text" id="in-appid" placeholder="アプリIDを入力">
       <button onclick="saveAppId()">保存</button>
     </div>
-    <p class="note">未設定でもGoogle Booksで動作します（登録不要）。和書の巻数・発売予定の精度を上げたい場合は <a href="https://webservice.rakuten.co.jp/" target="_blank" rel="noopener">楽天ウェブサービス</a> で無料登録（審査なし・即時発行）したアプリIDをここに入れると、以後は楽天ブックス優先で見廻ります。IDはこの端末内のみに保存され、外部へは送信されません。</p>
+    <p class="note">既定のアプリIDで楽天ブックスを使用しています。ご自身のアプリIDに切り替えたい場合は <a href="https://webservice.rakuten.co.jp/" target="_blank" rel="noopener">楽天ウェブサービス</a> で無料登録（審査なし・即時発行）し、「Application ID」の値をここに入れて保存してください。空欄で保存すると既定のIDに戻ります。IDはこの端末内のみに保存され、外部へは送信されません。</p>
   </div>
 
   <div class="add-box">
@@ -299,7 +299,8 @@ document.getElementById('today-label').textContent =
 })();
 
 /* ══════════ アプリID設定 ══════════ */
-function getAppId(){ return localStorage.getItem('kindle-watch:rakuten-appid') || ''; }
+const DEFAULT_RAKUTEN_APP_ID = 'e9194c21-ba0f-4549-abbc-8235febab033';
+function getAppId(){ return localStorage.getItem('kindle-watch:rakuten-appid') || DEFAULT_RAKUTEN_APP_ID; }
 function setAppId(v){ localStorage.setItem('kindle-watch:rakuten-appid', v); }
 function toggleSettings(forceOpen){
   const box = document.getElementById('settings-box');
