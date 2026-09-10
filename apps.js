@@ -72,5 +72,12 @@ window.STANDARD_APPS = [
     path: "椿ノ工房 Tsubaki2 プロンプトビルダー.html",
     desc: "Tsubaki2向けのプロンプトを組み立てるビルダー。",
     emoji: "🪭"
+  },
+  {
+    id: "toolbox-test-app",
+    name: "テストアプリ",
+    path: "test-app.html",
+    desc: "My App Toolboxへの新規ツール追加とポータル連携を確認するためのテストアプリ。",
+    emoji: "🧪"
   }
 ];
